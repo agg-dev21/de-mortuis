@@ -60,6 +60,20 @@ TOOLS (tools/ - open in Chrome or Edge, work offline)
                            your designs. Export PNG; Save project keeps all layers.
   Your design sheets are in characters/refs/.
 
+HOW A DAY WORKS
+  Morning: Iris or Naomi. Then three scenes, each with Iris, Naomi, or go alone (Maeve finds you).
+  Then the walk home (Iris, Naomi or alone), night texts, and the meters.
+  Choice wording turns warmer for whichever girl you've spent more time with, colder for the other.
+  Big choices: Day 3 morning (who you go to), Day 3 night (whether Iris tells you about her mom),
+  Day 7 afternoon (who you spend the last afternoon with).
+  Ignore both girls and go on Maeve's Day 3 date: you die, Death sends you back once, remembering.
+  Date her again on that second run and you stay with her for good.
+
+FONTS (fonts/)
+  Story and choices: BIZ UDMincho. Day titles: Aurora. Rumours and meters: DK Jambo.
+  Death's voice: Extra Blur. A girl losing herself: Megalomania.
+  Iris doing better: Stay With Me. Naomi doing better: Reenie Beanie (embedded, works offline).
+
 NOTES
 - In Twine's own Play/Test window the photos won't load (it can't see the img/ folder).
   Publish to File, save the HTML into this folder, and open it from here.
