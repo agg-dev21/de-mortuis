@@ -870,7 +870,7 @@ She takes the sandwich and doesn't open it. She just holds it.
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "\"Some people. Not the ones who matter.\"", "D1 Midday Iris 2")[(set: $iris to it + 5)]
-(link-reveal-goto: "\"Honestly? Most people do.\"", "D1 Midday Iris 2")[(set: $iris to it - 5)]]
+(link-reveal-goto: "\"Honestly? Most people do.\"", "D1 Midday Iris 2")[(set: $iris to it - 5)]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D1 Midday Iris 2 [bg-room-iris day iris]
@@ -888,7 +888,7 @@ Naomi is in the corner of the café with her headphones in and nothing playing. 
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "Tell the next table to shut up.", "D1 Midday Naomi 2")[(set: $naomi to it + 5, $mid1 to "loud")]
-(link-reveal-goto: "Laugh it off. \"They'll get bored.\"", "D1 Midday Naomi 2")[(set: $naomi to it - 5, $mid1 to "laugh")]]
+(link-reveal-goto: "Laugh it off. \"They'll get bored.\"", "D1 Midday Naomi 2")[(set: $naomi to it - 5, $mid1 to "laugh")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D1 Midday Naomi 2 [bg-cafe day naomi]
@@ -918,7 +918,7 @@ Someone films her on their phone. They don't even try to hide it.
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "Walk right next to her, so they have to look at you too.", "D2 Midday Iris 2")[(set: $iris to it + 5, $mid2 to "next")]
-(link-reveal-goto: "Walk a few steps behind. Don't make it worse.", "D2 Midday Iris 2")[(set: $iris to it - 5, $mid2 to "behind")]]
+(link-reveal-goto: "Walk a few steps behind. Don't make it worse.", "D2 Midday Iris 2")[(set: $iris to it - 5, $mid2 to "behind")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D2 Midday Iris 2 [bg-hall-posters day iris]
@@ -934,7 +934,7 @@ Someone films her on their phone. They don't even try to hide it.
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "\"I had a really bad dream. I can't shake it.\"", "D2 Midday Naomi 2")[(set: $naomi to it + 5, $mid2 to "dream")]
-(link-reveal-goto: "\"Nothing. I'm fine.\"", "D2 Midday Naomi 2")[(set: $naomi to it - 5, $mid2 to "fine")]]
+(link-reveal-goto: "\"Nothing. I'm fine.\"", "D2 Midday Naomi 2")[(set: $naomi to it - 5, $mid2 to "fine")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D2 Midday Naomi 2 [bg-library day naomi]
@@ -964,7 +964,7 @@ She agrees, which surprises both of you. Inside, it gets quieter when she walks 
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "Sit in the middle, where everyone can see you both.", "D3 Midday Iris 2")[(set: $iris to it + 5, $mid3 to "middle")]
-(link-reveal-goto: "Grab food to go. Eat it somewhere quiet.", "D3 Midday Iris 2")[(set: $mid3 to "quiet")]]
+(link-reveal-goto: "Grab food to go. Eat it somewhere quiet.", "D3 Midday Iris 2")[(set: $mid3 to "quiet")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D3 Midday Iris 2 [bg-lounge day iris]
@@ -986,7 +986,7 @@ Iris finishes her whole plate. She looks at it like she can't believe it.](else:
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "Don't move until she eats it.", "D3 Midday Naomi 2")[(set: $naomi to it + 5, $mid3 to "stay")]
-(link-reveal-goto: "Fine. Tell her to worry about herself, then.", "D3 Midday Naomi 2")[(set: $naomi to it - 5, $mid3 to "leave")]]
+(link-reveal-goto: "Fine. Tell her to worry about herself, then.", "D3 Midday Naomi 2")[(set: $naomi to it - 5, $mid3 to "leave")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D3 Midday Naomi 2 [bg-cafe day naomi]
@@ -1016,7 +1016,7 @@ It's an email to the scholarship office. She's written the first line nine times
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "Help her write it. Only what she wants in it.", "D4 Midday Iris 2")[(set: $iris to it + 5, $mid4 to "help")]
-(link-reveal-goto: "\"Maybe wait until things calm down?\"", "D4 Midday Iris 2")[(set: $iris to it - 5, $mid4 to "wait")]]
+(link-reveal-goto: "\"Maybe wait until things calm down?\"", "D4 Midday Iris 2")[(set: $iris to it - 5, $mid4 to "wait")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D4 Midday Iris 2 [bg-lab day iris]
@@ -1040,7 +1040,7 @@ You catch up with her at the stairs.
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "\"I'll walk you to them.\"", "D4 Midday Naomi 2")[(set: $naomi to it + 5, $mid4 to "walk")]
-(link-reveal-goto: "\"Okay. See you later then.\"", "D4 Midday Naomi 2")[(set: $naomi to it - 5, $mid4 to "go")]]
+(link-reveal-goto: "\"Okay. See you later then.\"", "D4 Midday Naomi 2")[(set: $naomi to it - 5, $mid4 to "go")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D4 Midday Naomi 2 [bg-hall-brick day naomi]
@@ -1068,7 +1068,7 @@ Iris stops walking.
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "Stand next to her and stare them down.", "D5 Later Iris 2")[(set: $iris to it + 5, $mid5 to "stand")]
-(link-reveal-goto: "Get her out of there, fast.", "D5 Later Iris 2")[(set: $mid5 to "leave")]]
+(link-reveal-goto: "Get her out of there, fast.", "D5 Later Iris 2")[(set: $mid5 to "leave")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D5 Later Iris 2 [bg-hall-posters day iris]
@@ -1088,7 +1088,7 @@ Naomi is in an empty classroom, typing on her phone. She deletes it. Types again
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "\"You don't have to fix it alone.\"", "D5 Later Naomi 2")[(set: $naomi to it + 5, $mid5 to "alone")]
-(link-reveal-goto: "Say nothing. Let her figure it out.", "D5 Later Naomi 2")[(set: $naomi to it - 5, $mid5 to "quiet")]]
+(link-reveal-goto: "Say nothing. Let her figure it out.", "D5 Later Naomi 2")[(set: $naomi to it - 5, $mid5 to "quiet")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D5 Later Naomi 2 [bg-classroom day naomi]
@@ -1118,7 +1118,7 @@ Iris tears a page out of her sketchbook and hands it to you. It's a drawing of t
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "\"Why are you giving it away?\"", "D6 Later Iris 2")[(set: $iris to it + 5, $mid6 to "ask")]
-(link-reveal-goto: "Say thanks and put it in your bag.", "D6 Later Iris 2")[(set: $iris to it - 5, $mid6 to "thanks")]]
+(link-reveal-goto: "Say thanks and put it in your bag.", "D6 Later Iris 2")[(set: $iris to it - 5, $mid6 to "thanks")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D6 Later Iris 2 [bg-room-iris day iris]
@@ -1136,7 +1136,7 @@ She looks at you for a long moment. "Okay," she says. "Deal."](else:)["Good," sh
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "Lie down on the floor next to her.", "D6 Later Naomi 2")[(set: $naomi to it + 5, $mid6 to "floor")]
-(link-reveal-goto: "Tell her you should go.", "D6 Later Naomi 2")[(set: $naomi to it - 5, $mid6 to "go")]]
+(link-reveal-goto: "Tell her you should go.", "D6 Later Naomi 2")[(set: $naomi to it - 5, $mid6 to "go")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D6 Later Naomi 2 [bg-room-naomi day naomi]
@@ -1162,7 +1162,7 @@ Iris is on the steps outside her building. When she sees you she stands up very 
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "\"I'm coming over tonight. Don't argue.\"", "D7 Later Iris 2")[(set: $iris to it + 5, $mid7 to "tonight")]
-(link-reveal-goto: "\"Any time.\" Go to class.", "D7 Later Iris 2")[(set: $iris to it - 5, $mid7 to "anytime")]]
+(link-reveal-goto: "\"Any time.\" Go to class.", "D7 Later Iris 2")[(set: $iris to it - 5, $mid7 to "anytime")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D7 Later Iris 2 [bg-hall-brick day iris]
@@ -1180,7 +1180,7 @@ She watches you go.]
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "\"Come with me.\"", "D7 Later Naomi 2")[(set: $naomi to it + 5, $mid7 to "come")]
-(link-reveal-goto: "\"I'll handle it.\"", "D7 Later Naomi 2")[(set: $naomi to it - 5, $mid7 to "handle")]]
+(link-reveal-goto: "\"I'll handle it.\"", "D7 Later Naomi 2")[(set: $naomi to it - 5, $mid7 to "handle")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D7 Later Naomi 2 [bg-library day naomi]
@@ -1261,7 +1261,7 @@ You don't have an answer. She seems to like that.](else-if: $day is 4)[She's wai
 
 
 :: End of day [bg-black eod]
-(display: "clamp")(set: $iris to it - (cond: $day <= 3, 10, $day <= 5, 15, 8))(set: $naomi to it - (cond: $day is 1, 0, $day is 2, 4, $day is 3, 6, $day is 4, 12, $day is 5, 14, $confessedNaomi, 4, 10))(if: $naomiFound and not $confessedNaomi)[(set: $naomi to it - 5)](if: $dating)[(set: $iris to it - 5)(set: $naomi to it - 5)](set: $aloneToday to 0)(display: "clamp")(set: $baseI to $iris, $baseN to $naomi)<div class="dayhead">END OF DAY $day</div>
+(display: "clamp")(set: $iris to it - (cond: $day <= 3, 10, $day <= 5, 18, 10))(set: $naomi to it - (cond: $day is 1, 0, $day is 2, 4, $day is 3, 6, $day is 4, 14, $day is 5, 16, $confessedNaomi, 4, 12))(if: $naomiFound and not $confessedNaomi)[(set: $naomi to it - 5)](if: $dating)[(set: $iris to it - 5)(set: $naomi to it - 5)](set: $aloneToday to 0)(display: "clamp")(set: $baseI to $iris, $baseN to $naomi)<div class="dayhead">END OF DAY $day</div>
 <div class="meter"><span class="who">Iris</span><div class="bar">(print: '<div class="fill iris" style="width:' + (str: $iris) + '%"></div>')</div><span class="num">$iris</span></div>
 <div class="meter"><span class="who">Naomi</span><div class="bar">(print: '<div class="fill naomi" style="width:' + (str: $naomi) + '%"></div>')</div><span class="num">$naomi</span></div>
 <div class="switches">(for: each _i, ...(range: 1, 5))[(if: _i <= $switches)[●](else:)[○]]</div>
@@ -1396,7 +1396,7 @@ The page goes black. There's nothing after this.
 (set: $hidMom to false, $hidNaomi to false, $hidIris to false, $irisTold to false)
 (set: $naomiAlone to false, $naomiFound to false, $confessedNaomi to false, $confessedIris to false, $askedDirect to false)
 (set: $lockI to false, $lockN to false, $capI to false, $capN to false, $frzI to 0, $frzN to 0)
-(set: $dip to false, $pops to 0, $tA to "", $mtFrom to "", $mtS to 0, $mtC to 0)
+(set: $dip to false, $pops to 0, $mtSkip to false, $tA to "", $mtFrom to "", $mtS to 0, $mtC to 0)
 
 
 :: mood header [header]
@@ -1665,7 +1665,7 @@ Iris eats on the floor with her back against her bed. Between bites she keeps ch
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "\"Tell me when you want. I'm not going anywhere.\"", "D2 Late Iris 2")[(set: $iris to it + 5, $r to "wait")]
-(link-reveal-goto: "\"It's not dumb. Just tell me.\"", "D2 Late Iris 2")[(set: $iris to it - 5, $r to "push")]]
+(link-reveal-goto: "\"It's not dumb. Just tell me.\"", "D2 Late Iris 2")[(set: $iris to it - 5, $r to "push")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D2 Late Iris 2 [bg-room-iris day iris]
@@ -1685,7 +1685,7 @@ The microwave meal is still on her desk, half eaten. Naomi is on her bed, scroll
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "\"Who cares who started it. Put it down. Eat with me.\"", "D2 Late Naomi 2")[(set: $naomi to it + 5, $r to "eat")]
-(link-reveal-goto: "\"Does it matter who started it?\"", "D2 Late Naomi 2")[(set: $naomi to it - 5, $r to "matter")]]
+(link-reveal-goto: "\"Does it matter who started it?\"", "D2 Late Naomi 2")[(set: $naomi to it - 5, $r to "matter")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D2 Late Naomi 2 [bg-room-naomi day naomi]
@@ -1769,7 +1769,7 @@ You meet Iris in the art hallway near her building. She's taped one of her drawi
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "\"I'm looking at it.\" Actually look at it.", "D3 Late Iris 2")[(set: $iris to it + 5, $r to "look")]
-(link-reveal-goto: "\"Should you be doing stuff like that? With everything?\"", "D3 Late Iris 2")[(set: $iris to it - 5, $r to "should")]]
+(link-reveal-goto: "\"Should you be doing stuff like that? With everything?\"", "D3 Late Iris 2")[(set: $iris to it - 5, $r to "should")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D3 Late Iris 2 [bg-gallery day iris]
@@ -1791,7 +1791,7 @@ Her voice cracks on //weird//, which is unlucky for her.
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "\"Call her. I'll sit here while you do.\"", "D3 Late Naomi 2")[(set: $naomi to it + 5, $r to "call")]
-(link-reveal-goto: "\"You kind of do sound weird.\"", "D3 Late Naomi 2")[(set: $naomi to it - 5, $r to "weird")]]
+(link-reveal-goto: "\"You kind of do sound weird.\"", "D3 Late Naomi 2")[(set: $naomi to it - 5, $r to "weird")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D3 Late Naomi 2 [bg-library day naomi]
@@ -1945,7 +1945,7 @@ Iris is in the lounge with her phone in her lap, staring at the scholarship offi
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "\"I'll sit here while you call. You don't have to decide anything else.\"", "D4 Late Iris 2")[(set: $iris to it + 5, $r to "call")]
-(link-reveal-goto: "\"You're not leaving. Don't say that.\"", "D4 Late Iris 2")[(set: $iris to it - 5, $r to "no")]]
+(link-reveal-goto: "\"You're not leaving. Don't say that.\"", "D4 Late Iris 2")[(set: $iris to it - 5, $r to "no")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D4 Late Iris 2 [bg-lounge day iris]
@@ -1965,7 +1965,7 @@ Naomi is behind the counter of the café, covering someone's shift. She's very g
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "Order something complicated so she has an excuse to stay busy.", "D4 Late Naomi 2")[(set: $naomi to it + 5, $r to "order")]
-(link-reveal-goto: "\"It's not the steam.\"", "D4 Late Naomi 2")[(set: $naomi to it - 5, $r to "steam")]]
+(link-reveal-goto: "\"It's not the steam.\"", "D4 Late Naomi 2")[(set: $naomi to it - 5, $r to "steam")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D4 Late Naomi 2 [bg-cafe day naomi]
@@ -1993,7 +1993,7 @@ Someone from her studio class waves at her. Just waves. Like it's normal.
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "Wave back with her. Stay for one drink.", "D5 Late Iris 2")[(set: $iris to it + 5, $r to "stay")]
-(link-reveal-goto: "\"Let's go before anyone else sees you.\"", "D5 Late Iris 2")[(set: $iris to it - 5, $r to "go")]]
+(link-reveal-goto: "\"Let's go before anyone else sees you.\"", "D5 Late Iris 2")[(set: $iris to it - 5, $r to "go")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D5 Late Iris 2 [bg-gallery night iris]
@@ -2013,7 +2013,7 @@ It's a post. A long one. //I'm the one who told people about Iris's money stuff.
 
 (set: $mtFrom to "iris")(display: "midtext")
 |ch)[(link-reveal-goto: "Close the laptop, gently. \"Not like this. Not alone.\"", "D5 Late Naomi 2")[(set: $naomi to it + 5, $r to "close")]
-(link-reveal-goto: "\"If it makes you feel better, post it.\"", "D5 Late Naomi 2")[(set: $naomi to it - 5, $r to "post")]]
+(link-reveal-goto: "\"If it makes you feel better, post it.\"", "D5 Late Naomi 2")[(set: $naomi to it - 5, $r to "post")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D5 Late Naomi 2 [bg-room-naomi night naomi]
@@ -2043,7 +2043,7 @@ You read it twice, the way you'd check a lock.
 
 (set: $mtFrom to "naomi")(display: "midtext")
 |ch)[(link-reveal-goto: "\"Add something for next week. Anything.\"", "D6 Late Iris 2")[(set: $iris to it + 5, $r to "add")]
-(link-reveal-goto: "\"Looks like you've got it all handled.\"", "D6 Late Iris 2")[(set: $iris to it - 5, $r to "handled")]]
+(link-reveal-goto: "\"Looks like you've got it all handled.\"", "D6 Late Iris 2")[(set: $iris to it - 5, $r to "handled")]](if: $mtSkip)[(show: ?ch)]
 
 
 :: D6 Late Iris 2 [bg-room-iris night iris]
@@ -2179,7 +2179,7 @@ Around five she says, out of nowhere, "I'm glad it's you. My friend, I mean. You
 
 
 :: midtext
-(set: _m to (cond: $mtFrom is "iris", $iris, $naomi), _who to (cond: $mtFrom is "iris", "Iris", "Naomi"), _cur to (cond: $mtFrom is "iris", "Naomi", "Iris"))(set: _lv to (cond: _m < 35, "low", _m < 60, "mid", "high"), _k to (cond: $day is 1 or $day is 4 or $day is 7, 1, $day is 2 or $day is 5, 2, 3))(set: $tA to "")(if: $loop is 2 and _lv is not "low")[(show: ?ch)](else:)[Your phone buzzes.
+(set: _m to (cond: $mtFrom is "iris", $iris, $naomi), _who to (cond: $mtFrom is "iris", "Iris", "Naomi"), _cur to (cond: $mtFrom is "iris", "Naomi", "Iris"))(set: _lv to (cond: _m < 35, "low", _m < 60, "mid", "high"), _k to (cond: $day is 1 or $day is 4 or $day is 7, 1, $day is 2 or $day is 5, 2, 3))(set: $tA to "", $mtSkip to ($loop is 2 and _lv is not "low"))(unless: $mtSkip)[Your phone buzzes.
 
 (if: $mtFrom is "iris")[(if: _lv is "high")[<span class="phone">(print: (a: "look. a dog in a tiny raincoat", "i drew something today. its not terrible", "the cafe has the good muffins today fyi")'s (_k))</span>](else-if: _lv is "mid")[<span class="phone">(print: (a: "are you around later?", "what are you doing", "can i ask you something later")'s (_k))</span>](else:)[<span class="phone">(print: (a: "are you busy", "i dont feel very good", "sorry")'s (_k))</span>
 <span class="phone">(print: (a: "nvm", "its fine", "ignore that")'s (_k))</span>]](else:)[(if: _lv is "high")[<span class="phone">(print: (a: "the fountain guy learned a second song. tragic", "rate my lunch 1-10. wrong answers will be punished", "you owe me a coffee btw")'s (_k))</span>](else-if: _lv is "mid")[<span class="phone">(print: (a: "where are you", "r u mad at me or something", "whatever. are you coming later")'s (_k))</span>](else:)[<span class="phone">(print: (a: "are you busy", "can you call me", "do you think im a bad person")'s (_k))</span>

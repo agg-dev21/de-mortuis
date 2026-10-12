@@ -651,7 +651,7 @@ Neither of them is in the dining hall.
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;Some people. Not the ones who matter.\&quot;&quot;, &quot;D1 Midday Iris 2&quot;)[(set: $iris to it + 5)]
-(link-reveal-goto: &quot;\&quot;Honestly? Most people do.\&quot;&quot;, &quot;D1 Midday Iris 2&quot;)[(set: $iris to it - 5)]]</tw-passagedata><tw-passagedata pid="55" name="D1 Midday Iris 2" tags="bg-room-iris day iris" position="500,625" size="100,100">She nods slowly, like she&#39;s filing it away somewhere.
+(link-reveal-goto: &quot;\&quot;Honestly? Most people do.\&quot;&quot;, &quot;D1 Midday Iris 2&quot;)[(set: $iris to it - 5)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="55" name="D1 Midday Iris 2" tags="bg-room-iris day iris" position="500,625" size="100,100">She nods slowly, like she&#39;s filing it away somewhere.
 
 Then she unwraps the sandwich and eats a quarter of it. It&#39;s not much. It&#39;s more than this morning.
 
@@ -661,7 +661,7 @@ Then she unwraps the sandwich and eats a quarter of it. It&#39;s not much. It&#3
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Tell the next table to shut up.&quot;, &quot;D1 Midday Naomi 2&quot;)[(set: $naomi to it + 5, $mid1 to &quot;loud&quot;)]
-(link-reveal-goto: &quot;Laugh it off. \&quot;They&#39;ll get bored.\&quot;&quot;, &quot;D1 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid1 to &quot;laugh&quot;)]]</tw-passagedata><tw-passagedata pid="57" name="D1 Midday Naomi 2" tags="bg-cafe day naomi" position="750,625" size="100,100">(if: $mid1 is &quot;loud&quot;)[The table goes quiet. Somebody mutters something. Nobody says Iris&#39;s name again.
+(link-reveal-goto: &quot;Laugh it off. \&quot;They&#39;ll get bored.\&quot;&quot;, &quot;D1 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid1 to &quot;laugh&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="57" name="D1 Midday Naomi 2" tags="bg-cafe day naomi" position="750,625" size="100,100">(if: $mid1 is &quot;loud&quot;)[The table goes quiet. Somebody mutters something. Nobody says Iris&#39;s name again.
 
 Naomi takes one headphone out. &quot;...That was kind of cool,&quot; she says. &quot;Don&#39;t let it go to your head.&quot;](else:)[Naomi looks at you for a second too long.
 
@@ -679,7 +679,7 @@ Someone films her on their phone. They don&#39;t even try to hide it.
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Walk right next to her, so they have to look at you too.&quot;, &quot;D2 Midday Iris 2&quot;)[(set: $iris to it + 5, $mid2 to &quot;next&quot;)]
-(link-reveal-goto: &quot;Walk a few steps behind. Don&#39;t make it worse.&quot;, &quot;D2 Midday Iris 2&quot;)[(set: $iris to it - 5, $mid2 to &quot;behind&quot;)]]</tw-passagedata><tw-passagedata pid="60" name="D2 Midday Iris 2" tags="bg-hall-posters day iris" position="1125,625" size="100,100">(if: $mid2 is &quot;next&quot;)[You walk so close your sleeves touch. At her door, Iris breathes out like she&#39;s been holding it since Monday.
+(link-reveal-goto: &quot;Walk a few steps behind. Don&#39;t make it worse.&quot;, &quot;D2 Midday Iris 2&quot;)[(set: $iris to it - 5, $mid2 to &quot;behind&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="60" name="D2 Midday Iris 2" tags="bg-hall-posters day iris" position="1125,625" size="100,100">(if: $mid2 is &quot;next&quot;)[You walk so close your sleeves touch. At her door, Iris breathes out like she&#39;s been holding it since Monday.
 
 &quot;Thanks,&quot; she says. She means it.](else:)[She notices. She doesn&#39;t say anything. At her door she goes in without looking back.]
 
@@ -687,7 +687,7 @@ Someone films her on their phone. They don&#39;t even try to hide it.
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;I had a really bad dream. I can&#39;t shake it.\&quot;&quot;, &quot;D2 Midday Naomi 2&quot;)[(set: $naomi to it + 5, $mid2 to &quot;dream&quot;)]
-(link-reveal-goto: &quot;\&quot;Nothing. I&#39;m fine.\&quot;&quot;, &quot;D2 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid2 to &quot;fine&quot;)]]</tw-passagedata><tw-passagedata pid="62" name="D2 Midday Naomi 2" tags="bg-library day naomi" position="125,750" size="100,100">(if: $mid2 is &quot;dream&quot;)[She&#39;s quiet for a moment.
+(link-reveal-goto: &quot;\&quot;Nothing. I&#39;m fine.\&quot;&quot;, &quot;D2 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid2 to &quot;fine&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="62" name="D2 Midday Naomi 2" tags="bg-library day naomi" position="125,750" size="100,100">(if: $mid2 is &quot;dream&quot;)[She&#39;s quiet for a moment.
 
 &quot;...What kind of dream,&quot; she says. Not a question, exactly. She waits anyway.
 
@@ -705,7 +705,7 @@ She flips a page she hasn&#39;t read.]
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Sit in the middle, where everyone can see you both.&quot;, &quot;D3 Midday Iris 2&quot;)[(set: $iris to it + 5, $mid3 to &quot;middle&quot;)]
-(link-reveal-goto: &quot;Grab food to go. Eat it somewhere quiet.&quot;, &quot;D3 Midday Iris 2&quot;)[(set: $mid3 to &quot;quiet&quot;)]]</tw-passagedata><tw-passagedata pid="65" name="D3 Midday Iris 2" tags="bg-lounge day iris" position="500,750" size="100,100">(if: $mid3 is &quot;middle&quot;)[It&#39;s awful for about five minutes. Then people get bored, the way people do, and go back to their own lunches.
+(link-reveal-goto: &quot;Grab food to go. Eat it somewhere quiet.&quot;, &quot;D3 Midday Iris 2&quot;)[(set: $mid3 to &quot;quiet&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="65" name="D3 Midday Iris 2" tags="bg-lounge day iris" position="500,750" size="100,100">(if: $mid3 is &quot;middle&quot;)[It&#39;s awful for about five minutes. Then people get bored, the way people do, and go back to their own lunches.
 
 Iris finishes her whole plate. She looks at it like she can&#39;t believe it.](else:)[You eat on the back steps. It&#39;s cold. Iris eats half of hers.
 
@@ -719,7 +719,7 @@ Iris finishes her whole plate. She looks at it like she can&#39;t believe it.](e
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Don&#39;t move until she eats it.&quot;, &quot;D3 Midday Naomi 2&quot;)[(set: $naomi to it + 5, $mid3 to &quot;stay&quot;)]
-(link-reveal-goto: &quot;Fine. Tell her to worry about herself, then.&quot;, &quot;D3 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid3 to &quot;leave&quot;)]]</tw-passagedata><tw-passagedata pid="67" name="D3 Midday Naomi 2" tags="bg-cafe day naomi" position="750,750" size="100,100">(if: $mid3 is &quot;stay&quot;)[A standoff. She lasts about forty seconds.
+(link-reveal-goto: &quot;Fine. Tell her to worry about herself, then.&quot;, &quot;D3 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid3 to &quot;leave&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="67" name="D3 Midday Naomi 2" tags="bg-cafe day naomi" position="750,750" size="100,100">(if: $mid3 is &quot;stay&quot;)[A standoff. She lasts about forty seconds.
 
 &quot;This is so stupid,&quot; she says, eating it. She eats all of it. She doesn&#39;t say thank you. She does push her coffee toward you when she&#39;s done.](else:)[&quot;I am worrying about myself,&quot; she says. &quot;Somebody has to.&quot;
 
@@ -737,7 +737,7 @@ Naomi walks past you in the hallway without stopping, which she has never once d
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Help her write it. Only what she wants in it.&quot;, &quot;D4 Midday Iris 2&quot;)[(set: $iris to it + 5, $mid4 to &quot;help&quot;)]
-(link-reveal-goto: &quot;\&quot;Maybe wait until things calm down?\&quot;&quot;, &quot;D4 Midday Iris 2&quot;)[(set: $iris to it - 5, $mid4 to &quot;wait&quot;)]]</tw-passagedata><tw-passagedata pid="70" name="D4 Midday Iris 2" tags="bg-lab day iris" position="1125,750" size="100,100">(if: $mid4 is &quot;help&quot;)[It takes an hour. Most of it is her deleting things. When it&#39;s done, it&#39;s four sentences long, and every one of them is true.
+(link-reveal-goto: &quot;\&quot;Maybe wait until things calm down?\&quot;&quot;, &quot;D4 Midday Iris 2&quot;)[(set: $iris to it - 5, $mid4 to &quot;wait&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="70" name="D4 Midday Iris 2" tags="bg-lab day iris" position="1125,750" size="100,100">(if: $mid4 is &quot;help&quot;)[It takes an hour. Most of it is her deleting things. When it&#39;s done, it&#39;s four sentences long, and every one of them is true.
 
 She doesn&#39;t send it yet. But she saves it. &quot;Okay,&quot; she says. &quot;Okay.&quot;](else:)[&quot;Right,&quot; she says. &quot;Yeah. Things will calm down.&quot;
 
@@ -753,7 +753,7 @@ She closes the laptop. She doesn&#39;t open it again while you&#39;re there.]
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;I&#39;ll walk you to them.\&quot;&quot;, &quot;D4 Midday Naomi 2&quot;)[(set: $naomi to it + 5, $mid4 to &quot;walk&quot;)]
-(link-reveal-goto: &quot;\&quot;Okay. See you later then.\&quot;&quot;, &quot;D4 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid4 to &quot;go&quot;)]]</tw-passagedata><tw-passagedata pid="72" name="D4 Midday Naomi 2" tags="bg-hall-brick day naomi" position="125,875" size="100,100">(if: $mid4 is &quot;walk&quot;)[&quot;Ugh. Fine.&quot; She walks. You walk. Neither of you says where you&#39;re going. You end up at the vending machines and she buys two drinks without asking which one you want.
+(link-reveal-goto: &quot;\&quot;Okay. See you later then.\&quot;&quot;, &quot;D4 Midday Naomi 2&quot;)[(set: $naomi to it - 5, $mid4 to &quot;go&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="72" name="D4 Midday Naomi 2" tags="bg-hall-brick day naomi" position="125,875" size="100,100">(if: $mid4 is &quot;walk&quot;)[&quot;Ugh. Fine.&quot; She walks. You walk. Neither of you says where you&#39;re going. You end up at the vending machines and she buys two drinks without asking which one you want.
 
 It&#39;s the right one.](else:)[&quot;Yeah,&quot; she says. &quot;Later.&quot;
 
@@ -769,7 +769,7 @@ Iris stops walking.
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Stand next to her and stare them down.&quot;, &quot;D5 Later Iris 2&quot;)[(set: $iris to it + 5, $mid5 to &quot;stand&quot;)]
-(link-reveal-goto: &quot;Get her out of there, fast.&quot;, &quot;D5 Later Iris 2&quot;)[(set: $mid5 to &quot;leave&quot;)]]</tw-passagedata><tw-passagedata pid="75" name="D5 Later Iris 2" tags="bg-hall-posters day iris" position="500,875" size="100,100">(if: $mid5 is &quot;stand&quot;)[They don&#39;t stop right away. Then they do. One of them actually looks embarrassed.
+(link-reveal-goto: &quot;Get her out of there, fast.&quot;, &quot;D5 Later Iris 2&quot;)[(set: $mid5 to &quot;leave&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="75" name="D5 Later Iris 2" tags="bg-hall-posters day iris" position="500,875" size="100,100">(if: $mid5 is &quot;stand&quot;)[They don&#39;t stop right away. Then they do. One of them actually looks embarrassed.
 
 Iris&#39;s hands are shaking. &quot;You didn&#39;t have to do that,&quot; she says. She holds on to your sleeve for the rest of the hallway.](else:)[You steer her round the corner. She leans against the wall and breathes.
 
@@ -781,7 +781,7 @@ Iris&#39;s hands are shaking. &quot;You didn&#39;t have to do that,&quot; she sa
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;You don&#39;t have to fix it alone.\&quot;&quot;, &quot;D5 Later Naomi 2&quot;)[(set: $naomi to it + 5, $mid5 to &quot;alone&quot;)]
-(link-reveal-goto: &quot;Say nothing. Let her figure it out.&quot;, &quot;D5 Later Naomi 2&quot;)[(set: $naomi to it - 5, $mid5 to &quot;quiet&quot;)]]</tw-passagedata><tw-passagedata pid="77" name="D5 Later Naomi 2" tags="bg-classroom day naomi" position="750,875" size="100,100">(if: $mid5 is &quot;alone&quot;)[She stops typing.
+(link-reveal-goto: &quot;Say nothing. Let her figure it out.&quot;, &quot;D5 Later Naomi 2&quot;)[(set: $naomi to it - 5, $mid5 to &quot;quiet&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="77" name="D5 Later Naomi 2" tags="bg-classroom day naomi" position="750,875" size="100,100">(if: $mid5 is &quot;alone&quot;)[She stops typing.
 
 &quot;Don&#39;t say nice things to me right now,&quot; she says. &quot;I&#39;ll cry, and then I&#39;ll have to kill you.&quot;
 
@@ -799,7 +799,7 @@ She doesn&#39;t cry. She puts the phone face down and sits with you until the li
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;Why are you giving it away?\&quot;&quot;, &quot;D6 Later Iris 2&quot;)[(set: $iris to it + 5, $mid6 to &quot;ask&quot;)]
-(link-reveal-goto: &quot;Say thanks and put it in your bag.&quot;, &quot;D6 Later Iris 2&quot;)[(set: $iris to it - 5, $mid6 to &quot;thanks&quot;)]]</tw-passagedata><tw-passagedata pid="80" name="D6 Later Iris 2" tags="bg-room-iris day iris" position="1125,875" size="100,100">(if: $mid6 is &quot;ask&quot;)[She shrugs. &quot;I don&#39;t know. I just wanted you to have something.&quot;
+(link-reveal-goto: &quot;Say thanks and put it in your bag.&quot;, &quot;D6 Later Iris 2&quot;)[(set: $iris to it - 5, $mid6 to &quot;thanks&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="80" name="D6 Later Iris 2" tags="bg-room-iris day iris" position="1125,875" size="100,100">(if: $mid6 is &quot;ask&quot;)[She shrugs. &quot;I don&#39;t know. I just wanted you to have something.&quot;
 
 &quot;I&#39;ll give it back when you finish the next one,&quot; you say.
 
@@ -809,7 +809,7 @@ She looks at you for a long moment. &quot;Okay,&quot; she says. &quot;Deal.&quot
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Lie down on the floor next to her.&quot;, &quot;D6 Later Naomi 2&quot;)[(set: $naomi to it + 5, $mid6 to &quot;floor&quot;)]
-(link-reveal-goto: &quot;Tell her you should go.&quot;, &quot;D6 Later Naomi 2&quot;)[(set: $naomi to it - 5, $mid6 to &quot;go&quot;)]]</tw-passagedata><tw-passagedata pid="82" name="D6 Later Naomi 2" tags="bg-room-naomi day naomi" position="125,1000" size="100,100">(if: $mid6 is &quot;floor&quot;)[You lie down. The carpet smells like her coffee.
+(link-reveal-goto: &quot;Tell her you should go.&quot;, &quot;D6 Later Naomi 2&quot;)[(set: $naomi to it - 5, $mid6 to &quot;go&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="82" name="D6 Later Naomi 2" tags="bg-room-naomi day naomi" position="125,1000" size="100,100">(if: $mid6 is &quot;floor&quot;)[You lie down. The carpet smells like her coffee.
 
 &quot;This is stupid,&quot; she says, after a while. She doesn&#39;t move either.](else:)[&quot;Yeah,&quot; she says to the ceiling. &quot;Go.&quot;]
 
@@ -823,7 +823,7 @@ She looks at you for a long moment. &quot;Okay,&quot; she says. &quot;Deal.&quot
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;I&#39;m coming over tonight. Don&#39;t argue.\&quot;&quot;, &quot;D7 Later Iris 2&quot;)[(set: $iris to it + 5, $mid7 to &quot;tonight&quot;)]
-(link-reveal-goto: &quot;\&quot;Any time.\&quot; Go to class.&quot;, &quot;D7 Later Iris 2&quot;)[(set: $iris to it - 5, $mid7 to &quot;anytime&quot;)]]</tw-passagedata><tw-passagedata pid="85" name="D7 Later Iris 2" tags="bg-hall-brick day iris" position="500,1000" size="100,100">(if: $mid7 is &quot;tonight&quot;)[&quot;...Okay,&quot; she says. Something in her face moves. &quot;Okay. Come after dinner.&quot;](else:)[&quot;Yeah,&quot; she says. &quot;Any time.&quot;
+(link-reveal-goto: &quot;\&quot;Any time.\&quot; Go to class.&quot;, &quot;D7 Later Iris 2&quot;)[(set: $iris to it - 5, $mid7 to &quot;anytime&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="85" name="D7 Later Iris 2" tags="bg-hall-brick day iris" position="500,1000" size="100,100">(if: $mid7 is &quot;tonight&quot;)[&quot;...Okay,&quot; she says. Something in her face moves. &quot;Okay. Come after dinner.&quot;](else:)[&quot;Yeah,&quot; she says. &quot;Any time.&quot;
 
 She watches you go.]
 
@@ -833,7 +833,7 @@ She watches you go.]
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;Come with me.\&quot;&quot;, &quot;D7 Later Naomi 2&quot;)[(set: $naomi to it + 5, $mid7 to &quot;come&quot;)]
-(link-reveal-goto: &quot;\&quot;I&#39;ll handle it.\&quot;&quot;, &quot;D7 Later Naomi 2&quot;)[(set: $naomi to it - 5, $mid7 to &quot;handle&quot;)]]</tw-passagedata><tw-passagedata pid="87" name="D7 Later Naomi 2" tags="bg-library day naomi" position="750,1000" size="100,100">(if: $mid7 is &quot;come&quot;)[&quot;She doesn&#39;t want me there,&quot; Naomi says. &quot;But... text me. If you need me. I&#39;ll come.&quot;](else:)[&quot;Fine,&quot; she says. &quot;Handle it, then.&quot;
+(link-reveal-goto: &quot;\&quot;I&#39;ll handle it.\&quot;&quot;, &quot;D7 Later Naomi 2&quot;)[(set: $naomi to it - 5, $mid7 to &quot;handle&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="87" name="D7 Later Naomi 2" tags="bg-library day naomi" position="750,1000" size="100,100">(if: $mid7 is &quot;come&quot;)[&quot;She doesn&#39;t want me there,&quot; Naomi says. &quot;But... text me. If you need me. I&#39;ll come.&quot;](else:)[&quot;Fine,&quot; she says. &quot;Handle it, then.&quot;
 
 She goes back to not studying.]
 
@@ -894,7 +894,7 @@ You don&#39;t have an answer. She seems to like that.](else-if: $day is 4)[She&#
 &quot;Don&#39;t look so scared. I&#39;ll be around.&quot;]
 (if: $hauntMaeve)[&lt;span class=&quot;echo maeve&quot;&gt;soon, babe&lt;/span&gt;]]
 
-[[Check your phone-&gt;Night texts]]</tw-passagedata><tw-passagedata pid="91" name="End of day" tags="bg-black eod" position="0,1125" size="100,100">(display: &quot;clamp&quot;)(set: $iris to it - (cond: $day &lt;= 3, 10, $day &lt;= 5, 15, 8))(set: $naomi to it - (cond: $day is 1, 0, $day is 2, 4, $day is 3, 6, $day is 4, 12, $day is 5, 14, $confessedNaomi, 4, 10))(if: $naomiFound and not $confessedNaomi)[(set: $naomi to it - 5)](if: $dating)[(set: $iris to it - 5)(set: $naomi to it - 5)](set: $aloneToday to 0)(display: &quot;clamp&quot;)(set: $baseI to $iris, $baseN to $naomi)&lt;div class=&quot;dayhead&quot;&gt;END OF DAY $day&lt;/div&gt;
+[[Check your phone-&gt;Night texts]]</tw-passagedata><tw-passagedata pid="91" name="End of day" tags="bg-black eod" position="0,1125" size="100,100">(display: &quot;clamp&quot;)(set: $iris to it - (cond: $day &lt;= 3, 10, $day &lt;= 5, 18, 10))(set: $naomi to it - (cond: $day is 1, 0, $day is 2, 4, $day is 3, 6, $day is 4, 14, $day is 5, 16, $confessedNaomi, 4, 12))(if: $naomiFound and not $confessedNaomi)[(set: $naomi to it - 5)](if: $dating)[(set: $iris to it - 5)(set: $naomi to it - 5)](set: $aloneToday to 0)(display: &quot;clamp&quot;)(set: $baseI to $iris, $baseN to $naomi)&lt;div class=&quot;dayhead&quot;&gt;END OF DAY $day&lt;/div&gt;
 &lt;div class=&quot;meter&quot;&gt;&lt;span class=&quot;who&quot;&gt;Iris&lt;/span&gt;&lt;div class=&quot;bar&quot;&gt;(print: &#39;&lt;div class=&quot;fill iris&quot; style=&quot;width:&#39; + (str: $iris) + &#39;%&quot;&gt;&lt;/div&gt;&#39;)&lt;/div&gt;&lt;span class=&quot;num&quot;&gt;$iris&lt;/span&gt;&lt;/div&gt;
 &lt;div class=&quot;meter&quot;&gt;&lt;span class=&quot;who&quot;&gt;Naomi&lt;/span&gt;&lt;div class=&quot;bar&quot;&gt;(print: &#39;&lt;div class=&quot;fill naomi&quot; style=&quot;width:&#39; + (str: $naomi) + &#39;%&quot;&gt;&lt;/div&gt;&#39;)&lt;/div&gt;&lt;span class=&quot;num&quot;&gt;$naomi&lt;/span&gt;&lt;/div&gt;
 &lt;div class=&quot;switches&quot;&gt;(for: each _i, ...(range: 1, 5))[(if: _i &lt;= $switches)[●](else:)[○]]&lt;/div&gt;
@@ -999,7 +999,7 @@ The page goes black. There&#39;s nothing after this.
 (set: $hidMom to false, $hidNaomi to false, $hidIris to false, $irisTold to false)
 (set: $naomiAlone to false, $naomiFound to false, $confessedNaomi to false, $confessedIris to false, $askedDirect to false)
 (set: $lockI to false, $lockN to false, $capI to false, $capN to false, $frzI to 0, $frzN to 0)
-(set: $dip to false, $pops to 0, $tA to &quot;&quot;, $mtFrom to &quot;&quot;, $mtS to 0, $mtC to 0)</tw-passagedata><tw-passagedata pid="100" name="mood header" tags="header" position="1125,1125" size="100,100">(if: $loop is 1 and (passage:)&#39;s tags contains &quot;hub&quot;)[(if: $iris &lt; 20 and not $dip and $pops &lt; 2)[(set: $dip to true, $pops to it + 1)&lt;div class=&quot;deathpop&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;death&quot;&gt;(if: $pops is 1)[It looks like you&#39;re really coming back to me.](else:)[I can hear her from here. She&#39;s gone very quiet.]&lt;/span&gt;&lt;/div&gt;](else-if: $iris &gt;= 25)[(set: $dip to false)]]
+(set: $dip to false, $pops to 0, $mtSkip to false, $tA to &quot;&quot;, $mtFrom to &quot;&quot;, $mtS to 0, $mtC to 0)</tw-passagedata><tw-passagedata pid="100" name="mood header" tags="header" position="1125,1125" size="100,100">(if: $loop is 1 and (passage:)&#39;s tags contains &quot;hub&quot;)[(if: $iris &lt; 20 and not $dip and $pops &lt; 2)[(set: $dip to true, $pops to it + 1)&lt;div class=&quot;deathpop&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;death&quot;&gt;(if: $pops is 1)[It looks like you&#39;re really coming back to me.](else:)[I can hear her from here. She&#39;s gone very quiet.]&lt;/span&gt;&lt;/div&gt;](else-if: $iris &gt;= 25)[(set: $dip to false)]]
 (if: (passage:)&#39;s tags contains &quot;iris&quot;)[(if: $iris &lt; 35)[&lt;span class=&quot;lost&quot;&gt;(if: $day &lt; 3)[dont be a lot. dont be a lot.](else-if: $day &lt; 6)[one less thing](else:)[its almost done]&lt;/span&gt;](else-if: $iris &gt;= 60)[&lt;span class=&quot;glow iris&quot;&gt;(if: $day &lt; 4)[maybe tomorrow is okay](else:)[next week. a next-week thing]&lt;/span&gt;]]
 (if: (passage:)&#39;s tags contains &quot;naomi&quot;)[(if: $naomi &lt; 35)[&lt;span class=&quot;lost&quot;&gt;(if: $naomiFound)[my fault my fault my fault](else:)[who even started this]&lt;/span&gt;](else-if: $naomi &gt;= 60 and ($confessedNaomi or $day is 1))[&lt;span class=&quot;glow naomi&quot;&gt;(if: $confessedNaomi)[we&#39;re both idiots. fine.](else:)[he&#39;s annoying. stay annoying]&lt;/span&gt;](else-if: $day &gt;= 2 and $signDay &lt; $day)[(set: $signDay to $day)&lt;span class=&quot;sign&quot;&gt;(if: $day is 2)[Her phone buzzes. She doesn&#39;t look at it. She always looks at it.](else-if: $day is 3)[Her nails are bitten short. On Monday they were painted.](else-if: $day is 4)[She laughs at something a second late, like she had to remember how.](else-if: $day is 5)[Her hands won&#39;t stay still. There&#39;s a coffee in front of her she hasn&#39;t touched.](else-if: $day is 6)[She looks like she&#39;s been awake since Thursday.](else:)[She checks her phone every minute. Iris. It&#39;s always Iris.]&lt;/span&gt;]]</tw-passagedata><tw-passagedata pid="101" name="go alone" tags="" position="0,1250" size="100,100">(set: $alone to it + 1, $aloneToday to it + 1, $iris to it - 2, $naomi to it - 2)(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="102" name="Alone" tags="bg-hall-white day maeve" position="125,1250" size="100,100">(if: $loop is 1 and not $metMaeve)[(set: $metMaeve to true)You find a bench nobody&#39;s using. A minute later, somebody is.
 
@@ -1180,7 +1180,7 @@ She collects her things and goes to sit somewhere you can&#39;t see her.]
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;Tell me when you want. I&#39;m not going anywhere.\&quot;&quot;, &quot;D2 Late Iris 2&quot;)[(set: $iris to it + 5, $r to &quot;wait&quot;)]
-(link-reveal-goto: &quot;\&quot;It&#39;s not dumb. Just tell me.\&quot;&quot;, &quot;D2 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;push&quot;)]]</tw-passagedata><tw-passagedata pid="122" name="D2 Late Iris 2" tags="bg-room-iris day iris" position="125,1500" size="100,100">(if: $r is &quot;wait&quot;)[She nods. She doesn&#39;t tell you.
+(link-reveal-goto: &quot;\&quot;It&#39;s not dumb. Just tell me.\&quot;&quot;, &quot;D2 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;push&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="122" name="D2 Late Iris 2" tags="bg-room-iris day iris" position="125,1500" size="100,100">(if: $r is &quot;wait&quot;)[She nods. She doesn&#39;t tell you.
 
 But she eats everything, and when you get up to leave she says, &quot;Tonight. Maybe tonight.&quot;](else:)[&quot;It&#39;s dumb,&quot; she says again, firmer. She closes the container.
 
@@ -1192,7 +1192,7 @@ But she eats everything, and when you get up to leave she says, &quot;Tonight. M
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;Who cares who started it. Put it down. Eat with me.\&quot;&quot;, &quot;D2 Late Naomi 2&quot;)[(set: $naomi to it + 5, $r to &quot;eat&quot;)]
-(link-reveal-goto: &quot;\&quot;Does it matter who started it?\&quot;&quot;, &quot;D2 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;matter&quot;)]]</tw-passagedata><tw-passagedata pid="124" name="D2 Late Naomi 2" tags="bg-room-naomi day naomi" position="375,1500" size="100,100">(if: $r is &quot;eat&quot;)[She puts the phone down. She eats your fries instead of her meal and calls them mid.
+(link-reveal-goto: &quot;\&quot;Does it matter who started it?\&quot;&quot;, &quot;D2 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;matter&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="124" name="D2 Late Naomi 2" tags="bg-room-naomi day naomi" position="375,1500" size="100,100">(if: $r is &quot;eat&quot;)[She puts the phone down. She eats your fries instead of her meal and calls them mid.
 
 Halfway through, she goes quiet. &quot;You&#39;d tell me, right? If I did something bad?&quot;
 
@@ -1244,7 +1244,7 @@ She drinks her lemonade very fast and says she has to go.]
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;I&#39;m looking at it.\&quot; Actually look at it.&quot;, &quot;D3 Late Iris 2&quot;)[(set: $iris to it + 5, $r to &quot;look&quot;)]
-(link-reveal-goto: &quot;\&quot;Should you be doing stuff like that? With everything?\&quot;&quot;, &quot;D3 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;should&quot;)]]</tw-passagedata><tw-passagedata pid="132" name="D3 Late Iris 2" tags="bg-gallery day iris" position="125,1625" size="100,100">(if: $r is &quot;look&quot;)[It&#39;s her window, at night, in blue. You look at it for a long time.
+(link-reveal-goto: &quot;\&quot;Should you be doing stuff like that? With everything?\&quot;&quot;, &quot;D3 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;should&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="132" name="D3 Late Iris 2" tags="bg-gallery day iris" position="125,1625" size="100,100">(if: $r is &quot;look&quot;)[It&#39;s her window, at night, in blue. You look at it for a long time.
 
 When you turn around, she&#39;s watching you instead of the drawing. &quot;Okay,&quot; she says. &quot;Okay.&quot; She leaves the drawing up.](else:)[She takes it down. Folds it in half.
 
@@ -1258,7 +1258,7 @@ Her voice cracks on //weird//, which is unlucky for her.
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;Call her. I&#39;ll sit here while you do.\&quot;&quot;, &quot;D3 Late Naomi 2&quot;)[(set: $naomi to it + 5, $r to &quot;call&quot;)]
-(link-reveal-goto: &quot;\&quot;You kind of do sound weird.\&quot;&quot;, &quot;D3 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;weird&quot;)]]</tw-passagedata><tw-passagedata pid="134" name="D3 Late Naomi 2" tags="bg-library day naomi" position="375,1625" size="100,100">(if: $r is &quot;call&quot;)[She calls. She talks about her classes in a bright fake voice for six minutes. Near the end, quietly, she says, &quot;No, I&#39;m okay. I have a friend here.&quot;
+(link-reveal-goto: &quot;\&quot;You kind of do sound weird.\&quot;&quot;, &quot;D3 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;weird&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="134" name="D3 Late Naomi 2" tags="bg-library day naomi" position="375,1625" size="100,100">(if: $r is &quot;call&quot;)[She calls. She talks about her classes in a bright fake voice for six minutes. Near the end, quietly, she says, &quot;No, I&#39;m okay. I have a friend here.&quot;
 
 She hangs up and doesn&#39;t look at you. &quot;Don&#39;t,&quot; she says. You don&#39;t.](else:)[&quot;Great. Super.&quot; She shuts the laptop on the email. &quot;Everyone&#39;s a critic.&quot;
 
@@ -1364,7 +1364,7 @@ She doesn&#39;t look at you once after that.]
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;I&#39;ll sit here while you call. You don&#39;t have to decide anything else.\&quot;&quot;, &quot;D4 Late Iris 2&quot;)[(set: $iris to it + 5, $r to &quot;call&quot;)]
-(link-reveal-goto: &quot;\&quot;You&#39;re not leaving. Don&#39;t say that.\&quot;&quot;, &quot;D4 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;no&quot;)]]</tw-passagedata><tw-passagedata pid="146" name="D4 Late Iris 2" tags="bg-lounge day iris" position="625,1750" size="100,100">(if: $r is &quot;call&quot;)[She doesn&#39;t call. But she saves the number as //call tomorrow//, and she shows you, like it&#39;s a promise.
+(link-reveal-goto: &quot;\&quot;You&#39;re not leaving. Don&#39;t say that.\&quot;&quot;, &quot;D4 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;no&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="146" name="D4 Late Iris 2" tags="bg-lounge day iris" position="625,1750" size="100,100">(if: $r is &quot;call&quot;)[She doesn&#39;t call. But she saves the number as //call tomorrow//, and she shows you, like it&#39;s a promise.
 
 &quot;Tomorrow,&quot; she says. &quot;If tomorrow&#39;s okay.&quot;](else:)[&quot;Okay,&quot; she says. &quot;I&#39;m not leaving.&quot;
 
@@ -1376,7 +1376,7 @@ The way she says it makes it sound like a different kind of leaving.]
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Order something complicated so she has an excuse to stay busy.&quot;, &quot;D4 Late Naomi 2&quot;)[(set: $naomi to it + 5, $r to &quot;order&quot;)]
-(link-reveal-goto: &quot;\&quot;It&#39;s not the steam.\&quot;&quot;, &quot;D4 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;steam&quot;)]]</tw-passagedata><tw-passagedata pid="148" name="D4 Late Naomi 2" tags="bg-cafe day naomi" position="875,1750" size="100,100">(if: $r is &quot;order&quot;)[You order the most annoying drink on the menu. She makes it perfectly, with a tiny lopsided heart in the foam, and slides it over without charging you.
+(link-reveal-goto: &quot;\&quot;It&#39;s not the steam.\&quot;&quot;, &quot;D4 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;steam&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="148" name="D4 Late Naomi 2" tags="bg-cafe day naomi" position="875,1750" size="100,100">(if: $r is &quot;order&quot;)[You order the most annoying drink on the menu. She makes it perfectly, with a tiny lopsided heart in the foam, and slides it over without charging you.
 
 &quot;Don&#39;t read into the heart,&quot; she says. &quot;It&#39;s just foam.&quot;](else:)[&quot;It&#39;s the steam,&quot; she says again, louder. Someone in the queue looks over.
 
@@ -1392,7 +1392,7 @@ Someone from her studio class waves at her. Just waves. Like it&#39;s normal.
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Wave back with her. Stay for one drink.&quot;, &quot;D5 Late Iris 2&quot;)[(set: $iris to it + 5, $r to &quot;stay&quot;)]
-(link-reveal-goto: &quot;\&quot;Let&#39;s go before anyone else sees you.\&quot;&quot;, &quot;D5 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;go&quot;)]]</tw-passagedata><tw-passagedata pid="151" name="D5 Late Iris 2" tags="bg-gallery night iris" position="0,1875" size="100,100">(if: $r is &quot;stay&quot;)[One drink becomes two. Iris talks to the girl from studio about charcoal for ten whole minutes.
+(link-reveal-goto: &quot;\&quot;Let&#39;s go before anyone else sees you.\&quot;&quot;, &quot;D5 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;go&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="151" name="D5 Late Iris 2" tags="bg-gallery night iris" position="0,1875" size="100,100">(if: $r is &quot;stay&quot;)[One drink becomes two. Iris talks to the girl from studio about charcoal for ten whole minutes.
 
 On the way out she grabs your arm and whispers, &quot;She didn&#39;t say anything. She didn&#39;t say //anything//,&quot; like it&#39;s a miracle. It kind of is.](else:)[She lets you steer her out. In the hallway she says, &quot;You&#39;re right. It&#39;s better if they don&#39;t see me.&quot;
 
@@ -1404,7 +1404,7 @@ It&#39;s a post. A long one. //I&#39;m the one who told people about Iris&#39;s 
 
 (set: $mtFrom to &quot;iris&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;Close the laptop, gently. \&quot;Not like this. Not alone.\&quot;&quot;, &quot;D5 Late Naomi 2&quot;)[(set: $naomi to it + 5, $r to &quot;close&quot;)]
-(link-reveal-goto: &quot;\&quot;If it makes you feel better, post it.\&quot;&quot;, &quot;D5 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;post&quot;)]]</tw-passagedata><tw-passagedata pid="153" name="D5 Late Naomi 2" tags="bg-room-naomi night naomi" position="250,1875" size="100,100">(if: $r is &quot;close&quot;)[She lets you. She puts her face in her hands and says, through them, &quot;I just want it to be my fault in a way I can fix.&quot;
+(link-reveal-goto: &quot;\&quot;If it makes you feel better, post it.\&quot;&quot;, &quot;D5 Late Naomi 2&quot;)[(set: $naomi to it - 5, $r to &quot;post&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="153" name="D5 Late Naomi 2" tags="bg-room-naomi night naomi" position="250,1875" size="100,100">(if: $r is &quot;close&quot;)[She lets you. She puts her face in her hands and says, through them, &quot;I just want it to be my fault in a way I can fix.&quot;
 
 Something itches at the back of your mind, like a word on the tip of your tongue. You can&#39;t reach it. Not yet.](else:)[She posts it. Within ten minutes it has two hundred comments. Within twenty, some of them are about her.
 
@@ -1422,7 +1422,7 @@ You read it twice, the way you&#39;d check a lock.
 
 (set: $mtFrom to &quot;naomi&quot;)(display: &quot;midtext&quot;)
 |ch)[(link-reveal-goto: &quot;\&quot;Add something for next week. Anything.\&quot;&quot;, &quot;D6 Late Iris 2&quot;)[(set: $iris to it + 5, $r to &quot;add&quot;)]
-(link-reveal-goto: &quot;\&quot;Looks like you&#39;ve got it all handled.\&quot;&quot;, &quot;D6 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;handled&quot;)]]</tw-passagedata><tw-passagedata pid="156" name="D6 Late Iris 2" tags="bg-room-iris night iris" position="625,1875" size="100,100">(if: $r is &quot;add&quot;)[She thinks about it for a long time. Then she writes //coffee with Naomi?// with a question mark, and underlines the question mark.
+(link-reveal-goto: &quot;\&quot;Looks like you&#39;ve got it all handled.\&quot;&quot;, &quot;D6 Late Iris 2&quot;)[(set: $iris to it - 5, $r to &quot;handled&quot;)]](if: $mtSkip)[(show: ?ch)]</tw-passagedata><tw-passagedata pid="156" name="D6 Late Iris 2" tags="bg-room-iris night iris" position="625,1875" size="100,100">(if: $r is &quot;add&quot;)[She thinks about it for a long time. Then she writes //coffee with Naomi?// with a question mark, and underlines the question mark.
 
 &quot;That&#39;s next week,&quot; she says. &quot;That&#39;s a next-week thing.&quot;](else:)[&quot;Yeah,&quot; she says. &quot;Almost everything.&quot;
 
@@ -1510,7 +1510,7 @@ Around five she says, out of nowhere, &quot;I&#39;m glad it&#39;s you. My friend
 
 &quot;Go see Iris,&quot; she says. &quot;Now. Go.&quot;]
 
-[[Evening-&gt;D7 Evening]]</tw-passagedata><tw-passagedata pid="167" name="midtext" tags="" position="750,2000" size="100,100">(set: _m to (cond: $mtFrom is &quot;iris&quot;, $iris, $naomi), _who to (cond: $mtFrom is &quot;iris&quot;, &quot;Iris&quot;, &quot;Naomi&quot;), _cur to (cond: $mtFrom is &quot;iris&quot;, &quot;Naomi&quot;, &quot;Iris&quot;))(set: _lv to (cond: _m &lt; 35, &quot;low&quot;, _m &lt; 60, &quot;mid&quot;, &quot;high&quot;), _k to (cond: $day is 1 or $day is 4 or $day is 7, 1, $day is 2 or $day is 5, 2, 3))(set: $tA to &quot;&quot;)(if: $loop is 2 and _lv is not &quot;low&quot;)[(show: ?ch)](else:)[Your phone buzzes.
+[[Evening-&gt;D7 Evening]]</tw-passagedata><tw-passagedata pid="167" name="midtext" tags="" position="750,2000" size="100,100">(set: _m to (cond: $mtFrom is &quot;iris&quot;, $iris, $naomi), _who to (cond: $mtFrom is &quot;iris&quot;, &quot;Iris&quot;, &quot;Naomi&quot;), _cur to (cond: $mtFrom is &quot;iris&quot;, &quot;Naomi&quot;, &quot;Iris&quot;))(set: _lv to (cond: _m &lt; 35, &quot;low&quot;, _m &lt; 60, &quot;mid&quot;, &quot;high&quot;), _k to (cond: $day is 1 or $day is 4 or $day is 7, 1, $day is 2 or $day is 5, 2, 3))(set: $tA to &quot;&quot;, $mtSkip to ($loop is 2 and _lv is not &quot;low&quot;))(unless: $mtSkip)[Your phone buzzes.
 
 (if: $mtFrom is &quot;iris&quot;)[(if: _lv is &quot;high&quot;)[&lt;span class=&quot;phone&quot;&gt;(print: (a: &quot;look. a dog in a tiny raincoat&quot;, &quot;i drew something today. its not terrible&quot;, &quot;the cafe has the good muffins today fyi&quot;)&#39;s (_k))&lt;/span&gt;](else-if: _lv is &quot;mid&quot;)[&lt;span class=&quot;phone&quot;&gt;(print: (a: &quot;are you around later?&quot;, &quot;what are you doing&quot;, &quot;can i ask you something later&quot;)&#39;s (_k))&lt;/span&gt;](else:)[&lt;span class=&quot;phone&quot;&gt;(print: (a: &quot;are you busy&quot;, &quot;i dont feel very good&quot;, &quot;sorry&quot;)&#39;s (_k))&lt;/span&gt;
 &lt;span class=&quot;phone&quot;&gt;(print: (a: &quot;nvm&quot;, &quot;its fine&quot;, &quot;ignore that&quot;)&#39;s (_k))&lt;/span&gt;]](else:)[(if: _lv is &quot;high&quot;)[&lt;span class=&quot;phone&quot;&gt;(print: (a: &quot;the fountain guy learned a second song. tragic&quot;, &quot;rate my lunch 1-10. wrong answers will be punished&quot;, &quot;you owe me a coffee btw&quot;)&#39;s (_k))&lt;/span&gt;](else-if: _lv is &quot;mid&quot;)[&lt;span class=&quot;phone&quot;&gt;(print: (a: &quot;where are you&quot;, &quot;r u mad at me or something&quot;, &quot;whatever. are you coming later&quot;)&#39;s (_k))&lt;/span&gt;](else:)[&lt;span class=&quot;phone&quot;&gt;(print: (a: &quot;are you busy&quot;, &quot;can you call me&quot;, &quot;do you think im a bad person&quot;)&#39;s (_k))&lt;/span&gt;
