@@ -194,6 +194,21 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 @keyframes logoIn { from { opacity: 0; transform: translateY(8px); filter: blur(6px); } to { opacity: 1; transform: none; filter: drop-shadow(0 6px 24px rgba(240, 138, 168, 0.25)); } }
 @media (prefers-reduced-motion: reduce) { .logo { animation: none; } }
 .subtitle { text-align: center; font-style: italic; letter-spacing: 0.3em; opacity: 0.7; }
+/* title and credits: no panel, the whole window is the screen, logo centred */
+tw-story[tags~="fullscreen"] { width: 100%; max-width: none; margin: 0; padding: 0; min-height: 100vh; box-sizing: border-box; }
+tw-story[tags~="fullscreen"] tw-passage {
+  max-width: none; min-height: 100vh; margin: 0; padding: 4vh 6vw; box-sizing: border-box;
+  background: transparent; border: 0; border-radius: 0; box-shadow: none; backdrop-filter: none;
+  display: flex; flex-direction: column; justify-content: safe center; align-items: center;
+}
+tw-story[tags~="fullscreen"] tw-passage > * { max-width: 760px; margin-top: 0.4em; margin-bottom: 0.4em; }
+/* the header/footer passages only leave blank lines here, which pushed the logo down */
+tw-story[tags~="fullscreen"] tw-passage > tw-include,
+tw-story[tags~="fullscreen"] tw-passage > br,
+tw-story[tags~="fullscreen"] tw-passage > tw-consecutive-br { display: none; }
+tw-story[tags~="fullscreen"] .logo { --w: min(70vw, 900px, 100vh); width: var(--w); max-width: none; margin: calc(var(--w) * -0.04) 0 calc(var(--w) * -0.1); }
+tw-story[tags~="fullscreen"] .logo.small { --w: min(60vw, 640px, 80vh); }
+tw-story[tags~="fullscreen"] tw-sidebar { display: none; }
 .center { text-align: center; }
 .quiet { color: #bab4c8; font-size: 0.88em; }
 
@@ -303,7 +318,7 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 </script><tw-passagedata pid="1" name="StoryInit" tags="startup" position="0,0" size="100,100">(set: $loop to 1, $name to &quot;&quot;)
 (display: &quot;reset vars&quot;)</tw-passagedata><tw-passagedata pid="2" name="echo footer" tags="footer" position="125,0" size="100,100">(if: (passage:)&#39;s tags contains &quot;iris&quot; and $hauntIris)[&lt;span class=&quot;echo&quot;&gt;he&#39;s the only one who doesn&#39;t look at me like that&lt;/span&gt;]
 (if: (passage:)&#39;s tags contains &quot;naomi&quot; and $hauntNaomi)[&lt;span class=&quot;echo naomi&quot;&gt;don&#39;t let him see&lt;/span&gt;]
-(if: (passage:)&#39;s tags contains &quot;maeve&quot; and $hauntMaeve)[&lt;span class=&quot;echo maeve&quot;&gt;soon, (print: $name)&lt;/span&gt;]</tw-passagedata><tw-passagedata pid="3" name="clamp" tags="" position="250,0" size="100,100">(set: $iris to (max: 0, (min: 100, $iris, $baseI + 20)))(set: $naomi to (max: 0, (min: 100, $naomi, $baseN + 20)))(if: $lockI)[(set: $iris to (min: $iris, $frzI))](if: $lockN)[(set: $naomi to (min: $naomi, $frzN))]</tw-passagedata><tw-passagedata pid="4" name="pick iris" tags="" position="375,0" size="100,100">(set: $devI to it + 1, $last to &quot;iris&quot;, $iris to it + 5, $naomi to it - (cond: $day &lt;= 3, 2, $day &lt;= 5, 3, 4))(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="5" name="pick naomi" tags="" position="500,0" size="100,100">(set: $devN to it + 1, $last to &quot;naomi&quot;, $naomi to it + 5, $iris to it - (cond: $day &lt;= 3, 2, $day &lt;= 5, 3, 4))(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="6" name="Content note" tags="bg-black" position="625,0" size="100,100">&lt;div class=&quot;logo&quot; role=&quot;img&quot; aria-label=&quot;De Mortuis&quot;&gt;&lt;/div&gt;
+(if: (passage:)&#39;s tags contains &quot;maeve&quot; and $hauntMaeve)[&lt;span class=&quot;echo maeve&quot;&gt;soon, (print: $name)&lt;/span&gt;]</tw-passagedata><tw-passagedata pid="3" name="clamp" tags="" position="250,0" size="100,100">(set: $iris to (max: 0, (min: 100, $iris, $baseI + 20)))(set: $naomi to (max: 0, (min: 100, $naomi, $baseN + 20)))(if: $lockI)[(set: $iris to (min: $iris, $frzI))](if: $lockN)[(set: $naomi to (min: $naomi, $frzN))]</tw-passagedata><tw-passagedata pid="4" name="pick iris" tags="" position="375,0" size="100,100">(set: $devI to it + 1, $last to &quot;iris&quot;, $iris to it + 5, $naomi to it - (cond: $day &lt;= 3, 2, $day &lt;= 5, 3, 4))(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="5" name="pick naomi" tags="" position="500,0" size="100,100">(set: $devN to it + 1, $last to &quot;naomi&quot;, $naomi to it + 5, $iris to it - (cond: $day &lt;= 3, 2, $day &lt;= 5, 3, 4))(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="6" name="Content note" tags="bg-black fullscreen" position="625,0" size="100,100">&lt;div class=&quot;logo&quot; role=&quot;img&quot; aria-label=&quot;De Mortuis&quot;&gt;&lt;/div&gt;
 &lt;div class=&quot;subtitle&quot;&gt;nil nisi bonum&lt;/div&gt;
 
 &lt;p class=&quot;center quiet&quot;&gt;This story deals with grief and suicide. Nothing is ever shown, but it&#39;s there. You can stop at any time.&lt;/p&gt;
@@ -1139,7 +1154,7 @@ On the last night Maeve holds out her hand.
 
 The page goes black. There&#39;s nothing after this.
 
-[[...-&gt;Credits]]</tw-passagedata><tw-passagedata pid="92" name="Credits" tags="bg-black piano" position="125,1125" size="100,100">&lt;div class=&quot;logo small&quot; role=&quot;img&quot; aria-label=&quot;De Mortuis&quot;&gt;&lt;/div&gt;
+[[...-&gt;Credits]]</tw-passagedata><tw-passagedata pid="92" name="Credits" tags="bg-black piano fullscreen" position="125,1125" size="100,100">&lt;div class=&quot;logo small&quot; role=&quot;img&quot; aria-label=&quot;De Mortuis&quot;&gt;&lt;/div&gt;
 &lt;div class=&quot;subtitle&quot;&gt;nil nisi bonum&lt;/div&gt;
 
 &lt;p class=&quot;center&quot;&gt;A game by Anish Goel.&lt;/p&gt;

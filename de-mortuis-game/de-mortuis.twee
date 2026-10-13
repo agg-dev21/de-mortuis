@@ -198,6 +198,21 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 @keyframes logoIn { from { opacity: 0; transform: translateY(8px); filter: blur(6px); } to { opacity: 1; transform: none; filter: drop-shadow(0 6px 24px rgba(240, 138, 168, 0.25)); } }
 @media (prefers-reduced-motion: reduce) { .logo { animation: none; } }
 .subtitle { text-align: center; font-style: italic; letter-spacing: 0.3em; opacity: 0.7; }
+/* title and credits: no panel, the whole window is the screen, logo centred */
+tw-story[tags~="fullscreen"] { width: 100%; max-width: none; margin: 0; padding: 0; min-height: 100vh; box-sizing: border-box; }
+tw-story[tags~="fullscreen"] tw-passage {
+  max-width: none; min-height: 100vh; margin: 0; padding: 4vh 6vw; box-sizing: border-box;
+  background: transparent; border: 0; border-radius: 0; box-shadow: none; backdrop-filter: none;
+  display: flex; flex-direction: column; justify-content: safe center; align-items: center;
+}
+tw-story[tags~="fullscreen"] tw-passage > * { max-width: 760px; margin-top: 0.4em; margin-bottom: 0.4em; }
+/* the header/footer passages only leave blank lines here, which pushed the logo down */
+tw-story[tags~="fullscreen"] tw-passage > tw-include,
+tw-story[tags~="fullscreen"] tw-passage > br,
+tw-story[tags~="fullscreen"] tw-passage > tw-consecutive-br { display: none; }
+tw-story[tags~="fullscreen"] .logo { --w: min(70vw, 900px, 100vh); width: var(--w); max-width: none; margin: calc(var(--w) * -0.04) 0 calc(var(--w) * -0.1); }
+tw-story[tags~="fullscreen"] .logo.small { --w: min(60vw, 640px, 80vh); }
+tw-story[tags~="fullscreen"] tw-sidebar { display: none; }
 .center { text-align: center; }
 .quiet { color: #bab4c8; font-size: 0.88em; }
 
@@ -235,7 +250,7 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 (set: $devN to it + 1, $last to "naomi", $naomi to it + 5, $iris to it - (cond: $day <= 3, 2, $day <= 5, 3, 4))(display: "clamp")
 
 
-:: Content note [bg-black]
+:: Content note [bg-black fullscreen]
 <div class="logo" role="img" aria-label="De Mortuis"></div>
 <div class="subtitle">nil nisi bonum</div>
 
@@ -1415,7 +1430,7 @@ The page goes black. There's nothing after this.
 [[...->Credits]]
 
 
-:: Credits [bg-black piano]
+:: Credits [bg-black piano fullscreen]
 <div class="logo small" role="img" aria-label="De Mortuis"></div>
 <div class="subtitle">nil nisi bonum</div>
 
