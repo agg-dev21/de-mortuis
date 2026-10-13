@@ -1,5 +1,5 @@
 Copies of the scene photos with the characters placed in them.
-The photos in img/ are untouched; the game still uses those.
+The game uses these (copied into img/ with the same names); the plain photos in img/ are untouched.
 cutouts/ has each girl cut out on a transparent background.
 
 bench--maeve.jpg
@@ -30,6 +30,8 @@ hall-posters--naomi.jpg
     D3 Afternoon Naomi, D3 Afternoon Naomi 2
 hall-white--maeve.jpg
     Alone
+hall-white-night--maeve.jpg
+    Alone, Day 3 evening
 lab--iris.jpg
     D3 Iris, D4 Midday Iris, D4 Midday Iris 2
 lab-night--iris--night.jpg
@@ -44,10 +46,14 @@ room-iris--iris.jpg
     D1 Iris, D2 Iris, D5 Iris, D6 Iris, D1 Midday Iris, D1 Midday Iris 2, D6 Later Iris, D6 Later Iris 2, D1 Late Iris, D1 Late Iris 2, D2 Late Iris, D2 Late Iris 2
 room-iris-2--iris--night.jpg
     D6 Late Iris, D6 Late Iris 2, D2 Evening, D2 Reaction, D3 Evening Iris, D3 Evening Iris 2
+room-iris-bw--iris.jpg
+    Iris low (room swap)
 room-iris-clean--iris--night.jpg
     D7 Evening, D7 Truth, D7 Ask, D7 Asked, D7 Naomi
 room-iris-clean--iris-naomi--night.jpg
     D7 Door
+room-mc-night--maeve--night.jpg
+    End She Waits
 room-naomi--naomi.jpg
     D3 Naomi, D6 Morning, D6 Confess, D6 Hide, D6 Naomi, D6 Later Naomi, D6 Later Naomi 2, D2 Late Naomi, D2 Late Naomi 2
 room-naomi--naomi--night.jpg
