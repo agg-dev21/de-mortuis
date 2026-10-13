@@ -200,10 +200,15 @@ tw-story::after {
 }
 @keyframes spriteIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { tw-story::after { animation: none; } }
-tw-story[tags~="iris"]  { --sprite: url("sprites/iris.png"); }
-tw-story[tags~="naomi"] { --sprite: url("sprites/naomi.png"); }
-tw-story[tags~="maeve"] { --sprite: url("sprites/maeve.png"); }
-tw-story[tags~="iris"][tags~="naomi"] { --sprite: url("sprites/iris.png"), url("sprites/naomi.png"); --sprite-pos: 22% 100%, 78% 100%; }
+/* each girl's current picture; the mood header switches the expression with a hidden marker */
+tw-story { --spr-iris: url("sprites/iris.png"); --spr-naomi: url("sprites/naomi-normal.png"); --spr-maeve: url("sprites/maeve.png"); }
+tw-story:has(.naomi-depressed) { --spr-naomi: url("sprites/naomi-depressed.png"); }
+tw-story:has(.naomi-flustered) { --spr-naomi: url("sprites/naomi-flustered.png"); }
+tw-story:has(.naomi-absent)    { --spr-naomi: none; }
+tw-story[tags~="iris"]  { --sprite: var(--spr-iris); }
+tw-story[tags~="naomi"] { --sprite: var(--spr-naomi); }
+tw-story[tags~="maeve"] { --sprite: var(--spr-maeve); }
+tw-story[tags~="iris"][tags~="naomi"] { --sprite: var(--spr-iris), var(--spr-naomi); --sprite-pos: 22% 100%, 78% 100%; }
 tw-story[tags~="night"]::after { filter: brightness(0.62) saturate(0.8); }
 tw-story:has(.iris-low)[tags~="iris"]::after { filter: grayscale(1) brightness(0.85); }
 /* the text column */
@@ -213,20 +218,19 @@ tw-passage {
   padding: 7vh 40px 8vh 44px; border: none; border-radius: 0; box-shadow: -18px 0 40px rgba(0, 0, 0, 0.45);
   background: #0f0d15; backdrop-filter: none;
 }
-/* no art (black scenes: title, prologue, meters, credits): one centred column as before */
+/* no art (black scenes: title, prologue, meters, credits): full black screen, text centred */
 tw-story[tags~="bg-black"]::before, tw-story[tags~="bg-black"]::after { display: none; }
 tw-story[tags~="bg-black"] tw-passage {
-  margin: 6vh auto; width: auto; max-width: 760px; min-height: 0; padding: 30px 36px;
-  border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 14px; background: rgba(11, 9, 16, 0.88);
+  margin: 0; width: 100vw; min-height: 100vh; box-shadow: none; background: #0d0c12;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5vh max(40px, calc((100vw - 760px) / 2));
 }
-/* phones and narrow windows: art on top, text underneath */
-@media (max-width: 820px), (orientation: portrait) {
-  :root { --art-w: 100vw; }
-  tw-story::before, tw-story::after { height: 44vh; }
-  tw-story::after { background-size: auto 40vh; }
-  tw-passage { margin: 44vh 0 0 0; width: 100vw; min-height: 56vh; padding: 22px 18px 40px; box-shadow: 0 -14px 30px rgba(0, 0, 0, 0.5); }
-  tw-story[tags~="bg-black"] tw-passage { margin: 2vh 12px; width: auto; }
-}
+/* Twine's undo/redo arrows: a small corner control, not a block that pushes the text down */
+tw-story[tags~="bg-black"] .logo:not(.small) { width: min(620px, 48vh); }
+tw-sidebar { position: fixed; top: 14px; left: 14px; z-index: 5; height: auto; width: auto; padding: 0; opacity: 0.45; }
+tw-sidebar:hover { opacity: 0.9; }
+/* setup passages that only print blank lines */
+tw-include[name="StoryInit"], tw-include[name="echo footer"]:empty { display: none; }
 
 
 :: StoryInit [startup]
@@ -1553,6 +1557,7 @@ The page goes black. There's nothing after this.
 
 
 :: mood header [header]
+(if: (passage:)'s tags contains "naomi")[(if: (passage:)'s name is "D7 Door" and ($hidNaomi or $lockN))[<span class="naomi-absent" hidden></span>](else-if: $naomi < 35 or ($naomiFound and not $confessedNaomi and $naomi < 60))[<span class="naomi-depressed" hidden></span>](else-if: $naomi >= 70 or (passage:)'s name is in (a: "D1 Naomi", "D6 Confess", "D7 Door", "D6 Later Naomi 2", "D6 Late Naomi 2"))[<span class="naomi-flustered" hidden></span>]]
 (if: $loop is 1 and (passage:)'s tags contains "hub" and ($day > 3 or (passage:)'s name is "D3 Evening"))[(if: $iris < 20 and not $dip and $pops < 2)[(set: $dip to true, $pops to it + 1)<div class="deathpop" aria-hidden="true"><span class="death">(if: $pops is 1)[It looks like you're really coming back to me.](else:)[I can hear her from here. She's gone very quiet.]</span></div>](else-if: $iris >= 25)[(set: $dip to false)]]
 (if: (passage:)'s tags contains "iris")[(if: $iris < 35)[<span class="iris-low" hidden></span><span class="lost">(if: $day < 3)[dont be a lot. dont be a lot.](else-if: $day < 6)[one less thing](else:)[its almost done]</span>](else-if: $iris >= 60)[<span class="glow iris">(if: $day < 4)[maybe tomorrow is okay](else:)[next week. a next-week thing]</span>]]
 (if: (passage:)'s tags contains "naomi")[(if: $naomi < 35)[<span class="lost">(if: $naomiFound)[my fault my fault my fault](else:)[who even started this]</span>](else-if: $naomi >= 60 and ($confessedNaomi or $day is 1))[<span class="glow naomi">(if: $confessedNaomi)[we're both idiots. fine.](else:)[he's annoying. stay annoying]</span>](else-if: $day >= 2 and $signDay < $day)[(set: $signDay to $day)<span class="sign">(if: $day is 2)[Her phone buzzes. She doesn't look at it. She always looks at it.](else-if: $day is 3)[Her nails are bitten short. On Monday they were painted.](else-if: $day is 4)[She laughs at something a second late, like she had to remember how.](else-if: $day is 5)[Her hands won't stay still. There's a coffee in front of her she hasn't touched.](else-if: $day is 6)[She looks like she's been awake since Thursday.](else:)[She checks her phone every minute. Iris. It's always Iris.]</span>]]

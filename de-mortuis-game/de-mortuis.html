@@ -196,10 +196,15 @@ tw-story::after {
 }
 @keyframes spriteIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { tw-story::after { animation: none; } }
-tw-story[tags~="iris"]  { --sprite: url("sprites/iris.png"); }
-tw-story[tags~="naomi"] { --sprite: url("sprites/naomi.png"); }
-tw-story[tags~="maeve"] { --sprite: url("sprites/maeve.png"); }
-tw-story[tags~="iris"][tags~="naomi"] { --sprite: url("sprites/iris.png"), url("sprites/naomi.png"); --sprite-pos: 22% 100%, 78% 100%; }
+/* each girl's current picture; the mood header switches the expression with a hidden marker */
+tw-story { --spr-iris: url("sprites/iris.png"); --spr-naomi: url("sprites/naomi-normal.png"); --spr-maeve: url("sprites/maeve.png"); }
+tw-story:has(.naomi-depressed) { --spr-naomi: url("sprites/naomi-depressed.png"); }
+tw-story:has(.naomi-flustered) { --spr-naomi: url("sprites/naomi-flustered.png"); }
+tw-story:has(.naomi-absent)    { --spr-naomi: none; }
+tw-story[tags~="iris"]  { --sprite: var(--spr-iris); }
+tw-story[tags~="naomi"] { --sprite: var(--spr-naomi); }
+tw-story[tags~="maeve"] { --sprite: var(--spr-maeve); }
+tw-story[tags~="iris"][tags~="naomi"] { --sprite: var(--spr-iris), var(--spr-naomi); --sprite-pos: 22% 100%, 78% 100%; }
 tw-story[tags~="night"]::after { filter: brightness(0.62) saturate(0.8); }
 tw-story:has(.iris-low)[tags~="iris"]::after { filter: grayscale(1) brightness(0.85); }
 /* the text column */
@@ -209,20 +214,19 @@ tw-passage {
   padding: 7vh 40px 8vh 44px; border: none; border-radius: 0; box-shadow: -18px 0 40px rgba(0, 0, 0, 0.45);
   background: #0f0d15; backdrop-filter: none;
 }
-/* no art (black scenes: title, prologue, meters, credits): one centred column as before */
+/* no art (black scenes: title, prologue, meters, credits): full black screen, text centred */
 tw-story[tags~="bg-black"]::before, tw-story[tags~="bg-black"]::after { display: none; }
 tw-story[tags~="bg-black"] tw-passage {
-  margin: 6vh auto; width: auto; max-width: 760px; min-height: 0; padding: 30px 36px;
-  border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 14px; background: rgba(11, 9, 16, 0.88);
+  margin: 0; width: 100vw; min-height: 100vh; box-shadow: none; background: #0d0c12;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5vh max(40px, calc((100vw - 760px) / 2));
 }
-/* phones and narrow windows: art on top, text underneath */
-@media (max-width: 820px), (orientation: portrait) {
-  :root { --art-w: 100vw; }
-  tw-story::before, tw-story::after { height: 44vh; }
-  tw-story::after { background-size: auto 40vh; }
-  tw-passage { margin: 44vh 0 0 0; width: 100vw; min-height: 56vh; padding: 22px 18px 40px; box-shadow: 0 -14px 30px rgba(0, 0, 0, 0.5); }
-  tw-story[tags~="bg-black"] tw-passage { margin: 2vh 12px; width: auto; }
-}
+/* Twine's undo/redo arrows: a small corner control, not a block that pushes the text down */
+tw-story[tags~="bg-black"] .logo:not(.small) { width: min(620px, 48vh); }
+tw-sidebar { position: fixed; top: 14px; left: 14px; z-index: 5; height: auto; width: auto; padding: 0; opacity: 0.45; }
+tw-sidebar:hover { opacity: 0.9; }
+/* setup passages that only print blank lines */
+tw-include[name="StoryInit"], tw-include[name="echo footer"]:empty { display: none; }
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">/* Sound for the game. Files live in sounds/.
    Loops, picked by the passage's tags and cross-faded:
      music.mp3  the lofi track, under every normal scene
@@ -1171,7 +1175,8 @@ The page goes black. There&#39;s nothing after this.
 (set: $naomiAlone to false, $naomiFound to false, $confessedNaomi to false, $confessedIris to false, $askedDirect to false, $naomiCame to false)
 (set: $lockI to false, $lockN to false, $capI to false, $capN to false, $frzI to 0, $frzN to 0)
 (set: $dip to false, $pops to 0, $mtSkip to false, $tA to &quot;&quot;, $mtFrom to &quot;&quot;, $mtS to 0, $mtC to 0)
-(set: $preI to 0, $preN to 0, $pkI to -1, $pkN to -1, $dayFive to &quot;&quot;, $d6 to &quot;&quot;, $naomiReady to false, $ending to &quot;&quot;, $ntI to &quot;&quot;, $ntN to &quot;&quot;, $shoutTold to false)</tw-passagedata><tw-passagedata pid="94" name="mood header" tags="header" position="375,1125" size="100,100">(if: $loop is 1 and (passage:)&#39;s tags contains &quot;hub&quot; and ($day &gt; 3 or (passage:)&#39;s name is &quot;D3 Evening&quot;))[(if: $iris &lt; 20 and not $dip and $pops &lt; 2)[(set: $dip to true, $pops to it + 1)&lt;div class=&quot;deathpop&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;death&quot;&gt;(if: $pops is 1)[It looks like you&#39;re really coming back to me.](else:)[I can hear her from here. She&#39;s gone very quiet.]&lt;/span&gt;&lt;/div&gt;](else-if: $iris &gt;= 25)[(set: $dip to false)]]
+(set: $preI to 0, $preN to 0, $pkI to -1, $pkN to -1, $dayFive to &quot;&quot;, $d6 to &quot;&quot;, $naomiReady to false, $ending to &quot;&quot;, $ntI to &quot;&quot;, $ntN to &quot;&quot;, $shoutTold to false)</tw-passagedata><tw-passagedata pid="94" name="mood header" tags="header" position="375,1125" size="100,100">(if: (passage:)&#39;s tags contains &quot;naomi&quot;)[(if: (passage:)&#39;s name is &quot;D7 Door&quot; and ($hidNaomi or $lockN))[&lt;span class=&quot;naomi-absent&quot; hidden&gt;&lt;/span&gt;](else-if: $naomi &lt; 35 or ($naomiFound and not $confessedNaomi and $naomi &lt; 60))[&lt;span class=&quot;naomi-depressed&quot; hidden&gt;&lt;/span&gt;](else-if: $naomi &gt;= 70 or (passage:)&#39;s name is in (a: &quot;D1 Naomi&quot;, &quot;D6 Confess&quot;, &quot;D7 Door&quot;, &quot;D6 Later Naomi 2&quot;, &quot;D6 Late Naomi 2&quot;))[&lt;span class=&quot;naomi-flustered&quot; hidden&gt;&lt;/span&gt;]]
+(if: $loop is 1 and (passage:)&#39;s tags contains &quot;hub&quot; and ($day &gt; 3 or (passage:)&#39;s name is &quot;D3 Evening&quot;))[(if: $iris &lt; 20 and not $dip and $pops &lt; 2)[(set: $dip to true, $pops to it + 1)&lt;div class=&quot;deathpop&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;death&quot;&gt;(if: $pops is 1)[It looks like you&#39;re really coming back to me.](else:)[I can hear her from here. She&#39;s gone very quiet.]&lt;/span&gt;&lt;/div&gt;](else-if: $iris &gt;= 25)[(set: $dip to false)]]
 (if: (passage:)&#39;s tags contains &quot;iris&quot;)[(if: $iris &lt; 35)[&lt;span class=&quot;iris-low&quot; hidden&gt;&lt;/span&gt;&lt;span class=&quot;lost&quot;&gt;(if: $day &lt; 3)[dont be a lot. dont be a lot.](else-if: $day &lt; 6)[one less thing](else:)[its almost done]&lt;/span&gt;](else-if: $iris &gt;= 60)[&lt;span class=&quot;glow iris&quot;&gt;(if: $day &lt; 4)[maybe tomorrow is okay](else:)[next week. a next-week thing]&lt;/span&gt;]]
 (if: (passage:)&#39;s tags contains &quot;naomi&quot;)[(if: $naomi &lt; 35)[&lt;span class=&quot;lost&quot;&gt;(if: $naomiFound)[my fault my fault my fault](else:)[who even started this]&lt;/span&gt;](else-if: $naomi &gt;= 60 and ($confessedNaomi or $day is 1))[&lt;span class=&quot;glow naomi&quot;&gt;(if: $confessedNaomi)[we&#39;re both idiots. fine.](else:)[he&#39;s annoying. stay annoying]&lt;/span&gt;](else-if: $day &gt;= 2 and $signDay &lt; $day)[(set: $signDay to $day)&lt;span class=&quot;sign&quot;&gt;(if: $day is 2)[Her phone buzzes. She doesn&#39;t look at it. She always looks at it.](else-if: $day is 3)[Her nails are bitten short. On Monday they were painted.](else-if: $day is 4)[She laughs at something a second late, like she had to remember how.](else-if: $day is 5)[Her hands won&#39;t stay still. There&#39;s a coffee in front of her she hasn&#39;t touched.](else-if: $day is 6)[She looks like she&#39;s been awake since Thursday.](else:)[She checks her phone every minute. Iris. It&#39;s always Iris.]&lt;/span&gt;]]</tw-passagedata><tw-passagedata pid="95" name="go alone" tags="" position="500,1125" size="100,100">(set: $alone to it + 1, $aloneToday to it + 1, $iris to it - 2, $naomi to it - 2)(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="96" name="Alone" tags="bg-hall-white day maeve" position="625,1125" size="100,100">(if: $loop is 1 and not $metMaeve)[(set: $metMaeve to true)You find a bench nobody&#39;s using. A minute later, somebody is.
 
