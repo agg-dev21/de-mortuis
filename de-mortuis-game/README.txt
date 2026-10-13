@@ -5,12 +5,10 @@ de-mortuis.html   Playable game. Keep it next to the img/ folder.
 de-mortuis.twee   The source. Import into Twine: Library > Import > pick this file.
 img/              Background photos (your campus shots, resized to 1600px).
 
-ROOM PHOTOS STILL NEEDED
-Drop these into img/ with exactly these names. Until then those scenes show a dark background.
-  room-mc.jpg          your room       (waking up, Day 6 night, night texts, She Waits ending)
-  room-naomi.jpg       Naomi's room    (Days 2-6)
-
 WHICH PHOTO IS WHERE
+  room-mc.jpg              your room by day (waking up)
+  room-mc-night.jpg        your room at night: night texts, Day 6 scrolling, She Waits ending
+  room-naomi.jpg           Naomi's room (made from Iris's tidy room, mirrored and warm)
   between-1/2/3.jpg        Death's voice: revival, Day 7 morning / "one more time" / All Three ending
   room-iris.jpg            Iris's room by day (Days 1-6)
   room-iris-2.jpg          Iris's room at night (Day 2 confession, Day 3 evening, Day 6 night)
