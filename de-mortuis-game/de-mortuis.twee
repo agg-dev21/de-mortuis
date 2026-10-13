@@ -227,6 +227,14 @@ tw-story[tags~="bg-black"] tw-passage {
 }
 /* Twine's undo/redo arrows: a small corner control, not a block that pushes the text down */
 tw-story[tags~="bg-black"] .logo:not(.small) { width: min(620px, 48vh); }
+.byline { text-align: center; font-size: 0.9em; letter-spacing: 0.12em; color: #bab4c8; margin: 4px 0 0; }
+.premise { margin: 2vh auto 1.5vh; padding: 6px 22px; max-width: 680px; font-size: 0.86em; border-top: 1px solid rgba(255,122,168,0.35); border-bottom: 1px solid rgba(255,122,168,0.35); text-align: center; }
+.premise p { margin: 0.5em 0; }
+.premise .goal { color: #fbf7f1; }
+tw-passage:has(.premise) .logo:not(.small) { width: min(560px, 36vh); margin: 0 auto -3vh; }
+tw-story[tags~="bg-black"] tw-passage:has(.premise) { padding-top: 3vh; padding-bottom: 3vh; }
+tw-passage:has(.premise) > tw-include > br, tw-passage:has(.premise) > br { display: none; }
+tw-passage:has(.premise) .note { font-size: 0.74em; max-width: 680px; margin: 0 auto 1.5vh; }
 tw-sidebar { position: fixed; top: 14px; left: 14px; z-index: 5; height: auto; width: auto; padding: 0; opacity: 0.45; }
 tw-sidebar:hover { opacity: 0.9; }
 /* setup passages that only print blank lines */
@@ -257,14 +265,8 @@ tw-include[name="StoryInit"], tw-include[name="echo footer"]:empty { display: no
 
 
 :: Content note [bg-black]
-<div class="logo" role="img" aria-label="De Mortuis"></div>
-<div class="subtitle">nil nisi bonum</div>
-
-<p class="center quiet">This story deals with grief and suicide. Nothing is ever shown, but it's there. You can stop at any time.</p>
-<p class="center quiet">If you're struggling, you don't have to carry it alone. In the US you can call or text 988, any time.</p>
-
-(if: (saved-games:) contains "auto")[<p class="center">(link: "Continue")[(load-game: "auto")]</p>
-<p class="center">[[New game->Name]]</p>](else:)[<p class="center">[[Begin->Name]]</p>]
+<div class="logo" role="img" aria-label="De Mortuis"></div><div class="subtitle">nil nisi bonum</div><p class="byline">a game by Anish Goel</p><div class="premise"><p>A rumour went round campus about Iris. Within a week she was gone, and so were you. Now a voice in the dark has sent you back to the start of that week.</p><p class="goal"><b>Your goal:</b> you have seven days. Choose who to stand beside each day, watch how Iris and Naomi are holding up, and keep them both alive until the week is over.</p></div><p class="center quiet note">This story deals with grief and suicide. Nothing is ever shown, but it's there. You can stop at any time. If you're struggling, you don't have to carry it alone. In the US you can call or text 988, any time.</p>
+(if: (saved-games:) contains "auto")[<p class="center">(link: "Continue")[(load-game: "auto")] &nbsp;·&nbsp; [[New game->Name]]</p>](else:)[<p class="center">[[Begin->Name]]</p>]
 
 
 :: Prologue [bg-black rain piano]
@@ -278,11 +280,11 @@ Iris's mother was at the front, in a wheelchair, an oxygen line taped under her 
 
 At the very back, under a tree, stood Professor Hale. The man the whole college had been whispering about. He left before anyone could see his face.
 
-That was when you understood. Iris didn't lose her scholarship because of him. She lost it because she'd been driving three hours every weekend to take care of her mom. Hale was the only one who noticed. The only one who helped.
+That was when you understood. Iris didn't lose her scholarship because of him. She lost it because she'd been driving two hours every weekend to take care of her mom. Hale was the only one who noticed. The only one who helped.
 
-She told you about the scholarship once, sitting on your floor. You said //that sucks// and asked if she wanted pizza.
+She told you about the scholarship once, sitting on her floor. You said //that sucks// and asked if she wanted pizza.
 
-After that the week comes apart. Your room. Your phone, face down. 2:07 on the screen, very bright in the dark.
+After that the week comes apart. Your room. Your phone on the pillow. 2:07 on the screen, very bright in the dark.
 
 And then nothing.
 
@@ -299,7 +301,7 @@ You remember all of it this time. The whole week. The teal and orange hallway, t
 <span class="phone">wait is it true about iris and hale??</span>
 <span class="phone">thats literally how she lost the scholarship lmao</span>
 
-You know what's coming. The whiteboard. The post. The stairwell.
+You know what's coming. The whiteboard. The post.
 
 And somewhere on this campus there's a girl with white hair who already knows you're awake.
 
@@ -543,7 +545,7 @@ It's late. Your phone buzzes on the way back from the vending machine.
 <span class="phone">u alive</span> &nbsp;<span class="quiet">Naomi</span>
 (if: $dating)[<span class="phone">come outside (print: $name)</span> &nbsp;<span class="quiet">Maeve</span>]
 
-(link-reveal-goto: "Go to Iris's. Walk her to the dining hall before it closes.", "Walk home")[(set: $walked to "iris", $iris to it + 5)]
+(link-reveal-goto: "Go to Iris's. Walk her round the block so she gets some air.", "Walk home")[(set: $walked to "iris", $iris to it + 5)]
 (link-reveal-goto: "Wait for Naomi outside her building.", "Walk home")[(set: $walked to "naomi", $naomi to it + 5)]
 (if: $dating)[(link-reveal-goto: "Go outside. Maeve's waiting.", "Walk home")[(set: $walked to "maeve")]
 ](link-reveal-goto: "Walk home alone.", "Walk home")[(set: $walked to "alone")]
@@ -713,11 +715,11 @@ Naomi didn't start this. She didn't find it out. She didn't overhear it.
 :: D6 Bench [bg-bench-night night maeve]
 Maeve is sitting on the green bench, swinging her legs, like she's been waiting.
 
-(if: $loop is 2)["Oh, (print: $name)," she says softly. "There it is. Again."
+(if: $loop is 2)["Oh, (print: $name)," she says softly. "There it is."
 
-"You knew. Both times."
+"You knew."
 
-"I know lots of things." She pulls you down next to her and leans into you, cold all the way through. "You took it better this time. Last time you looked at me like I was the way out." She laughs, very quietly. "I'm not, (print: $name). Not for you. Not yet."](else:)["Oh, (print: $name)," she says softly. "There it is."
+"I know lots of things." She pulls you down next to her and leans into you, cold all the way through. "You took it better than most. Some people look at me like I'm the way out." She laughs, very quietly. "I'm not, (print: $name). Not for you. Not yet."](else:)["Oh, (print: $name)," she says softly. "There it is."
 
 "You knew."
 
@@ -808,7 +810,7 @@ You have. You don't know how to put it down yet.
 
 :: D6 Naomi [bg-room-naomi day naomi]
 (display: "big meters")
-The movie is terrible. She talks over the entire thing. (if: $confessedNaomi)[At one point she throws a pillow at you for no reason and laughs, and it's the first time you've heard her laugh all week.](else:)[She doesn't laugh once.]
+The movie is terrible. She talks over the entire thing. (if: $confessedNaomi)[At one point she throws a pillow at you for no reason and laughs, and it's the first time you've heard her really laugh all week.](else:)[She doesn't laugh once.]
 
 [[Later->D6 Later Naomi]]
 
@@ -851,7 +853,7 @@ The light is the same colour it was the first time.
 <span class="phone">your text. from two weeks ago.</span>
 <span class="phone">you KNEW. you sat on my bed and you KNEW</span> &nbsp;<span class="quiet">Naomi</span>
 
-She doesn't answer when you call. You find her outside the café before her shift anyway.
+She doesn't answer when you call.
 
 ](if: $lockN)[Naomi sees you coming and doesn't stop walking.
 
@@ -950,7 +952,7 @@ Naomi sits down on the floor, stiffly, like she's never sat on a floor before. "
 
 Iris looks at Naomi. Then at you. Two people who passed on her secret, sitting on her floor, holding the coffees they brought her.
 
-"You're both idiots," Iris says. And then, so quietly you barely hear it: "You both came, though."]
+(if: $hidIris)["You're an idiot," Iris tells Naomi. And then, so quietly you barely hear it: "You came, though."](else:)["You're both idiots," Iris says. And then, so quietly you barely hear it: "You both came, though."]]
 
 [[...->D7 Night]]
 
@@ -1044,9 +1046,9 @@ Someone films her on their phone. They don't even try to hide it.
 
 
 :: D2 Midday Iris 2 [bg-hall-posters day iris]
-(if: $mid2 is "next")[You walk so close your sleeves touch. At her door, Iris breathes out like she's been holding it since Monday.
+(if: $mid2 is "next")[You walk so close your sleeves touch. At the classroom door, Iris breathes out like she's been holding it since Monday.
 
-"Thanks," she says. She means it.](else:)[She notices. She doesn't say anything. At her door she goes in without looking back.]
+"Thanks," she says. She means it.](else:)[She notices. She doesn't say anything. At the classroom door she goes in without looking back.]
 
 [[Keep going->D2 Afternoon]]
 
@@ -1114,7 +1116,7 @@ Iris finishes her whole plate. She looks at it like she can't believe it.](else:
 :: D3 Midday Naomi 2 [bg-cafe day naomi]
 (if: $mid3 is "stay")[A standoff. She lasts about forty seconds.
 
-"This is so stupid," she says, eating it. She eats all of it. She doesn't say thank you. She does push her coffee toward you when she's done.](else:)["I am worrying about myself," she says. "Somebody has to."
+"This is so stupid," she says, eating it. She eats all of it. She doesn't say thank you. She does push her drink toward you when she's done.](else:)["I am worrying about myself," she says. "Somebody has to."
 
 She leaves the muffin where it is.]
 
@@ -1218,7 +1220,7 @@ Naomi is in an empty classroom, typing on her phone. She deletes it. Types again
 
 "Don't say nice things to me right now," she says. "I'll cry, and then I'll have to kill you."
 
-She doesn't cry. She puts the phone face down and sits with you until the lights in the hallway switch off.](else:)[She types for a long time. Then she puts the phone away without sending anything.
+She doesn't cry. She puts the phone face down and sits with you until the hallway empties out.](else:)[She types for a long time. Then she puts the phone away without sending anything.
 
 "Forget it," she says.]
 
@@ -1287,7 +1289,7 @@ She looks at you for a long moment. "Okay," she says. "Deal."](else:)["Good," sh
 
 
 :: Walk home [bg-hall-red night]
-(display: "clamp")(if: $walked is "iris")[(if: $iris < 30)[You walk her to her door. She barely hugs back. Her arms hardly close around you. But she's the one who started it.](else-if: $iris < 60)[At her door she leans in and hugs you. Her arms actually close this time.](else:)[She hugs you for a long time, longer than she means to, then laughs into your jacket when she realises.]
+(display: "clamp")(if: $walked is "iris")[(if: $iris < 30)[You walk her to her door. She barely hugs you. Her arms hardly close around you. But she's the one who started it.](else-if: $iris < 60)[At her door she leans in and hugs you. Her arms actually close this time.](else:)[She hugs you for a long time, longer than she means to, then laughs into your jacket when she realises.]
 (if: $hauntIris)[<span class="echo">he's the only one who doesn't look at me like that</span>]](else-if: $walked is "naomi")[(if: $naomi < 30)[At her door you open your arms. She looks at them and says, "Don't." You put them down.](else-if: $naomi < 60)["Ugh. Fine." She hugs you, stiff, fast, like ripping off a bandage.](else:)["Okay, that's enough of that," she says, hugging you. She doesn't let go first.]
 (if: $hauntNaomi)[<span class="echo naomi">don't let him see</span>]](else-if: $walked is "maeve")[Maeve's hug is perfect. Warm. Smells like cold air. Her hands are freezing on the back of your neck.
 
@@ -1441,6 +1443,8 @@ The page goes black. There's nothing after this.
 <div class="subtitle">nil nisi bonum</div>
 
 <p class="center">A game by Anish Goel.</p>
+
+<p class="center quiet">Music: "Sad Lofi" by prettyjohn1 and "Sad Piano" (Pixabay). Rain: "Calming Rain" by liecio (Pixabay). Sound effects: freesound community (Pixabay).<br>Photography: SCAD campus, by Anish Goel.</p>
 
 <p class="center quiet">If this story touched something real for you, you don't have to carry it alone. In the US, call or text 988 to reach the Suicide & Crisis Lifeline, any time.</p>
 
@@ -1976,7 +1980,7 @@ She tilts her head. "Say yes again. I dare you."
 You're nearly sure what she is now. Seventy-five percent. Maybe more. The motion light above her hasn't come on once.
 
 (link-goto: "Go with her. You know what it means.", "End Forever")
-[[Not this time.->D3 Walk]]](else:)[On the way out of Iris's building, you stop at a vending machine for something to do with your hands.
+[[Not this time.->D3 Walk]]](else:)[On your way back, you stop at a vending machine for something to do with your hands.
 
 (if: $metMaeve)[Maeve is leaning on it. Of course she is.](else:)[There's a girl leaning on it. Long white hair. Pale eyes. "I'm Maeve," she says, like you asked.](set: $metMaeve to true)
 
@@ -2350,7 +2354,7 @@ Then someone behind you says, "Excuse me."
 
 It's Iris. She has the seminar too. She looks at Naomi's face, and at the door, and at the back row through the window, and she understands faster than you'd think.
 
-She walks in. She doesn't sit down either.
+She walks in. She doesn't sit down.
 
 "I'm right here," Iris says to the back row. Her voice shakes, and then it doesn't. "If you want to say it, say it to me."
 
@@ -2411,7 +2415,7 @@ She goes inside. You stand on the steps until it starts getting dark.
 
 [[Evening->D7 Evening]]](else:)[(if: $iris >= 60)[Iris is on the steps outside her building with her sketchbook open. Actually drawing.
 
-"Hi," she says. "Thank you for this week. I mean it. Not in a weird way." She turns the sketchbook so you can see. It's the three of you at Naomi's table. She's drawn the coffees.](else-if: $iris >= 35)[Iris is on the steps outside her building. When she sees you, she stands up very straight.
+"Hi," she says. "Thank you for this week. I mean it. Not in a weird way." She turns the sketchbook so you can see. It's you, on her floor, holding a mug of bad tea.](else-if: $iris >= 35)[Iris is on the steps outside her building. When she sees you, she stands up very straight.
 
 "Thank you for this week," she says. Too formal. Like she's practised it. "Really. You were really good to me."](else:)[Iris is on the steps outside her building. She stands up when she sees you, calm, like she's been waiting to say this exact thing.
 
