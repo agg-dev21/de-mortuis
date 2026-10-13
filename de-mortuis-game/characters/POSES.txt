@@ -1,7 +1,13 @@
-DE MORTUIS - CHARACTER SPRITES TO DRAW
-======================================
+DE MORTUIS - CHARACTER SPRITES
+==============================
 
-9 drawings: each girl, standing, in 3 expressions.
+DONE: all sprites are in SPRITES/ and wired into the game:
+  iris-normal / iris-flustered / iris-depressed
+  naomi-normal / naomi-flustered / naomi-depressed
+  maeve-normal (smirk) / maeve-surprised
+  (Maeve has two: there is no depressed Maeve, her smirk covers her Death side.)
+
+Original brief for the artist below.
 
 HOW TO DRAW THEM
   - Same outfits, hair and colours as the design sheets in characters/refs/.
@@ -31,11 +37,9 @@ NAOMI (blonde twin tails, blue ribbons)
   depressed   when her meter is low, or after she finds out it was her
               and you haven't told her the truth
 
-MAEVE (white hair, red eyes, black suit) - Death
-  normal      playful smirk: her usual self, the vending machine, going alone
-  flustered   flirty: the date, her second-run teasing, the She Waits ending
-  depressed   her Death side: the bad ending, "Mommy doesn't share",
-              sulking in the good ending
+MAEVE (white hair, black suit) - Death
+  normal      smirk: everywhere else
+  surprised   "Oh, (name)": the Day 6 bench, the 2:07 on the date, the good-ending reveal
 
 
 NOT NEEDED
