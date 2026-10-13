@@ -1460,9 +1460,11 @@ The page goes black. There's nothing after this.
 (function () {
   if (window.dmSound) return;
   function loop(src, vol) { var a = new Audio(src); a.loop = true; a.volume = 0; a.preload = 'auto'; return { el: a, vol: vol, timer: null }; }
-  var loops = { music: loop('sounds/music.mp3', 0.35), piano: loop('sounds/piano.mp3', 0.45), rain: loop('sounds/rain.mp3', 0.3) };
+  // the files are mastered to sit together (music/piano soft, rain softer, buzz and whoosh never above the music),
+  // so they play at their own level
+  var loops = { music: loop('sounds/music.mp3', 1), piano: loop('sounds/piano.mp3', 1), rain: loop('sounds/rain.mp3', 1) };
   var buzz = new Audio('sounds/buzz.mp3'), whoosh = new Audio('sounds/whoosh.mp3');
-  buzz.volume = 0.7; whoosh.volume = 0.55;
+  buzz.volume = 1; whoosh.volume = 1;
   window.dmSound = { loops: loops, buzz: buzz, whoosh: whoosh };
   window.dmMusic = loops.music.el;
 
