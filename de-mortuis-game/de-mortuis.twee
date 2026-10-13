@@ -904,7 +904,7 @@ Iris looks at Naomi. Then at you. Two people who passed on her secret, sitting o
 [[...->D7 Night]]
 
 
-:: D7 Night [bg-room-iris-clean-night night]
+:: D7 Night [bg-room-iris-clean-night night silence]
 Your phone lights up on the carpet.
 
 2:07.
@@ -1394,6 +1394,71 @@ The page goes black. There's nothing after this.
 <p class="center quiet">If this story touched something real for you, you don't have to carry it alone. In the US, call or text 988 to reach the Suicide & Crisis Lifeline, any time.</p>
 
 <p class="center">(link: "Play again")[(restart:)]</p>
+
+
+:: StoryScript [script]
+/* Background music: sounds/music.mp3 loops quietly under the whole game.
+   It starts on the first click (browsers block sound before that), has a mute
+   button in the corner, and fades out on any passage tagged "silence". */
+(function () {
+  if (window.dmMusic) return;
+  var VOL = 0.35;
+  var music = new Audio('sounds/music.mp3');
+  music.loop = true; music.volume = 0; music.preload = 'auto';
+  window.dmMusic = music;
+
+  var muted = false;
+  try { muted = localStorage.getItem('dm-muted') === '1'; } catch (e) {}
+  var started = false, silent = false, fadeTimer = null;
+
+  function fadeTo(target, ms) {
+    clearInterval(fadeTimer);
+    var steps = Math.max(1, Math.round(ms / 50)), step = (target - music.volume) / steps, n = 0;
+    if (target > 0 && music.paused) music.play().catch(function () {});
+    fadeTimer = setInterval(function () {
+      n++; music.volume = Math.min(1, Math.max(0, music.volume + step));
+      if (n >= steps) { clearInterval(fadeTimer); music.volume = target; if (target === 0) music.pause(); }
+    }, 50);
+  }
+  function update(ms) { if (started) fadeTo(muted || silent ? 0 : VOL, ms); }
+
+  var btn = document.createElement('button');
+  btn.className = 'dm-mute'; btn.type = 'button';
+  function label() { btn.textContent = muted ? '♪ off' : '♪ on'; btn.setAttribute('aria-label', muted ? 'Turn music on' : 'Turn music off'); }
+  label();
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation(); muted = !muted; label();
+    try { localStorage.setItem('dm-muted', muted ? '1' : '0'); } catch (err) {}
+    started = true; update(400);
+  });
+  var css = document.createElement('style');
+  css.textContent = '.dm-mute{position:fixed;right:14px;bottom:14px;z-index:60;font:inherit;font-size:14px;color:#fbf7f1;' +
+    'background:rgba(11,9,16,.75);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.7}' +
+    '.dm-mute:hover{opacity:1}';
+  document.head.appendChild(css);
+  document.body.appendChild(btn);
+
+  function begin() {
+    if (started) return;
+    started = true; update(2000);
+    document.removeEventListener('click', begin, true);
+    document.removeEventListener('keydown', begin, true);
+  }
+  document.addEventListener('click', begin, true);
+  document.addEventListener('keydown', begin, true);
+
+  // passages tagged "silence" fade the music out; it comes back on the next untagged passage
+  var story = document.querySelector('tw-story');
+  function checkTags() {
+    var tags = (story && story.getAttribute('tags') || '').split(/\s+/);
+    var s = tags.indexOf('silence') !== -1;
+    if (s !== silent) { silent = s; update(s ? 1500 : 3000); }
+  }
+  if (story) new MutationObserver(checkTags).observe(story, { attributes: true, attributeFilter: ['tags'] });
+  checkTags();
+})();
+
+
 :: reset vars
 (set: $iris to 20, $naomi to 100, $baseI to 20, $baseN to 100, $devI to 0, $devN to 0, $last to "", $alone to 0, $aloneToday to 0, $next to "", $r to "", $react to "")
 (set: $switches to 5, $hauntIris to false, $hauntNaomi to false, $hauntMaeve to false)
@@ -2279,7 +2344,7 @@ Your stomach drops. You know this room. You know what clean means.
 (display: "clamp")(set: $ending to (cond: $dating and $iris >= 35 and $naomi >= 35 and not $lockI and not $lockN, "waits", $dating, "three", $iris < 35 or $naomi < 35 or $lockI or $lockN, "bad", $iris >= 60 and $naomi >= 60 and $leaks is 0 and $askedDirect and not $capI and not $capN, "good", "middle"))
 
 
-:: Vending [bg-vending night maeve]
+:: Vending [bg-vending night maeve silence]
 (display: "decide ending")You step out into the hallway because you can't breathe in there.
 
 There's a vending machine at the end of it. There always is. It hums. The light above it flickers, and doesn't come on properly.

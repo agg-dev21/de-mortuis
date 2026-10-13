@@ -176,7 +176,67 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 .meter .fill.naomi { background: #f2a65a; }
 .meter .num { width: 40px; text-align: right; font-family: 'DK Jambo', 'BIZ UDMincho'; }
 .switches { margin-top: 18px; letter-spacing: 6px; color: #b9a6e8; }
-</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="StoryInit" tags="startup" position="0,0" size="100,100">(set: $loop to 1, $name to &quot;&quot;)
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* Background music: sounds/music.mp3 loops quietly under the whole game.
+   It starts on the first click (browsers block sound before that), has a mute
+   button in the corner, and fades out on any passage tagged "silence". */
+(function () {
+  if (window.dmMusic) return;
+  var VOL = 0.35;
+  var music = new Audio('sounds/music.mp3');
+  music.loop = true; music.volume = 0; music.preload = 'auto';
+  window.dmMusic = music;
+
+  var muted = false;
+  try { muted = localStorage.getItem('dm-muted') === '1'; } catch (e) {}
+  var started = false, silent = false, fadeTimer = null;
+
+  function fadeTo(target, ms) {
+    clearInterval(fadeTimer);
+    var steps = Math.max(1, Math.round(ms / 50)), step = (target - music.volume) / steps, n = 0;
+    if (target > 0 && music.paused) music.play().catch(function () {});
+    fadeTimer = setInterval(function () {
+      n++; music.volume = Math.min(1, Math.max(0, music.volume + step));
+      if (n >= steps) { clearInterval(fadeTimer); music.volume = target; if (target === 0) music.pause(); }
+    }, 50);
+  }
+  function update(ms) { if (started) fadeTo(muted || silent ? 0 : VOL, ms); }
+
+  var btn = document.createElement('button');
+  btn.className = 'dm-mute'; btn.type = 'button';
+  function label() { btn.textContent = muted ? '♪ off' : '♪ on'; btn.setAttribute('aria-label', muted ? 'Turn music on' : 'Turn music off'); }
+  label();
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation(); muted = !muted; label();
+    try { localStorage.setItem('dm-muted', muted ? '1' : '0'); } catch (err) {}
+    started = true; update(400);
+  });
+  var css = document.createElement('style');
+  css.textContent = '.dm-mute{position:fixed;right:14px;bottom:14px;z-index:60;font:inherit;font-size:14px;color:#fbf7f1;' +
+    'background:rgba(11,9,16,.75);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.7}' +
+    '.dm-mute:hover{opacity:1}';
+  document.head.appendChild(css);
+  document.body.appendChild(btn);
+
+  function begin() {
+    if (started) return;
+    started = true; update(2000);
+    document.removeEventListener('click', begin, true);
+    document.removeEventListener('keydown', begin, true);
+  }
+  document.addEventListener('click', begin, true);
+  document.addEventListener('keydown', begin, true);
+
+  // passages tagged "silence" fade the music out; it comes back on the next untagged passage
+  var story = document.querySelector('tw-story');
+  function checkTags() {
+    var tags = (story && story.getAttribute('tags') || '').split(/\s+/);
+    var s = tags.indexOf('silence') !== -1;
+    if (s !== silent) { silent = s; update(s ? 1500 : 3000); }
+  }
+  if (story) new MutationObserver(checkTags).observe(story, { attributes: true, attributeFilter: ['tags'] });
+  checkTags();
+})();
+</script><tw-passagedata pid="1" name="StoryInit" tags="startup" position="0,0" size="100,100">(set: $loop to 1, $name to &quot;&quot;)
 (display: &quot;reset vars&quot;)</tw-passagedata><tw-passagedata pid="2" name="echo footer" tags="footer" position="125,0" size="100,100">(if: (passage:)&#39;s tags contains &quot;iris&quot; and $hauntIris)[&lt;span class=&quot;echo&quot;&gt;he&#39;s the only one who doesn&#39;t look at me like that&lt;/span&gt;]
 (if: (passage:)&#39;s tags contains &quot;naomi&quot; and $hauntNaomi)[&lt;span class=&quot;echo naomi&quot;&gt;don&#39;t let him see&lt;/span&gt;]
 (if: (passage:)&#39;s tags contains &quot;maeve&quot; and $hauntMaeve)[&lt;span class=&quot;echo maeve&quot;&gt;soon, (print: $name)&lt;/span&gt;]</tw-passagedata><tw-passagedata pid="3" name="clamp" tags="" position="250,0" size="100,100">(set: $iris to (max: 0, (min: 100, $iris, $baseI + 20)))(set: $naomi to (max: 0, (min: 100, $naomi, $baseN + 20)))(if: $lockI)[(set: $iris to (min: $iris, $frzI))](if: $lockN)[(set: $naomi to (min: $naomi, $frzN))]</tw-passagedata><tw-passagedata pid="4" name="pick iris" tags="" position="375,0" size="100,100">(set: $devI to it + 1, $last to &quot;iris&quot;, $iris to it + 5, $naomi to it - (cond: $day &lt;= 3, 2, $day &lt;= 5, 3, 4))(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="5" name="pick naomi" tags="" position="500,0" size="100,100">(set: $devN to it + 1, $last to &quot;naomi&quot;, $naomi to it + 5, $iris to it - (cond: $day &lt;= 3, 2, $day &lt;= 5, 3, 4))(display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="6" name="Content note" tags="bg-black" position="625,0" size="100,100">&lt;div class=&quot;logo&quot; role=&quot;img&quot; aria-label=&quot;De Mortuis&quot;&gt;&lt;/div&gt;
@@ -698,7 +758,7 @@ Iris looks at Naomi. Then at you. Two people who passed on her secret, sitting o
 
 &quot;You&#39;re both idiots,&quot; Iris says. And then, so quietly you barely hear it: &quot;You both came, though.&quot;]
 
-[[...-&gt;D7 Night]]</tw-passagedata><tw-passagedata pid="51" name="D7 Night" tags="bg-room-iris-clean-night night" position="0,625" size="100,100">Your phone lights up on the carpet.
+[[...-&gt;D7 Night]]</tw-passagedata><tw-passagedata pid="51" name="D7 Night" tags="bg-room-iris-clean-night night silence" position="0,625" size="100,100">Your phone lights up on the carpet.
 
 2:07.
 
@@ -1623,7 +1683,7 @@ Later, your phone buzzes.
 Your stomach drops. You know this room. You know what clean means.
 
 (link-reveal-goto: &quot;\&quot;dont clean anything else. im coming over. i mean it\&quot;&quot;, &quot;D7 Evening&quot;)[(set: $iris to it + 5)(display: &quot;clamp&quot;)]
-(link-reveal-goto: &quot;\&quot;nice. that jacket was cool\&quot;&quot;, &quot;D7 Evening&quot;)[(set: $iris to it - 5)(display: &quot;clamp&quot;)]]</tw-passagedata><tw-passagedata pid="163" name="decide ending" tags="" position="250,2000" size="100,100">(display: &quot;clamp&quot;)(set: $ending to (cond: $dating and $iris &gt;= 35 and $naomi &gt;= 35 and not $lockI and not $lockN, &quot;waits&quot;, $dating, &quot;three&quot;, $iris &lt; 35 or $naomi &lt; 35 or $lockI or $lockN, &quot;bad&quot;, $iris &gt;= 60 and $naomi &gt;= 60 and $leaks is 0 and $askedDirect and not $capI and not $capN, &quot;good&quot;, &quot;middle&quot;))</tw-passagedata><tw-passagedata pid="164" name="Vending" tags="bg-vending night maeve" position="375,2000" size="100,100">(display: &quot;decide ending&quot;)You step out into the hallway because you can&#39;t breathe in there.
+(link-reveal-goto: &quot;\&quot;nice. that jacket was cool\&quot;&quot;, &quot;D7 Evening&quot;)[(set: $iris to it - 5)(display: &quot;clamp&quot;)]]</tw-passagedata><tw-passagedata pid="163" name="decide ending" tags="" position="250,2000" size="100,100">(display: &quot;clamp&quot;)(set: $ending to (cond: $dating and $iris &gt;= 35 and $naomi &gt;= 35 and not $lockI and not $lockN, &quot;waits&quot;, $dating, &quot;three&quot;, $iris &lt; 35 or $naomi &lt; 35 or $lockI or $lockN, &quot;bad&quot;, $iris &gt;= 60 and $naomi &gt;= 60 and $leaks is 0 and $askedDirect and not $capI and not $capN, &quot;good&quot;, &quot;middle&quot;))</tw-passagedata><tw-passagedata pid="164" name="Vending" tags="bg-vending night maeve silence" position="375,2000" size="100,100">(display: &quot;decide ending&quot;)You step out into the hallway because you can&#39;t breathe in there.
 
 There&#39;s a vending machine at the end of it. There always is. It hums. The light above it flickers, and doesn&#39;t come on properly.
 
