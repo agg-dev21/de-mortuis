@@ -177,6 +177,52 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 .meter .fill.naomi { background: #f2a65a; }
 .meter .num { width: 40px; text-align: right; font-family: 'DK Jambo', 'BIZ UDMincho'; }
 .switches { margin-top: 18px; letter-spacing: 6px; color: #b9a6e8; }
+
+/* ---------- visual novel layout ----------
+   The scene art (background photo + the girl's sprite) gets its own area that nothing covers;
+   the text sits beside it (wide screens) or under it (phones). Scenes with no art stay centred. */
+:root { --art-w: 58vw; }
+tw-story { background-image: none; background-color: #0d0c12; padding: 0; }
+tw-story::before {
+  content: ""; position: fixed; left: 0; top: 0; width: var(--art-w); height: 100vh; z-index: 0;
+  background-image: var(--ov), var(--bg); background-size: cover; background-position: center;
+}
+/* the girls: separate sprites standing in the art area */
+tw-story::after {
+  content: ""; position: fixed; left: 0; top: 0; width: var(--art-w); height: 100vh; z-index: 1; pointer-events: none;
+  background-image: var(--sprite, none); background-repeat: no-repeat;
+  background-size: auto 88vh; background-position: var(--sprite-pos, 50% 100%);
+  animation: spriteIn 0.6s ease;
+}
+@keyframes spriteIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { tw-story::after { animation: none; } }
+tw-story[tags~="iris"]  { --sprite: url("sprites/iris.png"); }
+tw-story[tags~="naomi"] { --sprite: url("sprites/naomi.png"); }
+tw-story[tags~="maeve"] { --sprite: url("sprites/maeve.png"); }
+tw-story[tags~="iris"][tags~="naomi"] { --sprite: url("sprites/iris.png"), url("sprites/naomi.png"); --sprite-pos: 22% 100%, 78% 100%; }
+tw-story[tags~="night"]::after { filter: brightness(0.62) saturate(0.8); }
+tw-story:has(.iris-low)[tags~="iris"]::after { filter: grayscale(1) brightness(0.85); }
+/* the text column */
+tw-passage {
+  position: relative; z-index: 2; box-sizing: border-box;
+  margin: 0 0 0 var(--art-w); max-width: none; width: calc(100vw - var(--art-w)); min-height: 100vh;
+  padding: 7vh 40px 8vh 44px; border: none; border-radius: 0; box-shadow: -18px 0 40px rgba(0, 0, 0, 0.45);
+  background: #0f0d15; backdrop-filter: none;
+}
+/* no art (black scenes: title, prologue, meters, credits): one centred column as before */
+tw-story[tags~="bg-black"]::before, tw-story[tags~="bg-black"]::after { display: none; }
+tw-story[tags~="bg-black"] tw-passage {
+  margin: 6vh auto; width: auto; max-width: 760px; min-height: 0; padding: 30px 36px;
+  border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 14px; background: rgba(11, 9, 16, 0.88);
+}
+/* phones and narrow windows: art on top, text underneath */
+@media (max-width: 820px), (orientation: portrait) {
+  :root { --art-w: 100vw; }
+  tw-story::before, tw-story::after { height: 44vh; }
+  tw-story::after { background-size: auto 40vh; }
+  tw-passage { margin: 44vh 0 0 0; width: 100vw; min-height: 56vh; padding: 22px 18px 40px; box-shadow: 0 -14px 30px rgba(0, 0, 0, 0.5); }
+  tw-story[tags~="bg-black"] tw-passage { margin: 2vh 12px; width: auto; }
+}
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">/* Sound for the game. Files live in sounds/.
    Loops, picked by the passage's tags and cross-faded:
      music.mp3  the lofi track, under every normal scene
