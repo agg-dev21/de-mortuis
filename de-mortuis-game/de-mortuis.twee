@@ -216,7 +216,7 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 <p class="center">[[New game->Name]]</p>](else:)[<p class="center">[[Begin->Name]]</p>]
 
 
-:: Prologue [bg-black rain]
+:: Prologue [bg-black rain piano]
 The last thing you remember is the funeral.
 
 Not yours. Hers.
@@ -916,7 +916,7 @@ Your phone lights up on the carpet.
 [[2:08->Vending]]
 
 
-:: Final [bg-black eod fade]
+:: Final [bg-black eod fade piano]
 <div class="dayhead">THE END OF THE WEEK</div>
 <div class="meter"><span class="who">Iris</span><div class="bar">(print: '<div class="fill iris" style="width:' + (str: $iris) + '%"></div>')</div><span class="num">$iris</span></div>
 <div class="meter"><span class="who">Naomi</span><div class="bar">(print: '<div class="fill naomi" style="width:' + (str: $naomi) + '%"></div>')</div><span class="num">$naomi</span></div>
@@ -1277,7 +1277,7 @@ You don't have an answer. She seems to like that.](else-if: $day is 4)[She's wai
 (link-goto: "Sleep", "Day " + (str: $day))
 
 
-:: End Good [bg-stairs-yellow day]
+:: End Good [bg-stairs-yellow day piano]
 <div class="dayhead">A MONTH LATER</div>
 The rumour is old news. Not because anyone apologised. People just found something else to talk about. That's how it works.
 
@@ -1292,7 +1292,7 @@ Nobody has ever corrected her.
 [[...->Reveal Good]]
 
 
-:: Reveal Good [bg-vending night maeve]
+:: Reveal Good [bg-vending night maeve piano]
 Before you went back inside, you asked her. You had to.
 
 "Who are you?"
@@ -1315,7 +1315,7 @@ The motion light didn't come on for her.
 [[The end->Credits]]
 
 
-:: End Middle [bg-gallery day]
+:: End Middle [bg-gallery day piano]
 <div class="dayhead">A MONTH LATER</div>
 Everyone makes it to the end of the week. That's the most important thing, and you know it. You tell yourself that a lot.
 
@@ -1330,7 +1330,7 @@ You're all alive. You walk past each other on campus. It's quiet, and it's sad, 
 [[The end->Credits]]
 
 
-:: End Bad [bg-black rain]
+:: End Bad [bg-black rain piano]
 It rains on the day of the funeral. Just like last time.
 
 (if: $iris < 35)[Iris goes first, on the last night, at the same minute as before. Her mother is at the front again. You know exactly where she'll reach for the edge of the casket. She does.
@@ -1356,7 +1356,7 @@ The page goes dark.
 [[...->Credits]]
 
 
-:: End She Waits [bg-room-mc-night night maeve]
+:: End She Waits [bg-room-mc-night night maeve piano]
 On the last night Maeve is sitting on your bed. She's been your girlfriend for four days. She's been Death for a lot longer.
 
 "You did the hard thing," she says. "Holding on to them, with me dragging on your arm the whole time." She kisses your forehead. Her lips are cold. "Not now. I'm really patient, (print: $name). I'm literally the most patient person you'll ever meet."
@@ -1371,7 +1371,7 @@ The door opens. Maeve walks in, looking exactly the same.
 [[The end->Credits]]
 
 
-:: End All Three [bg-between-3 night maeve]
+:: End All Three [bg-between-3 night maeve piano]
 The week went soft and warm and blurry. Maeve was always there. She was so easy to be with. She never asked for anything.
 
 Iris stopped texting. Naomi stopped texting. You didn't notice when.
@@ -1385,7 +1385,7 @@ The page goes black. There's nothing after this.
 [[...->Credits]]
 
 
-:: Credits [bg-black]
+:: Credits [bg-black piano]
 <div class="logo small" role="img" aria-label="De Mortuis"></div>
 <div class="subtitle">nil nisi bonum</div>
 
@@ -1397,34 +1397,53 @@ The page goes black. There's nothing after this.
 
 
 :: StoryScript [script]
-/* Background music: sounds/music.mp3 loops quietly under the whole game.
-   It starts on the first click (browsers block sound before that), has a mute
-   button in the corner, and fades out on any passage tagged "silence". */
+/* Sound for the game. Files live in sounds/.
+   Loops, picked by the passage's tags and cross-faded:
+     music.mp3  the lofi track, under every normal scene
+     piano.mp3  replaces it on passages tagged "piano" (prologue, endings)
+     rain.mp3   layered on top for passages tagged "rain"
+     "silence"  fades everything out (2:07, Maeve's last scene)
+   One-shots: buzz.mp3 when a new passage shows an incoming text (twice for 2+),
+   whoosh.mp3 when Death breaks in or you arrive in the between.
+   Nothing plays before the first click (browsers block it); the corner button mutes all of it. */
 (function () {
-  if (window.dmMusic) return;
-  var VOL = 0.35;
-  var music = new Audio('sounds/music.mp3');
-  music.loop = true; music.volume = 0; music.preload = 'auto';
-  window.dmMusic = music;
+  if (window.dmSound) return;
+  function loop(src, vol) { var a = new Audio(src); a.loop = true; a.volume = 0; a.preload = 'auto'; return { el: a, vol: vol, timer: null }; }
+  var loops = { music: loop('sounds/music.mp3', 0.35), piano: loop('sounds/piano.mp3', 0.45), rain: loop('sounds/rain.mp3', 0.3) };
+  var buzz = new Audio('sounds/buzz.mp3'), whoosh = new Audio('sounds/whoosh.mp3');
+  buzz.volume = 0.7; whoosh.volume = 0.55;
+  window.dmSound = { loops: loops, buzz: buzz, whoosh: whoosh };
+  window.dmMusic = loops.music.el;
 
   var muted = false;
   try { muted = localStorage.getItem('dm-muted') === '1'; } catch (e) {}
-  var started = false, silent = false, fadeTimer = null;
+  var started = false, tags = [];
 
-  function fadeTo(target, ms) {
-    clearInterval(fadeTimer);
-    var steps = Math.max(1, Math.round(ms / 50)), step = (target - music.volume) / steps, n = 0;
-    if (target > 0 && music.paused) music.play().catch(function () {});
-    fadeTimer = setInterval(function () {
-      n++; music.volume = Math.min(1, Math.max(0, music.volume + step));
-      if (n >= steps) { clearInterval(fadeTimer); music.volume = target; if (target === 0) music.pause(); }
+  function fadeTo(l, target, ms) {
+    var a = l.el; clearInterval(l.timer);
+    var steps = Math.max(1, Math.round(ms / 50)), step = (target - a.volume) / steps, n = 0;
+    if (target > 0 && a.paused) a.play().catch(function () {});
+    l.timer = setInterval(function () {
+      n++; a.volume = Math.min(1, Math.max(0, a.volume + step));
+      if (n >= steps) { clearInterval(l.timer); a.volume = target; if (target === 0) a.pause(); }
     }, 50);
   }
-  function update(ms) { if (started) fadeTo(muted || silent ? 0 : VOL, ms); }
+  function has(t) { return tags.indexOf(t) !== -1; }
+  function update(ms) {
+    if (!started) return;
+    var off = muted || has('silence');
+    fadeTo(loops.music, off || has('piano') ? 0 : loops.music.vol, ms);
+    fadeTo(loops.piano, !off && has('piano') ? loops.piano.vol : 0, ms);
+    fadeTo(loops.rain, !off && has('rain') ? loops.rain.vol : 0, ms);
+  }
+  function once(a, delay) {
+    if (!started || muted) return;
+    setTimeout(function () { try { a.currentTime = 0; } catch (e) {} a.play().catch(function () {}); }, delay || 0);
+  }
 
   var btn = document.createElement('button');
   btn.className = 'dm-mute'; btn.type = 'button';
-  function label() { btn.textContent = muted ? '♪ off' : '♪ on'; btn.setAttribute('aria-label', muted ? 'Turn music on' : 'Turn music off'); }
+  function label() { btn.textContent = muted ? '♪ off' : '♪ on'; btn.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off'); }
   label();
   btn.addEventListener('click', function (e) {
     e.stopPropagation(); muted = !muted; label();
@@ -1447,14 +1466,29 @@ The page goes black. There's nothing after this.
   document.addEventListener('click', begin, true);
   document.addEventListener('keydown', begin, true);
 
-  // passages tagged "silence" fade the music out; it comes back on the next untagged passage
   var story = document.querySelector('tw-story');
+  // the loops follow the passage's tags
   function checkTags() {
-    var tags = (story && story.getAttribute('tags') || '').split(/\s+/);
-    var s = tags.indexOf('silence') !== -1;
-    if (s !== silent) { silent = s; update(s ? 1500 : 3000); }
+    var next = (story && story.getAttribute('tags') || '').split(/\s+/);
+    if (next.join(' ') === tags.join(' ')) return;
+    var wasSilent = has('silence'); tags = next;
+    update(has('silence') ? 1500 : wasSilent ? 3000 : 1800);
   }
-  if (story) new MutationObserver(checkTags).observe(story, { attributes: true, attributeFilter: ['tags'] });
+  // one-shots fire when a new passage appears
+  function newPassage(p) {
+    setTimeout(function () {
+      var texts = p.querySelectorAll('.phone:not(.me)').length;
+      if (texts) { once(buzz); if (texts > 1) once(buzz, 550); }
+      var between = /(^|\s)bg-between-\d/.test(story.getAttribute('tags') || '');
+      if (p.querySelector('.deathpop') || between) once(whoosh, texts ? 300 : 0);
+    }, 60);
+  }
+  if (story) {
+    new MutationObserver(checkTags).observe(story, { attributes: true, attributeFilter: ['tags'] });
+    new MutationObserver(function (list) {
+      list.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.tagName === 'TW-PASSAGE') newPassage(n); }); });
+    }).observe(story, { childList: true });
+  }
   checkTags();
 })();
 
@@ -1932,7 +1966,7 @@ You look at your phone. 2:07.
 [[...->Again]]
 
 
-:: End Forever [bg-gallery-night night maeve]
+:: End Forever [bg-gallery-night night maeve piano]
 She takes you to the art hallway again. Teal and orange. Empty.
 
 This time you know. Ninety percent. Ninety-nine. You go anyway.

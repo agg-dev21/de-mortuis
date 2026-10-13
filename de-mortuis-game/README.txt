@@ -79,12 +79,20 @@ FONTS (fonts/)
   Death's voice: Extra Blur. A girl losing herself: Megalomania.
   Iris doing better: Stay With Me. Naomi doing better: Reenie Beanie (embedded, works offline).
 
-MUSIC (sounds/)
-  music.mp3  "Sad Lofi" by prettyjohn1 (Pixabay licence: free to use, no credit required).
-             Trimmed so it loops without a gap. Plays quietly under the whole game from the
-             first click; the corner button mutes it. Passages tagged "silence" fade it out
-             (2:07 on Day 7 and Maeve's last scene). To swap the music, replace this file.
-  Like the photos, it only plays in the published HTML, not in Twine's Play/Test.
+SOUND (sounds/)
+  music.mp3   "Sad Lofi" by prettyjohn1 (Pixabay). Loops under every normal scene.
+  piano.mp3   "Sad Piano" (freesound community, Pixabay). Replaces the lofi on passages
+              tagged "piano": the prologue and every ending.
+  rain.mp3    "Calming Rain" by liecio (Pixabay). Added on passages tagged "rain":
+              the prologue and the bad ending. Re-cut so it loops seamlessly.
+  buzz.mp3    phone buzz (freesound community). Plays when a passage shows an incoming
+              text, twice if there are several.
+  whoosh.mp3  creepy whoosh (freesound community). Plays when Death breaks in and when
+              you arrive in the between.
+  Tag a passage "silence" to fade everything out (2:07 on Day 7, Maeve's last scene).
+  Nothing plays before the first click (browsers block it); the corner button mutes it all.
+  All are free to use under the Pixabay licence, no credit required.
+  Like the photos, sound only plays in the published HTML, not in Twine's Play/Test.
 
 NOTES
 - In Twine's own Play/Test window the photos won't load (it can't see the img/ folder).

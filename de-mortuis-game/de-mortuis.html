@@ -176,34 +176,53 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 .meter .fill.naomi { background: #f2a65a; }
 .meter .num { width: 40px; text-align: right; font-family: 'DK Jambo', 'BIZ UDMincho'; }
 .switches { margin-top: 18px; letter-spacing: 6px; color: #b9a6e8; }
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* Background music: sounds/music.mp3 loops quietly under the whole game.
-   It starts on the first click (browsers block sound before that), has a mute
-   button in the corner, and fades out on any passage tagged "silence". */
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* Sound for the game. Files live in sounds/.
+   Loops, picked by the passage's tags and cross-faded:
+     music.mp3  the lofi track, under every normal scene
+     piano.mp3  replaces it on passages tagged "piano" (prologue, endings)
+     rain.mp3   layered on top for passages tagged "rain"
+     "silence"  fades everything out (2:07, Maeve's last scene)
+   One-shots: buzz.mp3 when a new passage shows an incoming text (twice for 2+),
+   whoosh.mp3 when Death breaks in or you arrive in the between.
+   Nothing plays before the first click (browsers block it); the corner button mutes all of it. */
 (function () {
-  if (window.dmMusic) return;
-  var VOL = 0.35;
-  var music = new Audio('sounds/music.mp3');
-  music.loop = true; music.volume = 0; music.preload = 'auto';
-  window.dmMusic = music;
+  if (window.dmSound) return;
+  function loop(src, vol) { var a = new Audio(src); a.loop = true; a.volume = 0; a.preload = 'auto'; return { el: a, vol: vol, timer: null }; }
+  var loops = { music: loop('sounds/music.mp3', 0.35), piano: loop('sounds/piano.mp3', 0.45), rain: loop('sounds/rain.mp3', 0.3) };
+  var buzz = new Audio('sounds/buzz.mp3'), whoosh = new Audio('sounds/whoosh.mp3');
+  buzz.volume = 0.7; whoosh.volume = 0.55;
+  window.dmSound = { loops: loops, buzz: buzz, whoosh: whoosh };
+  window.dmMusic = loops.music.el;
 
   var muted = false;
   try { muted = localStorage.getItem('dm-muted') === '1'; } catch (e) {}
-  var started = false, silent = false, fadeTimer = null;
+  var started = false, tags = [];
 
-  function fadeTo(target, ms) {
-    clearInterval(fadeTimer);
-    var steps = Math.max(1, Math.round(ms / 50)), step = (target - music.volume) / steps, n = 0;
-    if (target > 0 && music.paused) music.play().catch(function () {});
-    fadeTimer = setInterval(function () {
-      n++; music.volume = Math.min(1, Math.max(0, music.volume + step));
-      if (n >= steps) { clearInterval(fadeTimer); music.volume = target; if (target === 0) music.pause(); }
+  function fadeTo(l, target, ms) {
+    var a = l.el; clearInterval(l.timer);
+    var steps = Math.max(1, Math.round(ms / 50)), step = (target - a.volume) / steps, n = 0;
+    if (target > 0 && a.paused) a.play().catch(function () {});
+    l.timer = setInterval(function () {
+      n++; a.volume = Math.min(1, Math.max(0, a.volume + step));
+      if (n >= steps) { clearInterval(l.timer); a.volume = target; if (target === 0) a.pause(); }
     }, 50);
   }
-  function update(ms) { if (started) fadeTo(muted || silent ? 0 : VOL, ms); }
+  function has(t) { return tags.indexOf(t) !== -1; }
+  function update(ms) {
+    if (!started) return;
+    var off = muted || has('silence');
+    fadeTo(loops.music, off || has('piano') ? 0 : loops.music.vol, ms);
+    fadeTo(loops.piano, !off && has('piano') ? loops.piano.vol : 0, ms);
+    fadeTo(loops.rain, !off && has('rain') ? loops.rain.vol : 0, ms);
+  }
+  function once(a, delay) {
+    if (!started || muted) return;
+    setTimeout(function () { try { a.currentTime = 0; } catch (e) {} a.play().catch(function () {}); }, delay || 0);
+  }
 
   var btn = document.createElement('button');
   btn.className = 'dm-mute'; btn.type = 'button';
-  function label() { btn.textContent = muted ? '♪ off' : '♪ on'; btn.setAttribute('aria-label', muted ? 'Turn music on' : 'Turn music off'); }
+  function label() { btn.textContent = muted ? '♪ off' : '♪ on'; btn.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off'); }
   label();
   btn.addEventListener('click', function (e) {
     e.stopPropagation(); muted = !muted; label();
@@ -226,14 +245,29 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
   document.addEventListener('click', begin, true);
   document.addEventListener('keydown', begin, true);
 
-  // passages tagged "silence" fade the music out; it comes back on the next untagged passage
   var story = document.querySelector('tw-story');
+  // the loops follow the passage's tags
   function checkTags() {
-    var tags = (story && story.getAttribute('tags') || '').split(/\s+/);
-    var s = tags.indexOf('silence') !== -1;
-    if (s !== silent) { silent = s; update(s ? 1500 : 3000); }
+    var next = (story && story.getAttribute('tags') || '').split(/\s+/);
+    if (next.join(' ') === tags.join(' ')) return;
+    var wasSilent = has('silence'); tags = next;
+    update(has('silence') ? 1500 : wasSilent ? 3000 : 1800);
   }
-  if (story) new MutationObserver(checkTags).observe(story, { attributes: true, attributeFilter: ['tags'] });
+  // one-shots fire when a new passage appears
+  function newPassage(p) {
+    setTimeout(function () {
+      var texts = p.querySelectorAll('.phone:not(.me)').length;
+      if (texts) { once(buzz); if (texts > 1) once(buzz, 550); }
+      var between = /(^|\s)bg-between-\d/.test(story.getAttribute('tags') || '');
+      if (p.querySelector('.deathpop') || between) once(whoosh, texts ? 300 : 0);
+    }, 60);
+  }
+  if (story) {
+    new MutationObserver(checkTags).observe(story, { attributes: true, attributeFilter: ['tags'] });
+    new MutationObserver(function (list) {
+      list.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.tagName === 'TW-PASSAGE') newPassage(n); }); });
+    }).observe(story, { childList: true });
+  }
   checkTags();
 })();
 </script><tw-passagedata pid="1" name="StoryInit" tags="startup" position="0,0" size="100,100">(set: $loop to 1, $name to &quot;&quot;)
@@ -246,7 +280,7 @@ tw-story[tags~="fade"] tw-passage { animation: fadeIn 3s ease; }
 &lt;p class=&quot;center quiet&quot;&gt;If you&#39;re struggling, you don&#39;t have to carry it alone. In the US you can call or text 988, any time.&lt;/p&gt;
 
 (if: (saved-games:) contains &quot;auto&quot;)[&lt;p class=&quot;center&quot;&gt;(link: &quot;Continue&quot;)[(load-game: &quot;auto&quot;)]&lt;/p&gt;
-&lt;p class=&quot;center&quot;&gt;[[New game-&gt;Name]]&lt;/p&gt;](else:)[&lt;p class=&quot;center&quot;&gt;[[Begin-&gt;Name]]&lt;/p&gt;]</tw-passagedata><tw-passagedata pid="7" name="Prologue" tags="bg-black rain" position="750,0" size="100,100">The last thing you remember is the funeral.
+&lt;p class=&quot;center&quot;&gt;[[New game-&gt;Name]]&lt;/p&gt;](else:)[&lt;p class=&quot;center&quot;&gt;[[Begin-&gt;Name]]&lt;/p&gt;]</tw-passagedata><tw-passagedata pid="7" name="Prologue" tags="bg-black rain piano" position="750,0" size="100,100">The last thing you remember is the funeral.
 
 Not yours. Hers.
 
@@ -766,7 +800,7 @@ Iris looks at Naomi. Then at you. Two people who passed on her secret, sitting o
 
 &quot;Some girl just texted me,&quot; she says. &quot;White hair. I don&#39;t even know how she has my number. She said, //ask him who he told.//&quot;]
 
-[[2:08-&gt;Vending]]</tw-passagedata><tw-passagedata pid="52" name="Final" tags="bg-black eod fade" position="125,625" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;THE END OF THE WEEK&lt;/div&gt;
+[[2:08-&gt;Vending]]</tw-passagedata><tw-passagedata pid="52" name="Final" tags="bg-black eod fade piano" position="125,625" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;THE END OF THE WEEK&lt;/div&gt;
 &lt;div class=&quot;meter&quot;&gt;&lt;span class=&quot;who&quot;&gt;Iris&lt;/span&gt;&lt;div class=&quot;bar&quot;&gt;(print: &#39;&lt;div class=&quot;fill iris&quot; style=&quot;width:&#39; + (str: $iris) + &#39;%&quot;&gt;&lt;/div&gt;&#39;)&lt;/div&gt;&lt;span class=&quot;num&quot;&gt;$iris&lt;/span&gt;&lt;/div&gt;
 &lt;div class=&quot;meter&quot;&gt;&lt;span class=&quot;who&quot;&gt;Naomi&lt;/span&gt;&lt;div class=&quot;bar&quot;&gt;(print: &#39;&lt;div class=&quot;fill naomi&quot; style=&quot;width:&#39; + (str: $naomi) + &#39;%&quot;&gt;&lt;/div&gt;&#39;)&lt;/div&gt;&lt;span class=&quot;num&quot;&gt;$naomi&lt;/span&gt;&lt;/div&gt;
 
@@ -991,7 +1025,7 @@ You don&#39;t have an answer. She seems to like that.](else-if: $day is 4)[She&#
 &lt;div class=&quot;meter&quot;&gt;&lt;span class=&quot;who&quot;&gt;Naomi&lt;/span&gt;&lt;div class=&quot;bar&quot;&gt;(print: &#39;&lt;div class=&quot;fill naomi&quot; style=&quot;width:&#39; + (str: $naomi) + &#39;%&quot;&gt;&lt;/div&gt;&#39;)&lt;/div&gt;&lt;span class=&quot;num&quot;&gt;$naomi&lt;/span&gt;&lt;/div&gt;
 &lt;div class=&quot;switches&quot;&gt;(for: each _i, ...(range: 1, 5))[(if: _i &lt;= $switches)[●](else:)[○]]&lt;/div&gt;
 (set: $day to it + 1)
-(link-goto: &quot;Sleep&quot;, &quot;Day &quot; + (str: $day))</tw-passagedata><tw-passagedata pid="86" name="End Good" tags="bg-stairs-yellow day" position="625,1000" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;A MONTH LATER&lt;/div&gt;
+(link-goto: &quot;Sleep&quot;, &quot;Day &quot; + (str: $day))</tw-passagedata><tw-passagedata pid="86" name="End Good" tags="bg-stairs-yellow day piano" position="625,1000" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;A MONTH LATER&lt;/div&gt;
 The rumour is old news. Not because anyone apologised. People just found something else to talk about. That&#39;s how it works.
 
 Iris goes to the counselling centre twice a week. Her mom is home, on a new treatment, still singing badly in the car. Professor Hale is cleared. On the last day of term he passes Iris in the hallway and nods, and she nods back, and it&#39;s enough.
@@ -1002,7 +1036,7 @@ The three of you have a table now. Naomi&#39;s table, by the window. She pretend
 
 Nobody has ever corrected her.
 
-[[...-&gt;Reveal Good]]</tw-passagedata><tw-passagedata pid="87" name="Reveal Good" tags="bg-vending night maeve" position="750,1000" size="100,100">Before you went back inside, you asked her. You had to.
+[[...-&gt;Reveal Good]]</tw-passagedata><tw-passagedata pid="87" name="Reveal Good" tags="bg-vending night maeve piano" position="750,1000" size="100,100">Before you went back inside, you asked her. You had to.
 
 &quot;Who are you?&quot;
 
@@ -1021,7 +1055,7 @@ The motion light didn&#39;t come on for her.
 &lt;span class=&quot;phone me&quot;&gt;im not okay either. can we talk about it tomorrow&lt;/span&gt;
 &lt;span class=&quot;phone&quot;&gt;obviously. idiot. (if: $naomiCame)[get back in here](else:)[im coming over. right now]&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Naomi&lt;/span&gt;
 
-[[The end-&gt;Credits]]</tw-passagedata><tw-passagedata pid="88" name="End Middle" tags="bg-gallery day" position="875,1000" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;A MONTH LATER&lt;/div&gt;
+[[The end-&gt;Credits]]</tw-passagedata><tw-passagedata pid="88" name="End Middle" tags="bg-gallery day piano" position="875,1000" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;A MONTH LATER&lt;/div&gt;
 Everyone makes it to the end of the week. That&#39;s the most important thing, and you know it. You tell yourself that a lot.
 
 Iris gets help. She doesn&#39;t ask you to come with her. (if: $leaks &gt; 0)[She found out what you did from someone who wasn&#39;t you, and she never says anything about it.] She just stops answering, slowly, until she doesn&#39;t answer at all.
@@ -1032,7 +1066,7 @@ You&#39;re all alive. You walk past each other on campus. It&#39;s quiet, and it
 
 &lt;span class=&quot;phone&quot;&gt;Huh. Close one, (print: $name).&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;unknown number&lt;/span&gt;
 
-[[The end-&gt;Credits]]</tw-passagedata><tw-passagedata pid="89" name="End Bad" tags="bg-black rain" position="1000,1000" size="100,100">It rains on the day of the funeral. Just like last time.
+[[The end-&gt;Credits]]</tw-passagedata><tw-passagedata pid="89" name="End Bad" tags="bg-black rain piano" position="1000,1000" size="100,100">It rains on the day of the funeral. Just like last time.
 
 (if: $iris &lt; 35)[Iris goes first, on the last night, at the same minute as before. Her mother is at the front again. You know exactly where she&#39;ll reach for the edge of the casket. She does.
 
@@ -1054,7 +1088,7 @@ Maeve is sitting on the end of your bed, swinging her legs.
 
 The page goes dark.
 
-[[...-&gt;Credits]]</tw-passagedata><tw-passagedata pid="90" name="End She Waits" tags="bg-room-mc-night night maeve" position="1125,1000" size="100,100">On the last night Maeve is sitting on your bed. She&#39;s been your girlfriend for four days. She&#39;s been Death for a lot longer.
+[[...-&gt;Credits]]</tw-passagedata><tw-passagedata pid="90" name="End She Waits" tags="bg-room-mc-night night maeve piano" position="1125,1000" size="100,100">On the last night Maeve is sitting on your bed. She&#39;s been your girlfriend for four days. She&#39;s been Death for a lot longer.
 
 &quot;You did the hard thing,&quot; she says. &quot;Holding on to them, with me dragging on your arm the whole time.&quot; She kisses your forehead. Her lips are cold. &quot;Not now. I&#39;m really patient, (print: $name). I&#39;m literally the most patient person you&#39;ll ever meet.&quot;
 
@@ -1065,7 +1099,7 @@ The door opens. Maeve walks in, looking exactly the same.
 
 &quot;Hi, (print: $name),&quot; she says. &quot;Told you.&quot;
 
-[[The end-&gt;Credits]]</tw-passagedata><tw-passagedata pid="91" name="End All Three" tags="bg-between-3 night maeve" position="0,1125" size="100,100">The week went soft and warm and blurry. Maeve was always there. She was so easy to be with. She never asked for anything.
+[[The end-&gt;Credits]]</tw-passagedata><tw-passagedata pid="91" name="End All Three" tags="bg-between-3 night maeve piano" position="0,1125" size="100,100">The week went soft and warm and blurry. Maeve was always there. She was so easy to be with. She never asked for anything.
 
 Iris stopped texting. Naomi stopped texting. You didn&#39;t notice when.
 
@@ -1075,7 +1109,7 @@ On the last night Maeve holds out her hand.
 
 The page goes black. There&#39;s nothing after this.
 
-[[...-&gt;Credits]]</tw-passagedata><tw-passagedata pid="92" name="Credits" tags="bg-black" position="125,1125" size="100,100">&lt;div class=&quot;logo small&quot; role=&quot;img&quot; aria-label=&quot;De Mortuis&quot;&gt;&lt;/div&gt;
+[[...-&gt;Credits]]</tw-passagedata><tw-passagedata pid="92" name="Credits" tags="bg-black piano" position="125,1125" size="100,100">&lt;div class=&quot;logo small&quot; role=&quot;img&quot; aria-label=&quot;De Mortuis&quot;&gt;&lt;/div&gt;
 &lt;div class=&quot;subtitle&quot;&gt;nil nisi bonum&lt;/div&gt;
 
 &lt;p class=&quot;center&quot;&gt;A game by Anish Goel.&lt;/p&gt;
@@ -1399,7 +1433,7 @@ You look at your phone. 2:07.
 
 &quot;Oh, (print: $name),&quot; Maeve says, very softly. Almost fond. &quot;Already?&quot;
 
-[[...-&gt;Again]]</tw-passagedata><tw-passagedata pid="132" name="End Forever" tags="bg-gallery-night night maeve" position="125,1625" size="100,100">She takes you to the art hallway again. Teal and orange. Empty.
+[[...-&gt;Again]]</tw-passagedata><tw-passagedata pid="132" name="End Forever" tags="bg-gallery-night night maeve piano" position="125,1625" size="100,100">She takes you to the art hallway again. Teal and orange. Empty.
 
 This time you know. Ninety percent. Ninety-nine. You go anyway.
 
