@@ -7,27 +7,31 @@ img/              Background photos (your campus shots, resized to 1600px).
 
 ROOM PHOTOS STILL NEEDED
 Drop these into img/ with exactly these names. Until then those scenes show a dark background.
-  room-mc.jpg          your room            (prologue, Day 6 night, She Waits ending)
-  room-iris.jpg        Iris's room, messy   (Days 1-6)
-  room-iris-clean.jpg  Iris's room, very neat and cleared (Day 7 - this is a clue, keep it tidy)
-  room-naomi.jpg       Naomi's room         (Days 4, 6)
+  room-mc.jpg          your room       (waking up, Day 6 night, night texts, She Waits ending)
+  room-naomi.jpg       Naomi's room    (Days 2-6)
 
 WHICH PHOTO IS WHERE
-  gallery.jpg        Day 1 campus, Maeve's date, Day 7 morning, middle ending
-  library.jpg        Naomi's table (Days 1, 3)
-  cafe.jpg           Naomi's café (Day 2, Day 5)
-  classroom.jpg      Day 2 opening, Day 4 Naomi
-  lab.jpg            Day 1 evening, Day 3 opening, Day 4 night with Iris
-  vending.jpg        Maeve (Day 2 night, good-ending reveal)
-  bench.jpg          Maeve, Day 6 night
-  stairwell.jpg      Naomi, Day 5
-  hall-white.jpg     spare (tag a passage bg-hall-white to use it)
-  lounge.jpg         Day 4 Iris
-  hall-red.jpg       every walk home
-  hall-posters.jpg   Day 4 opening, Day 6 afternoon
-  hall-brick.jpg     Day 5 afternoon, Day 7 morning
-  stairs-yellow.jpg  good ending only
-  fountain.jpg       spare
+  between-1/2/3.jpg        Death's voice: revival, Day 7 morning / "one more time" / All Three ending
+  room-iris.jpg            Iris's room by day (Days 1-6)
+  room-iris-2.jpg          Iris's room at night (Day 2 confession, Day 3 evening, Day 6 night)
+  room-iris-bw.jpg         swaps in for both of the above whenever Iris is losing herself (meter under 35)
+  room-iris-clean.jpg      Day 7 night: desk cleared, walls bare (edited from the original)
+  room-iris-clean-night.jpg  2:07, lights off, phone glowing on the carpet
+  gallery.jpg / -night     Day 1, Day 3 art hallway, middle ending / Maeve's date
+  library.jpg              Naomi's table
+  cafe.jpg                 Naomi's café, Day 7 morning
+  classroom.jpg            Day 2, Day 3 seminar, Day 5 Naomi in room 204
+  lab.jpg / lab-night      Day 1 evening, Day 3 morning, Day 4 / Day 4 night with Iris
+  lounge.jpg               Iris, Days 3-4
+  stairwell.jpg            the printouts (Day 4), Naomi (Day 5)
+  vending.jpg              Maeve: Day 2, Day 3 date offer, the final scene, good-ending reveal
+  bench.jpg / -night       Day 6 alone with Maeve / Day 6 night
+  hall-white.jpg / -night  every "go alone" scene with Maeve (night version on Day 3 evening)
+  hall-red.jpg             every walk home
+  hall-posters.jpg         hallway scenes, Days 1-6
+  hall-brick.jpg           hallway scenes, Day 7 afternoon
+  fountain.jpg             Naomi, Day 1
+  stairs-yellow.jpg        good ending
 
 CHANGING OR ADDING ENVIRONMENTS
   1. Save the picture into img/ (the Environment Editor does this). Any name works,
@@ -61,11 +65,14 @@ TOOLS (tools/ - open in Chrome or Edge, work offline)
   Your design sheets are in characters/refs/.
 
 HOW A DAY WORKS
-  Morning: Iris or Naomi. Then three scenes, each with Iris, Naomi, or go alone (Maeve finds you).
-  Then the walk home (Iris, Naomi or alone), night texts, and the meters.
-  Choice wording turns warmer for whichever girl you've spent more time with, colder for the other.
-  Big choices: Day 3 morning (who you go to), Day 3 night (whether Iris tells you about her mom),
-  Day 7 afternoon (who you spend the last afternoon with).
+  You type your name first; Maeve uses it.
+  Days 1-5: a morning scene, then three scenes with Iris, Naomi, or go alone (Maeve finds you),
+  the walk home, night texts, and the meters. Choice wording warms toward whoever you've chosen more.
+  Big choices (meters shown on screen): Day 3 morning (who you go to), Day 5 (Naomi wants to speak
+  up in class), Day 6 (who you spend your last day with).
+  Day 6 cut-off: a girl under 15 can't be saved, 15-39 means middle ending at best.
+  Day 7: Death's last warning, Naomi in the morning, Iris in the afternoon, Iris's room at night.
+  You must ask Iris directly for the good ending. Then Maeve at the vending machine, and the ending.
   Ignore both girls and go on Maeve's Day 3 date: you die, Death sends you back once, remembering.
   Date her again on that second run and you stay with her for good.
 
