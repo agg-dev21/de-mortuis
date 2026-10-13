@@ -1,0 +1,60 @@
+Copies of the scene photos with the characters placed in them.
+The photos in img/ are untouched; the game still uses those.
+cutouts/ has each girl cut out on a transparent background.
+
+bench--maeve.jpg
+    D6 Alone
+bench-night--maeve--night.jpg
+    D6 Bench
+between-3--maeve--night.jpg
+    End All Three
+cafe--naomi.jpg
+    D2 Naomi, D5 Naomi, D7 Morning, D1 Midday Naomi, D1 Midday Naomi 2, D3 Midday Naomi, D3 Midday Naomi 2, D1 Late Naomi, D1 Late Naomi 2, D4 Late Naomi, D4 Late Naomi 2
+classroom--iris.jpg
+    D3 Afternoon Iris, D3 Afternoon Iris 2
+classroom--naomi.jpg
+    D4 Naomi, D5 Later Naomi, D5 Later Naomi 2, D5 Late, D5 Go, D5 Stop, D5 Shout
+fountain--naomi.jpg
+    D1 Afternoon Naomi, D1 Afternoon Naomi 2
+gallery--iris.jpg
+    D3 Late Iris, D3 Late Iris 2
+gallery-night--maeve--night.jpg
+    D3 Date, D3 Date Die, End Forever
+hall-brick--iris.jpg
+    D7 Afternoon
+hall-brick--naomi.jpg
+    D4 Midday Naomi, D4 Midday Naomi 2
+hall-posters--iris.jpg
+    D2 Midday Iris, D2 Midday Iris 2, D5 Later Iris, D5 Later Iris 2, D1 Afternoon Iris, D1 Afternoon Iris 2
+hall-posters--naomi.jpg
+    D3 Afternoon Naomi, D3 Afternoon Naomi 2
+hall-white--maeve.jpg
+    Alone
+lab--iris.jpg
+    D3 Iris, D4 Midday Iris, D4 Midday Iris 2
+lab-night--iris--night.jpg
+    D4 Iris Night
+library--iris.jpg
+    D2 Afternoon Iris, D2 Afternoon Iris 2
+library--naomi.jpg
+    D1 Naomi, D2 Midday Naomi, D2 Midday Naomi 2, D2 Afternoon Naomi, D2 Afternoon Naomi 2, D3 Late Naomi, D3 Late Naomi 2
+lounge--iris.jpg
+    D4 Iris, D3 Midday Iris, D3 Midday Iris 2, D4 Late Iris, D4 Late Iris 2
+room-iris--iris.jpg
+    D1 Iris, D2 Iris, D5 Iris, D6 Iris, D1 Midday Iris, D1 Midday Iris 2, D6 Later Iris, D6 Later Iris 2, D1 Late Iris, D1 Late Iris 2, D2 Late Iris, D2 Late Iris 2
+room-iris-2--iris--night.jpg
+    D6 Late Iris, D6 Late Iris 2, D2 Evening, D2 Reaction, D3 Evening Iris, D3 Evening Iris 2
+room-iris-clean--iris--night.jpg
+    D7 Evening, D7 Truth, D7 Ask, D7 Asked, D7 Naomi
+room-iris-clean--iris-naomi--night.jpg
+    D7 Door
+room-naomi--naomi.jpg
+    D3 Naomi, D6 Morning, D6 Confess, D6 Hide, D6 Naomi, D6 Later Naomi, D6 Later Naomi 2, D2 Late Naomi, D2 Late Naomi 2
+room-naomi--naomi--night.jpg
+    D4 Naomi Night, D6 Late Naomi, D6 Late Naomi 2, D3 Evening Naomi, D3 Evening Naomi 2
+stairwell--iris.jpg
+    D4 Afternoon Iris, D4 Afternoon Iris 2
+stairwell--naomi.jpg
+    Day 5, D4 Afternoon Naomi, D4 Afternoon Naomi 2
+vending--maeve--night.jpg
+    D2 Night, Reveal Good, D3 Night, Vending
