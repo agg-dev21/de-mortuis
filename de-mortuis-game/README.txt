@@ -6,9 +6,8 @@ de-mortuis.twee   The source. Import into Twine: Library > Import > pick this fi
 img/              Background photos (your campus shots, resized to 1600px).
 
 WHICH PHOTO IS WHERE
-  Scenes with Iris, Naomi or Maeve use the versions with her drawn in, e.g.
-  img/room-iris--iris.jpg (made from img/room-iris.jpg). The list of which scene uses which
-  is in img-with-characters/WHICH-SCENE.txt. The list below is the plain photos.
+  Backgrounds are plain photos only, with no characters in them. The characters will be
+  shown as separate sprites on top (see characters/POSES.txt).
   room-mc.jpg              your room by day (waking up)
   room-mc-night.jpg        your room at night: night texts, Day 6 scrolling, She Waits ending
   room-naomi.jpg           Naomi's room (made from Iris's tidy room, mirrored and warm)
