@@ -1,0 +1,1611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Character Studio · De Mortuis</title>
+<style>
+:root{--bg:#141319;--panel:#1c1b23;--panel2:#23222c;--line:#2f2d3a;--text:#ece8f3;--muted:#9b97ab;--accent:#8fb6ff;--accent2:#f08aa8;--danger:#ff6b6b}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
+button,select,input{font:inherit;color:inherit}
+button{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:#4a4758}
+button.primary{background:var(--accent);border-color:var(--accent);color:#0f1420;font-weight:600}
+button.on{background:#2c3550;border-color:var(--accent)}
+select,input[type=text],input[type=number]{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 7px}
+input[type=color]{width:34px;height:28px;border:1px solid var(--line);border-radius:6px;background:none;padding:0;cursor:pointer}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=checkbox]{accent-color:var(--accent)}
+#app{display:grid;grid-template-rows:46px 1fr;grid-template-columns:52px 1fr 340px;height:100vh}
+header{grid-column:1/4;display:flex;align-items:center;gap:6px;padding:0 10px;background:var(--panel);border-bottom:1px solid var(--line);overflow-x:auto}
+header .title{font-weight:700;letter-spacing:.08em;margin-right:6px;white-space:nowrap}
+header .sp{flex:1}
+header button,header select{white-space:nowrap}
+#zoomLbl{min-width:46px;text-align:center;color:var(--muted)}
+#tools{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;overflow-y:auto}
+#tools button{width:38px;height:36px;padding:0;font-size:16px;display:grid;place-items:center;flex:none}
+#tools .sep{width:28px;height:1px;background:var(--line);margin:3px 0;flex:none}
+#vp{position:relative;overflow:hidden;background:#101015}
+#stage{position:absolute;left:0;top:0;transform-origin:0 0;box-shadow:0 0 0 1px #2f2d3a,0 10px 40px rgba(0,0,0,.5)}
+#stage.checker{background:repeating-conic-gradient(#2a2933 0 25%,#232229 0 50%) 0 0/32px 32px}
+#stage canvas{position:absolute;left:0;top:0;display:block}
+#ov{pointer-events:none}
+#panel{background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding-bottom:40px}
+details{border-bottom:1px solid var(--line)}
+summary{padding:11px 14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"▾";color:var(--muted)}
+details:not([open]) summary::after{content:"▸"}
+.sec{padding:2px 14px 14px}
+.row{display:grid;grid-template-columns:92px 1fr 44px;align-items:center;gap:8px;margin:5px 0}
+.row label{color:var(--muted);user-select:none}
+.row .v{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.row2{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.hint{color:var(--muted);font-size:12px;margin:6px 0}
+.chk{display:flex;align-items:center;gap:6px;color:var(--muted);margin:5px 0}
+.pal{margin:8px 0}
+.pal b{display:block;font-weight:600;margin-bottom:4px}
+.sw{display:inline-block;width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,.15);margin:0 4px 4px 0;cursor:pointer;vertical-align:top}
+.sw:hover{transform:scale(1.1)}
+#curCol{width:44px;height:44px;border-radius:9px;border:2px solid #fff3}
+.layer{display:flex;align-items:center;gap:6px;padding:5px 6px;border:1px solid var(--line);border-radius:7px;margin:4px 0;cursor:pointer;background:var(--panel2)}
+.layer.sel{border-color:var(--accent)}
+.layer.clip{margin-left:16px}
+.layer canvas{width:30px;height:40px;background:#0e0d12;border-radius:3px;flex:none}
+.layer span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layer button{padding:2px 6px;font-size:12px}
+.tag{font-size:10px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2a2836;border:1px solid var(--line);padding:9px 14px;border-radius:9px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9;max-width:80vw}
+#toast.show{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;place-items:center;z-index:8}
+.modal.show{display:grid}
+.modal .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 24px;max-width:600px;max-height:85vh;overflow:auto}
+.modal td{padding:3px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.modal td:first-child{color:var(--accent);white-space:nowrap}
+kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:11px}
+body.beginner .adv{display:none!important}
+#hintbar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(28,27,35,.92);border:1px solid var(--line);border-radius:10px;padding:8px 14px;max-width:min(720px,90%);color:var(--text);font-size:13px;pointer-events:none;text-align:center}
+#hintbar b{color:var(--accent)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.steps button{padding:8px 4px;line-height:1.15;font-size:12px}
+.steps button small{display:block;color:var(--muted);font-size:10px}
+.steps button.on small{color:var(--text)}
+.coach{background:#1f2537;border:1px solid #33405e;border-radius:9px;padding:10px 12px;margin-top:10px;line-height:1.5}
+.coach b{color:var(--accent)}
+.coach .row2 button{font-size:12px}
+.seg{display:flex;gap:4px}
+.seg button{flex:1;padding:5px 2px;font-size:12px}
+.harm{display:flex;gap:4px;align-items:center}
+.harm .sw{width:30px;height:22px;margin:0}
+.parts{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.parts button{font-size:12px;padding:6px 4px}
+.pal.hl{outline:2px solid var(--accent);outline-offset:4px;border-radius:6px}
+#whoBox{background:#1a1f2e}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <span class="title">CHARACTER STUDIO</span>
+  <button id="bMode" class="on" title="Beginner mode hides the advanced settings">Beginner mode</button>
+  <button id="bNew">New</button>
+  <button id="bSketch" title="Open a drawing or photo as the Sketch layer">Open sketch</button>
+  <button id="bOpenProj">Open project</button>
+  <button id="bSaveProj" title="Ctrl+S">Save project</button>
+  <button id="bUndo" title="Ctrl+Z">↶</button><button id="bRedo" title="Ctrl+Shift+Z">↷</button>
+  <button id="bSym" title="Mirror everything you draw (Y)">Symmetry</button>
+  <button id="bGuide" title="Show the pose mannequin (G toggles)">Mannequin</button>
+  <select id="bg" title="Background (only for viewing)"><option value="checker">Transparent</option><option value="white">White</option><option value="dark">Dark</option><option value="scene">Scene photo…</option></select>
+  <span class="sp"></span>
+  <button id="bZoomOut">−</button><span id="zoomLbl">100%</span><button id="bZoomIn">+</button><button id="bFit">Fit</button>
+  <button id="bHelp">?</button>
+  <button id="bExport" class="primary">Export PNG</button>
+</header>
+
+<nav id="tools">
+  <button data-tool="pen" title="Ink pen (P). Smooth tapered lines">✒</button>
+  <button data-tool="pencil" title="Pencil (N). For rough sketching">✏</button>
+  <button data-tool="marker" title="Marker (K). Flat colour, no build-up">▬</button>
+  <button data-tool="air" title="Airbrush (A). Soft blush and glow">◍</button>
+  <button data-tool="eraser" title="Eraser (E)">⌫</button>
+  <div class="sep"></div>
+  <button data-tool="fill" title="Fill bucket (F). Fills inside your lines">◪</button>
+  <button data-tool="lasso" title="Lasso fill (L). Draw a shape, it fills. Hold Alt to cut out">✂</button>
+  <button data-tool="line" title="Straight line (U)">╱</button>
+  <button data-tool="ellipse" title="Ellipse (O). Shift for circle">◯</button>
+  <button data-tool="picker" title="Colour picker (I). Or Alt+click with any tool">⌖</button>
+  <button data-tool="face" title="Place a face (T). Choose the expression on the right">☻</button>
+  <div class="sep"></div>
+  <button data-tool="move" title="Move layer contents (V)">✥</button>
+  <button data-tool="pose" title="Pose the mannequin (J). Drag the dots">☺</button>
+  <button data-tool="crop" title="Crop the canvas (C). E.g. cut one character out of a sheet">⛶</button>
+  <button data-tool="hand" title="Pan (H, or hold Space)">✋</button>
+</nav>
+
+<main id="vp"><div id="stage" class="checker"><canvas id="cv"></canvas><canvas id="ov"></canvas></div><div id="hintbar"></div></main>
+
+<aside id="panel">
+  <details open id="stepsBox"><summary>Step by step</summary><div class="sec">
+    <div class="steps" id="steps"></div>
+    <div class="coach" id="coach"></div>
+  </div></details>
+
+  <details open id="whoBox"><summary>Who &amp; pose</summary><div class="sec">
+    <div class="hint" style="margin-top:0">1. Who are you drawing?</div>
+    <div class="parts" id="whoBtns"></div>
+    <div class="hint">2. Pick a pose <span id="whoPoseNote"></span></div>
+    <select id="gPose" style="display:none"></select>
+    <div class="parts" id="gPoseBtns"></div>
+    <label class="chk"><input type="checkbox" id="gAllPoses"> Show every pose</label>
+    <div class="hint">3. Turn it to the angle you want to draw</div>
+    <div class="seg" id="gViews"></div>
+    <div class="row"><label>Turn body</label><input type="range" id="gYaw" min="-180" max="180" step="5" value="0"><span class="v" id="gYawV"></span></div>
+    <div class="row"><label>Turn head</label><input type="range" id="gHead" min="-80" max="80" step="5" value="0"><span class="v" id="gHeadV"></span></div>
+    <div class="row2"><button id="gBody" class="primary">Make body base</button><span class="hint" style="margin:0">Skin</span><input type="color" id="gSkin" value="#ffe3d5"></div>
+    <div class="hint">Body base turns the pose into a clean outlined body on its own layer, ready for clothes and hair.</div>
+  </div></details>
+
+  <details open><summary>Brush</summary><div class="sec">
+    <div class="row2"><div id="curCol"></div><input type="color" id="col" value="#1d1a22"><div id="recent" style="flex:1"></div></div>
+    <div class="row2 harm"><span class="hint" style="margin:0 6px 0 0">Matching</span><span class="sw" id="hShadow" title="Shadow of this colour"></span><span class="sw" id="hBase" title="This colour"></span><span class="sw" id="hLight" title="Light of this colour"></span><span class="hint" style="margin:0 0 0 6px">shadow · base · light</span></div>
+    <div class="row"><label>Size</label><input type="range" id="size" min="1" max="200" value="8"><span class="v" id="sizeV"></span></div>
+    <div class="row"><label>Opacity</label><input type="range" id="opa" min="0.03" max="1" step="0.01" value="1"><span class="v" id="opaV"></span></div>
+    <div class="row2"><span class="hint" style="margin:0;width:86px">Steadiness</span><div class="seg" id="stabSeg" style="flex:1"></div></div>
+    <div class="row adv"><label>Stabiliser</label><input type="range" id="stab" min="0" max="80" value="28"><span class="v" id="stabV"></span></div>
+    <div class="row adv"><label>Taper</label><input type="range" id="taper" min="0" max="1" step="0.01" value="0.6"><span class="v" id="taperV"></span></div>
+    <label class="chk adv"><input type="checkbox" id="speedThin" checked> Fast strokes get thinner (fake pen pressure)</label>
+    <div class="hint">More steadiness = smoother lines that trail behind the mouse. <kbd>Shift</kbd>+click draws a straight line from your last stroke.</div>
+  </div></details>
+
+  <details open><summary>Drawing assists</summary><div class="sec">
+    <label class="chk"><input type="checkbox" id="aSnap" checked> Hold still at the end of a stroke to snap it into a clean line, circle or curve</label>
+    <label class="chk"><input type="checkbox" id="aJoin" checked> Join line ends to nearby lines (so fills don't leak)</label>
+    <div class="row"><label>Auto-smooth</label><input type="range" id="aSmooth" min="0" max="1" step="0.05" value="0.4"><span class="v" id="aSmoothV"></span></div>
+    <label class="chk"><input type="checkbox" id="aHints" checked> Show tips at the bottom of the canvas</label>
+  </div></details>
+
+  <details open><summary>Palettes</summary><div class="sec" id="palettes"></div></details>
+
+  <details open><summary>Layers</summary><div class="sec">
+    <div id="layerList"></div>
+    <div class="row2"><button id="lAdd">+ Layer</button><button id="lDup">Duplicate</button><button id="lUp">↑</button><button id="lDown">↓</button><button id="lMergeDown">Merge down</button><button id="lClear">Clear</button><button id="lDel" style="color:var(--danger)">Delete</button></div>
+    <div class="row"><label>Opacity</label><input type="range" id="lOpa" min="0" max="1" step="0.01"><span class="v" id="lOpaV"></span></div>
+    <div class="row adv"><label>Blend</label><select id="lBlend" style="grid-column:2/4"><option value="source-over">Normal</option><option value="multiply">Multiply (shadows)</option><option value="screen">Screen (light)</option><option value="overlay">Overlay</option><option value="soft-light">Soft light</option><option value="color">Colour</option><option value="lighter">Add (glow)</option></select></div>
+    <label class="chk adv"><input type="checkbox" id="lClip"> Clip to layer below (only paints inside it)</label>
+    <label class="chk"><input type="checkbox" id="lLock"> Stay inside what's already painted (recolour safely)</label>
+    <label class="chk adv"><input type="checkbox" id="lRef"> Fill reference (bucket fill stops at this layer's lines)</label>
+    <div class="row2"><button id="lFlip">Flip horizontal</button></div>
+  </div></details>
+
+  <details><summary>Resize / rotate layer</summary><div class="sec">
+    <div class="hint">Fix proportions without redrawing: resize or turn the selected layer, then Apply. Use ✥ to move it.</div>
+    <div class="row"><label>Size</label><input type="range" id="xfS" min="0.3" max="2" step="0.01" value="1"><span class="v" id="xfSV"></span></div>
+    <div class="row"><label>Rotate</label><input type="range" id="xfR" min="-45" max="45" step="0.5" value="0"><span class="v" id="xfRV"></span></div>
+    <div class="row2"><button id="xfApply" class="primary">Apply</button><button id="xfCancel">Reset</button></div>
+  </div></details>
+
+  <details open><summary>Fill</summary><div class="sec">
+    <div class="row2"><button id="bAutoFlats" class="primary">Auto-colour every closed area</button></div>
+    <div class="hint">Gives every area inside your lines its own placeholder colour on the Colour layer. Then pick a real colour and click an area with the bucket to swap it.</div>
+    <div class="row adv"><label>Tolerance</label><input type="range" id="fTol" min="0" max="120" value="32"><span class="v" id="fTolV"></span></div>
+    <div class="row adv"><label>Close gaps</label><input type="range" id="fGap" min="0" max="12" value="3"><span class="v" id="fGapV"></span></div>
+    <div class="row adv"><label>Grow under lines</label><input type="range" id="fGrow" min="0" max="8" value="2"><span class="v" id="fGrowV"></span></div>
+    <label class="chk adv"><input type="checkbox" id="fAll"> Look at all visible layers (not just “fill reference” ones)</label>
+  </div></details>
+
+  <details open><summary>Face &amp; expressions</summary><div class="sec">
+    <div class="hint">Ready-made anime eyes, brows and mouths. Pick an expression, then click between where the eyes go with the ☻ tool. With the mannequin on, “Put on mannequin” places it for you.</div>
+    <div class="parts" id="exprBtns"></div>
+    <div class="row adv"><label>Eyes</label><select id="fEyes" style="grid-column:2/4"></select></div>
+    <div class="row adv"><label>Brows</label><select id="fBrows" style="grid-column:2/4"></select></div>
+    <div class="row adv"><label>Mouth</label><select id="fMouth" style="grid-column:2/4"></select></div>
+    <div class="row"><label>Size</label><input type="range" id="fSize" min="20" max="260" value="80"><span class="v" id="fSizeV"></span></div>
+    <div class="row"><label>Eye gap</label><input type="range" id="fGapE" min="0" max="1.2" step="0.01" value="0.35"><span class="v" id="fGapEV"></span></div>
+    <div class="row2"><span class="hint" style="margin:0">Eye colour</span><input type="color" id="fEyeCol" value="#4a3d3a"><label class="chk" style="margin:0 0 0 8px"><input type="checkbox" id="fBlush" checked> Blush</label></div>
+    <div class="row2"><button id="bFaceTool">☻ Place face</button><button id="bFaceGuide">Put on mannequin</button></div>
+  </div></details>
+
+  <details open><summary>Auto shading</summary><div class="sec">
+    <div class="hint">Shades every colour region of your flats separately, like cel shading. Fill your Colour layer first.</div>
+    <div class="row"><label>Light from</label><input type="range" id="shAng" min="0" max="360" value="135"><span class="v" id="shAngV"></span></div>
+    <div class="row"><label>Depth</label><input type="range" id="shDep" min="2" max="120" value="22"><span class="v" id="shDepV"></span></div>
+    <div class="row"><label>Softness</label><input type="range" id="shSoft" min="0" max="20" value="0"><span class="v" id="shSoftV"></span></div>
+    <div class="row2"><span class="hint" style="margin:0">Shadow</span><input type="color" id="shCol" value="#a597c9"><span class="hint" style="margin:0">Light</span><input type="color" id="rimCol" value="#fff1d6"></div>
+    <div class="row2"><button id="bShade" class="primary">Add shadows</button><button id="bRim">Add rim light</button></div>
+    <div class="hint">Shadows go on the “Shading” layer, light on the “Light” layer, so you can erase or repaint them.</div>
+  </div></details>
+
+  <details><summary>From your sketch</summary><div class="sec">
+    <div class="hint">Turns a coloured sketch (like your character sheet) into a clean Lines layer and a flat Colour layer. Select the Sketch layer first.</div>
+    <div class="row adv"><label>Line darkness</label><input type="range" id="exThr" min="0.15" max="0.8" step="0.01" value="0.42"><span class="v" id="exThrV"></span></div>
+    <label class="chk"><input type="checkbox" id="exThin" checked> Keep thin lines only (big dark areas like a suit become colour)</label>
+    <div class="row2"><span class="hint" style="margin:0">Line colour</span><input type="color" id="exCol" value="#1d1a22"></div>
+    <label class="chk"><input type="checkbox" id="exSimplify" checked> Simplify colours (clean flats, cleaner shading)</label>
+    <div class="row adv"><label>Colours</label><input type="range" id="exK" min="4" max="24" value="12"><span class="v" id="exKV">12</span></div>
+    <div class="row2"><button id="bExLines">Extract lines</button><button id="bExFlats">Extract flat colours</button></div>
+    <div class="hint">Tip: use Crop first to cut one character out of the sheet.</div>
+  </div></details>
+
+  <details><summary>Mannequin settings</summary><div class="sec">
+    <div class="hint">Poses and angles are in “Who &amp; pose” at the top. Use the ☺ tool to drag joints; the pink hip dot moves the whole body.</div>
+    <div class="row"><label>Heads tall</label><input type="range" id="gHeads" min="5" max="9" step="0.1" value="7"><span class="v" id="gHeadsV"></span></div>
+    <div class="row"><label>Size</label><input type="range" id="gScale" min="0.3" max="1.4" step="0.01" value="0.92"><span class="v" id="gScaleV"></span></div>
+    <div class="row adv"><label>Opacity</label><input type="range" id="gOpa" min="0.1" max="1" step="0.01" value="0.6"><span class="v" id="gOpaV"></span></div>
+    <div class="row2"><button id="gFlip">Mirror pose</button><button id="gFace">Face guide: on</button></div>
+  </div></details>
+
+  <details open><summary>Export</summary><div class="sec">
+    <div class="row2"><input type="text" id="exName" value="iris-neutral" style="flex:1"><span class="hint" style="margin:0">.png</span></div>
+    <div class="row"><label>Height</label><select id="exH" style="grid-column:2/4"><option value="0">Same as canvas</option><option value="1600">1600 px</option><option value="1200">1200 px</option><option value="900">900 px</option></select></div>
+    <label class="chk"><input type="checkbox" id="exTrim" checked> Trim empty space around the character</label>
+    <div class="row2"><button id="bFolder">Connect a save folder</button></div>
+    <div class="hint" id="folderInfo">Not connected. Exports go to Downloads.</div>
+  </div></details>
+</aside>
+</div>
+
+<input type="file" id="fSketch" accept="image/*" hidden>
+<input type="file" id="fProj" accept=".dmchar,application/json" hidden>
+<input type="file" id="fScene" accept="image/*" hidden>
+<div id="toast"></div>
+
+<div class="modal" id="newModal"><div class="box">
+  <h3 style="margin-top:0">New canvas</h3>
+  <div class="row2"><button data-size="1200x2400" class="primary">Full body sprite · 1200×2400</button></div>
+  <div class="row2"><button data-size="1400x1600">Bust / portrait · 1400×1600</button></div>
+  <div class="row2"><button data-size="2048x2048">Square · 2048×2048</button></div>
+  <div class="row2"><button data-size="2752x2064">Character sheet · 2752×2064</button></div>
+  <p class="hint">Layers you get: Sketch (faded), Colour, Shading (clipped, multiply), Light (clipped, screen), Lines.</p>
+  <button onclick="document.getElementById('newModal').classList.remove('show')">Cancel</button>
+</div></div>
+
+<div class="modal" id="help"><div class="box">
+  <h3 style="margin-top:0">How to make a good character with a mouse</h3>
+  <ol class="hint" style="color:var(--text)">
+    <li><b>Start from something:</b> open your sketch, or pick a mannequin pose and trace it.</li>
+    <li><b>Ink on the Lines layer</b> with the pen. Stabiliser around 30–50, taper on. Draw long confident strokes; undo and redo a line rather than patching it.</li>
+    <li><b>Use symmetry</b> for faces and front-facing outfits, then turn it off for hair and poses.</li>
+    <li><b>Flat colours on the Colour layer:</b> bucket fill inside your lines (it ignores small gaps), or lasso big shapes.</li>
+    <li><b>Auto shading</b> once, then erase or lasso-cut bits you don't want on the Shading layer.</li>
+    <li><b>Airbrush</b> a little blush on cheeks, glow in the eyes, on the Light layer.</li>
+  </ol>
+  <table>
+    <tr><td>P N K A E</td><td>Pen, pencil, marker, airbrush, eraser</td></tr>
+    <tr><td>F / L</td><td>Fill bucket / lasso fill (Alt while drawing the lasso = cut out)</td></tr>
+    <tr><td>U / O</td><td>Line / ellipse</td></tr>
+    <tr><td>I or Alt+click</td><td>Pick a colour</td></tr>
+    <tr><td>V J C H</td><td>Move layer, pose mannequin, crop, pan</td></tr>
+    <tr><td>Y / G</td><td>Symmetry / mannequin on-off</td></tr>
+    <tr><td>[ ]</td><td>Brush size</td></tr>
+    <tr><td>Shift+click</td><td>Straight line from the end of your last stroke</td></tr>
+    <tr><td>Space</td><td>Hold to pan. Wheel zooms.</td></tr>
+    <tr><td>Ctrl+Z / Ctrl+Shift+Z</td><td>Undo / redo</td></tr>
+    <tr><td>Ctrl+S</td><td>Save project (.dmchar, keeps all layers)</td></tr>
+  </table>
+  <p><button onclick="document.getElementById('help').classList.remove('show')">Close</button></p>
+</div></div>
+
+<script>
+'use strict';
+let booted = false; // nothing draws until every part below has been set up
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; };
+const copyC = s => { const c = mk(s.width, s.height); c.getContext('2d').drawImage(s, 0, 0); return c; };
+const ctx2 = c => c.getContext('2d', { willReadFrequently: true });
+function toast(m, ms = 2400) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), ms); }
+const hexRgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+const rgbHex = (r, g, b) => '#' + [r, g, b].map(v => clamp(Math.round(v), 0, 255).toString(16).padStart(2, '0')).join('');
+
+/* ================================================================ document & layers */
+const doc = { w: 1200, h: 2400 };
+let layers = [], active = 0, uid = 1, dirty = false;
+const cv = $('#cv'), ov = $('#ov'), stage = $('#stage'), vp = $('#vp');
+const cctx = cv.getContext('2d'), octx = ov.getContext('2d');
+let sc = mk(doc.w, doc.h), scx = sc.getContext('2d');      // live stroke
+let tmpA = mk(doc.w, doc.h), tmpB = mk(doc.w, doc.h);       // compositing scratch
+
+function mkLayer(name, o = {}) { return { id: uid++, name, c: mk(doc.w, doc.h), visible: true, opacity: 1, blend: 'source-over', clip: false, lock: false, ref: false, ...o }; }
+function resizeSurfaces() {
+  for (const c of [cv, ov]) { c.width = doc.w; c.height = doc.h; }
+  stage.style.width = doc.w + 'px'; stage.style.height = doc.h + 'px';
+  sc = mk(doc.w, doc.h); scx = sc.getContext('2d'); tmpA = mk(doc.w, doc.h); tmpB = mk(doc.w, doc.h);
+}
+function newDoc(w, h, sketchImg) {
+  doc.w = w; doc.h = h; uid = 1;
+  layers = [
+    mkLayer('Sketch', { opacity: 0.45 }),
+    mkLayer('Colour'),
+    mkLayer('Shading', { clip: true, blend: 'multiply' }),
+    mkLayer('Light', { clip: true, blend: 'screen', opacity: 0.55 }),
+    mkLayer('Lines', { ref: true }),
+  ];
+  if (sketchImg) { const s = layers[0]; const k = Math.min(w / sketchImg.width, h / sketchImg.height); s.c.getContext('2d').drawImage(sketchImg, (w - sketchImg.width * k) / 2, (h - sketchImg.height * k) / 2, sketchImg.width * k, sketchImg.height * k); s.opacity = 1; }
+  active = sketchImg ? 0 : 4;
+  hist = []; fut = []; lastEnd = null; dirty = false;
+  resizeSurfaces(); guideReset(); fit(); renderLayers(); requestRender();
+}
+const byId = id => layers.find(L => L.id === id);
+const findLayer = name => layers.find(L => L.name.toLowerCase() === name.toLowerCase());
+function clipBase(i) { for (let j = i - 1; j >= 0; j--) if (!layers[j].clip) return j; return -1; }
+
+/* ================================================================ history */
+let hist = [], fut = [];
+function snap(changed) {
+  return { list: layers.map(L => ({ ...L })), px: changed.map(L => [L.id, copyC(L.c)]), w: doc.w, h: doc.h, active };
+}
+function pushHist(changed = []) { hist.push(snap(changed)); if (hist.length > 40) hist.shift(); fut = []; dirty = true; }
+function applySnap(e, into) {
+  into.push({ list: layers.map(L => ({ ...L })), px: e.px.map(([id]) => [id, copyC((byId(id) || e.list.find(o => o.id === id)).c)]), w: doc.w, h: doc.h, active });
+  const pxMap = new Map(e.px), cur = new Map(layers.map(L => [L.id, L.c]));
+  layers = e.list.map(o => ({ ...o, c: pxMap.get(o.id) || cur.get(o.id) || o.c }));
+  const sizeChanged = e.w !== doc.w || e.h !== doc.h;
+  doc.w = e.w; doc.h = e.h; active = clamp(e.active, 0, layers.length - 1);
+  if (sizeChanged) { resizeSurfaces(); fit(); }
+  renderLayers(); requestRender();
+}
+const undo = () => { const e = hist.pop(); if (e) applySnap(e, fut); };
+const redo = () => { const e = fut.pop(); if (e) applySnap(e, hist); };
+
+/* ================================================================ rendering */
+let bgMode = 'checker', sceneImg = null;
+let live = null; // {alpha, op} while a stroke/lasso/move is in progress on the active layer
+let moveOff = null;
+function layerSource(i) {
+  const L = layers[i];
+  if (i === active && xf && (xf.s !== 1 || xf.r !== 0)) {
+    const x = tmpA.getContext('2d'); x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, doc.w, doc.h);
+    applyXf(x); x.drawImage(L.c, 0, 0); x.restore(); return tmpA;
+  }
+  if (i !== active || (!live && !moveOff)) return L.c;
+  const x = tmpA.getContext('2d'); x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1; x.clearRect(0, 0, doc.w, doc.h);
+  if (moveOff) { x.drawImage(L.c, moveOff.x, moveOff.y); return tmpA; }
+  x.drawImage(L.c, 0, 0);
+  x.globalAlpha = live.alpha; x.globalCompositeOperation = live.op === 'erase' ? 'destination-out' : L.lock ? 'source-atop' : 'source-over';
+  x.drawImage(sc, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+  return tmpA;
+}
+function composite(ctx, forExport) {
+  ctx.save(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, doc.w, doc.h);
+  if (!forExport) {
+    if (bgMode === 'white') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, doc.w, doc.h); }
+    else if (bgMode === 'dark') { ctx.fillStyle = '#22212a'; ctx.fillRect(0, 0, doc.w, doc.h); }
+    else if (bgMode === 'scene' && sceneImg) { const k = Math.max(doc.w / sceneImg.width, doc.h / sceneImg.height); ctx.drawImage(sceneImg, (doc.w - sceneImg.width * k) / 2, (doc.h - sceneImg.height * k) / 2, sceneImg.width * k, sceneImg.height * k); }
+  }
+  for (let i = 0; i < layers.length; i++) {
+    const L = layers[i]; if (!L.visible || L.opacity <= 0) continue;
+    if (forExport && L.name === 'Sketch') continue;
+    let src = layerSource(i);
+    if (L.clip) {
+      const b = clipBase(i); if (b < 0 || !layers[b].visible) continue;
+      const x = tmpB.getContext('2d'); x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, doc.w, doc.h);
+      x.drawImage(src, 0, 0); x.globalCompositeOperation = 'destination-in'; x.drawImage(layerSource(b) === tmpA && b !== active ? layers[b].c : layers[b].c, 0, 0); x.globalCompositeOperation = 'source-over';
+      src = tmpB;
+    }
+    ctx.globalAlpha = L.opacity; ctx.globalCompositeOperation = L.blend; ctx.drawImage(src, 0, 0);
+  }
+  ctx.restore();
+}
+let raf = 0;
+function requestRender() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; composite(cctx, false); drawOverlay(); }); }
+
+/* ================================================================ view */
+const view = { zoom: 1, x: 0, y: 0 };
+function applyView() { stage.style.transform = `translate(${view.x}px,${view.y}px) scale(${view.zoom})`; $('#zoomLbl').textContent = Math.round(view.zoom * 100) + '%'; drawOverlay(); }
+function fit() { const r = vp.getBoundingClientRect(); view.zoom = Math.min((r.width - 40) / doc.w, (r.height - 40) / doc.h); view.x = (r.width - doc.w * view.zoom) / 2; view.y = (r.height - doc.h * view.zoom) / 2; applyView(); }
+function zoomAt(f, cx, cy) { const r = vp.getBoundingClientRect(); if (cx == null) { cx = r.width / 2; cy = r.height / 2; } const nz = clamp(view.zoom * f, 0.03, 16); view.x = cx - (cx - view.x) * nz / view.zoom; view.y = cy - (cy - view.y) * nz / view.zoom; view.zoom = nz; applyView(); }
+window.addEventListener('resize', applyView);
+const toDoc = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * doc.w, y: (e.clientY - r.top) / r.height * doc.h, t: performance.now() }; };
+
+/* ================================================================ brush settings */
+const B = { color: '#1d1a22', size: 8, opa: 1, stab: 28, taper: 0.6, speedThin: true };
+let tool = 'pen', sym = false, symX = 0.5;
+function setColor(c, addRecent = true) {
+  B.color = c; $('#col').value = c; $('#curCol').style.background = c;
+  if (addRecent) { recent = [c, ...recent.filter(x => x !== c)].slice(0, 10); renderRecent(); }
+}
+let recent = [];
+function renderRecent() { $('#recent').innerHTML = ''; for (const c of recent) { const s = document.createElement('span'); s.className = 'sw'; s.style.cssText = `background:${c};width:20px;height:20px`; s.onclick = () => setColor(c, false); $('#recent').append(s); } }
+function bindR(id, obj, key, fmt) { const el = $('#' + id), v = $('#' + id + 'V'); const up = () => { obj[key] = +el.value; if (v) v.textContent = fmt(obj[key]); drawOverlay(); }; el.oninput = up; up(); return el; }
+bindR('size', B, 'size', v => v + 'px'); bindR('opa', B, 'opa', v => Math.round(v * 100) + '%');
+bindR('stab', B, 'stab', v => v ? v : 'off'); bindR('taper', B, 'taper', v => Math.round(v * 100) + '%');
+$('#speedThin').onchange = e => B.speedThin = e.target.checked;
+$('#col').oninput = e => setColor(e.target.value);
+const F = {}; bindR('fTol', F, 'tol', v => v); bindR('fGap', F, 'gap', v => v + 'px'); bindR('fGrow', F, 'grow', v => v + 'px');
+const SH = {}; bindR('shAng', SH, 'ang', v => v + '°'); bindR('shDep', SH, 'dep', v => v + 'px'); bindR('shSoft', SH, 'soft', v => v + 'px');
+const EX = {}; bindR('exThr', EX, 'thr', v => v.toFixed(2)); bindR('exK', EX, 'k', v => v);
+
+/* ================================================================ palettes (sampled from your sheets) */
+const PALETTES = [
+  ['Maeve', [['#ede6e7', 'hair'], ['#c9bfc2', 'hair shade'], ['#f3ebea', 'skin'], ['#e0343c', 'eyes'], ['#2a2422', 'suit'], ['#141110', 'suit shade'], ['#4b688a', 'collar / cuffs'], ['#1d1a22', 'lines']]],
+  ['Iris', [['#9bc9fd', 'hair'], ['#5b8fd6', 'hair shade'], ['#2f5aa8', 'hair lines'], ['#ffe3d5', 'skin'], ['#f2c4b4', 'skin shade'], ['#4a3d3a', 'eyes'], ['#373330', 'vest'], ['#537092', 'skirt'], ['#dfe8f2', 'shirt'], ['#5a5250', 'socks']]],
+  ['Naomi', [['#f9d79b', 'hair'], ['#eeae6a', 'hair shade'], ['#64b0fe', 'bows / collar'], ['#cfe6ff', 'collar light'], ['#ffe3d5', 'skin'], ['#3a8de8', 'eyes'], ['#373330', 'jacket'], ['#537092', 'skirt'], ['#b8a596', 'tights'], ['#4b4641', 'thigh-highs']]],
+  ['Blond boy', [['#feecaa', 'hair'], ['#e9c75a', 'hair shade'], ['#4b5fd6', 'eyes'], ['#f9dbd1', 'skin'], ['#e8bfb2', 'skin shade'], ['#e1f1fe', 'shirt'], ['#b9d3ea', 'shirt shade']]],
+  ['Glasses boy', [['#725a5a', 'hair'], ['#4f3c3c', 'hair shade'], ['#fdeee8', 'skin'], ['#ecd3c9', 'skin shade'], ['#1d1b1f', 'glasses'], ['#e1f1fe', 'shirt'], ['#b9d3ea', 'shirt shade']]],
+  ['Shading', [['#a597c9', 'cool shadow'], ['#c9a3b5', 'warm shadow'], ['#7f86b8', 'night shadow'], ['#fff1d6', 'warm light'], ['#d9ecff', 'cool light'], ['#ff9fb2', 'blush']]],
+  ['Skin', [['#fff0e6', ''], ['#ffe3d5', ''], ['#f6cdb4', ''], ['#e3b08f', ''], ['#c68b64', ''], ['#9a6343', ''], ['#6b4430', '']]],
+];
+(function buildPalettes() {
+  const host = $('#palettes');
+  for (const [name, cols] of PALETTES) {
+    const d = document.createElement('div'); d.className = 'pal'; d.innerHTML = `<b>${name}</b>`;
+    for (const [c, label] of cols) { const s = document.createElement('span'); s.className = 'sw'; s.style.background = c; s.title = label ? `${label} ${c}` : c; s.onclick = () => setColor(c); d.append(s); }
+    host.append(d);
+  }
+})();
+
+/* ================================================================ layers UI */
+function renderLayers() {
+  const host = $('#layerList'); host.innerHTML = '';
+  for (let i = layers.length - 1; i >= 0; i--) {
+    const L = layers[i];
+    const d = document.createElement('div'); d.className = 'layer' + (i === active ? ' sel' : '') + (L.clip ? ' clip' : '');
+    const th = mk(30, 40); const k = Math.min(30 / doc.w, 40 / doc.h); th.getContext('2d').drawImage(L.c, (30 - doc.w * k) / 2, (40 - doc.h * k) / 2, doc.w * k, doc.h * k);
+    const name = document.createElement('span'); name.textContent = L.name; name.title = 'Double-click to rename';
+    name.ondblclick = ev => { ev.stopPropagation(); const n = prompt('Layer name', L.name); if (n) { pushHist(); L.name = n; renderLayers(); } };
+    const eye = document.createElement('button'); eye.textContent = L.visible ? '👁' : '–';
+    eye.onclick = ev => { ev.stopPropagation(); L.visible = !L.visible; renderLayers(); requestRender(); };
+    d.append(th, name);
+    if (L.clip) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = 'clip'; d.append(t); }
+    if (L.ref) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = 'ref'; d.append(t); }
+    d.append(eye);
+    d.onclick = () => { active = i; renderLayers(); };
+    host.append(d);
+  }
+  const L = layers[active]; if (!L) return;
+  $('#lOpa').value = L.opacity; $('#lOpaV').textContent = Math.round(L.opacity * 100) + '%';
+  $('#lBlend').value = L.blend; $('#lClip').checked = L.clip; $('#lLock').checked = L.lock; $('#lRef').checked = L.ref;
+}
+let opaPushed = false;
+$('#lOpa').addEventListener('pointerdown', () => { if (!opaPushed) { pushHist(); opaPushed = true; } });
+$('#lOpa').addEventListener('change', () => opaPushed = false);
+$('#lOpa').oninput = e => { layers[active].opacity = +e.target.value; $('#lOpaV').textContent = Math.round(e.target.value * 100) + '%'; requestRender(); };
+$('#lBlend').onchange = e => { pushHist(); layers[active].blend = e.target.value; requestRender(); };
+$('#lClip').onchange = e => { pushHist(); layers[active].clip = e.target.checked; renderLayers(); requestRender(); };
+$('#lLock').onchange = e => { pushHist(); layers[active].lock = e.target.checked; };
+$('#lRef').onchange = e => { pushHist(); layers[active].ref = e.target.checked; renderLayers(); };
+$('#lAdd').onclick = () => { pushHist(); layers.splice(active + 1, 0, mkLayer('Layer ' + uid)); active++; renderLayers(); };
+$('#lDup').onclick = () => { pushHist(); const L = layers[active]; const n = { ...L, id: uid++, name: L.name + ' copy', c: copyC(L.c) }; layers.splice(active + 1, 0, n); active++; renderLayers(); requestRender(); };
+$('#lUp').onclick = () => { if (active >= layers.length - 1) return; pushHist(); [layers[active], layers[active + 1]] = [layers[active + 1], layers[active]]; active++; renderLayers(); requestRender(); };
+$('#lDown').onclick = () => { if (active <= 0) return; pushHist(); [layers[active], layers[active - 1]] = [layers[active - 1], layers[active]]; active--; renderLayers(); requestRender(); };
+$('#lDel').onclick = () => { if (layers.length <= 1) return; pushHist(); layers.splice(active, 1); active = Math.max(0, active - 1); renderLayers(); requestRender(); };
+$('#lClear').onclick = () => { const L = layers[active]; pushHist([L]); L.c.getContext('2d').clearRect(0, 0, doc.w, doc.h); renderLayers(); requestRender(); };
+$('#lMergeDown').onclick = () => {
+  if (active <= 0) return; const top = layers[active], below = layers[active - 1];
+  pushHist([below]);
+  const x = below.c.getContext('2d'); let src = top.c;
+  if (top.clip) { const t = copyC(top.c), tx = t.getContext('2d'); tx.globalCompositeOperation = 'destination-in'; tx.drawImage(layers[clipBase(active)].c, 0, 0); src = t; }
+  x.save(); x.globalAlpha = top.opacity; x.globalCompositeOperation = below.lock ? 'source-atop' : top.blend; x.drawImage(src, 0, 0); x.restore();
+  layers.splice(active, 1); active--; renderLayers(); requestRender();
+};
+$('#lFlip').onclick = () => { const L = layers[active]; pushHist([L]); const c = copyC(L.c), x = L.c.getContext('2d'); x.clearRect(0, 0, doc.w, doc.h); x.save(); x.translate(doc.w, 0); x.scale(-1, 1); x.drawImage(c, 0, 0); x.restore(); renderLayers(); requestRender(); };
+
+/* ================================================================ stroke engine */
+let stroke = null, lastEnd = null, painting = false;
+const BRUSHES = ['pen', 'pencil', 'marker', 'air', 'eraser'];
+
+function chaikin(pts, it) {
+  let p = pts;
+  for (let k = 0; k < it && p.length > 2; k++) {
+    const q = [p[0]];
+    for (let i = 0; i < p.length - 1; i++) {
+      const a = p[i], b = p[i + 1];
+      q.push({ x: a.x * 0.75 + b.x * 0.25, y: a.y * 0.75 + b.y * 0.25, w: (a.w ?? 1) * 0.75 + (b.w ?? 1) * 0.25 });
+      q.push({ x: a.x * 0.25 + b.x * 0.75, y: a.y * 0.25 + b.y * 0.75, w: (a.w ?? 1) * 0.25 + (b.w ?? 1) * 0.75 });
+    }
+    q.push(p[p.length - 1]); p = q;
+  }
+  return p;
+}
+const smooth01 = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+// assigns a width factor (0..1) to each point: speed-based thinning + tapered ends
+function widths(pts, final, kind) {
+  let v = 0; pts[0].w = 1;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], dt = Math.max(1, (b.t || 0) - (a.t || 0)), d = Math.hypot(b.x - a.x, b.y - a.y);
+    v = v * 0.75 + (d / dt) * 0.25;
+    b.w = B.speedThin && kind === 'pen' ? clamp(1.12 - v * 0.18, 0.45, 1.12) : 1;
+  }
+  if (pts.length > 1) pts[0].w = pts[1].w;
+  if (B.taper > 0 && kind !== 'marker') {
+    let total = 0; const cum = [0];
+    for (let i = 1; i < pts.length; i++) { total += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); cum.push(total); }
+    const tl = Math.max(6, B.size * 5 * B.taper);
+    for (let i = 0; i < pts.length; i++) {
+      let f = 0.12 + 0.88 * smooth01(cum[i] / tl);
+      if (final) f *= 0.12 + 0.88 * smooth01((total - cum[i]) / (tl * 1.3));
+      pts[i].w *= f;
+    }
+  }
+}
+function drawVarLine(x, pts, size, color) {
+  x.strokeStyle = color; x.fillStyle = color; x.lineCap = 'round'; x.lineJoin = 'round';
+  if (pts.length === 1) { x.beginPath(); x.arc(pts[0].x, pts[0].y, Math.max(0.4, size * (pts[0].w ?? 1) / 2), 0, 7); x.fill(); return; }
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    x.lineWidth = Math.max(0.5, size * ((a.w ?? 1) + (b.w ?? 1)) / 2);
+    x.beginPath(); x.moveTo(a.x, a.y); x.lineTo(b.x, b.y); x.stroke();
+  }
+}
+function airDabs(x, pts, size, color) {
+  const [r, g, b] = hexRgb(color), rad = size;
+  let acc = 0;
+  const dab = (px, py) => { const gr = x.createRadialGradient(px, py, 0, px, py, rad); gr.addColorStop(0, `rgba(${r},${g},${b},0.09)`); gr.addColorStop(1, `rgba(${r},${g},${b},0)`); x.fillStyle = gr; x.fillRect(px - rad, py - rad, rad * 2, rad * 2); };
+  dab(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], bb = pts[i], d = Math.hypot(bb.x - a.x, bb.y - a.y); acc += d;
+    const step = Math.max(1, rad * 0.2);
+    while (acc >= step) { acc -= step; const t = 1 - acc / Math.max(d, 1e-6); dab(a.x + (bb.x - a.x) * t, a.y + (bb.y - a.y) * t); }
+  }
+}
+const mirror = pts => pts.map(p => ({ ...p, x: 2 * symX * doc.w - p.x }));
+function renderStroke(final) {
+  scx.clearRect(0, 0, doc.w, doc.h);
+  if (!stroke) return;
+  const kind = stroke.kind;
+  let pts = stroke.pts.map(p => ({ ...p }));
+  if (kind === 'ellipse-closed') { /* already smooth */ }
+  else pts = chaikin(pts, pts.length > 3 ? 2 : 0);
+  const sets = sym ? [pts, mirror(pts)] : [pts];
+  for (const p of sets) {
+    if (kind === 'air') { airDabs(scx, p, B.size, stroke.color); continue; }
+    const k = kind === 'eraser' ? 'pen' : kind;
+    const size = k === 'pencil' ? Math.max(1, B.size * 0.6) : B.size;
+    if (k === 'marker' || stroke.noTaper) p.forEach(q => q.w = 1); else widths(p, final, k === 'pen' ? 'pen' : 'pencil');
+    drawVarLine(scx, p, size, kind === 'eraser' ? '#000' : stroke.color);
+  }
+}
+function beginStroke(p, kind) {
+  stroke = { kind, color: B.color, pts: [p], sp: { ...p } };
+  live = { alpha: kind === 'pencil' ? B.opa * 0.85 : kind === 'air' ? Math.min(1, B.opa * 1.4) : B.opa, op: kind === 'eraser' ? 'erase' : 'paint' };
+  renderStroke(false); requestRender();
+}
+function extendStroke(p) {
+  if (stroke.snapped) return; // a snapped shape stays put until you let go
+  const zoomPx = cv.getBoundingClientRect().width / doc.w;
+  const R = B.stab / zoomPx;
+  const sp = stroke.sp, d = Math.hypot(p.x - sp.x, p.y - sp.y);
+  if (R > 0) { if (d <= R) return; sp.x += (p.x - sp.x) * (d - R) / d; sp.y += (p.y - sp.y) * (d - R) / d; }
+  else { sp.x = p.x; sp.y = p.y; }
+  const last = stroke.pts[stroke.pts.length - 1];
+  if (Math.hypot(sp.x - last.x, sp.y - last.y) < 0.8 / Math.max(zoomPx, 0.2)) return;
+  stroke.pts.push({ x: sp.x, y: sp.y, t: p.t });
+  renderStroke(false); requestRender();
+}
+function commitStroke(endP) {
+  if (!stroke) return;
+  if (endP && B.stab > 0 && !stroke.noCatch && !stroke.snapped) { const l = stroke.pts[stroke.pts.length - 1]; if (Math.hypot(endP.x - l.x, endP.y - l.y) > 0.5) stroke.pts.push({ x: endP.x, y: endP.y, t: endP.t }); }
+  if (!stroke.noCatch && !stroke.snapped && ['pen', 'pencil', 'marker', 'eraser'].includes(stroke.kind)) stroke.pts = smoothPts(stroke.pts, +$('#aSmooth').value);
+  if ($('#aJoin').checked && ['pen', 'pencil', 'marker'].includes(stroke.kind) && !stroke.closed) joinEnds(layers[active], stroke.pts);
+  renderStroke(true);
+  const L = layers[active]; pushHist([L]);
+  const x = L.c.getContext('2d'); x.save(); x.globalAlpha = live.alpha;
+  x.globalCompositeOperation = live.op === 'erase' ? 'destination-out' : L.lock ? 'source-atop' : 'source-over';
+  x.drawImage(sc, 0, 0); x.restore();
+  const last = stroke.pts[stroke.pts.length - 1]; lastEnd = { x: last.x, y: last.y };
+  stroke = null; live = null; scx.clearRect(0, 0, doc.w, doc.h);
+  renderLayers(); requestRender();
+}
+function lineStroke(a, b, kind) {
+  const n = Math.max(2, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 3)), pts = [];
+  for (let i = 0; i <= n; i++) pts.push({ x: a.x + (b.x - a.x) * i / n, y: a.y + (b.y - a.y) * i / n, t: i * 8 });
+  return { kind, color: B.color, pts, noCatch: true };
+}
+function ellipseStroke(a, b, circle) {
+  let w = b.x - a.x, h = b.y - a.y;
+  if (circle) { const s = Math.max(Math.abs(w), Math.abs(h)); w = Math.sign(w || 1) * s; h = Math.sign(h || 1) * s; }
+  const cx = a.x + w / 2, cy = a.y + h / 2, rx = Math.abs(w / 2), ry = Math.abs(h / 2);
+  const n = Math.max(24, Math.ceil(Math.PI * (rx + ry) / 3)), pts = [];
+  for (let i = 0; i <= n; i++) { const t = i / n * Math.PI * 2; pts.push({ x: cx + Math.cos(t) * rx, y: cy + Math.sin(t) * ry, t: i * 8 }); }
+  return { kind: 'pen', color: B.color, pts, noTaper: true, noCatch: true };
+}
+
+/* ================================================================ lasso */
+let lasso = null;
+function commitLasso() {
+  const L = layers[active], pts = lasso.pts; if (pts.length < 3) { lasso = null; return; }
+  pushHist([L]);
+  const x = L.c.getContext('2d'); x.save();
+  x.globalCompositeOperation = lasso.erase ? 'destination-out' : L.lock ? 'source-atop' : 'source-over';
+  x.globalAlpha = lasso.erase ? 1 : B.opa; x.fillStyle = B.color;
+  const poly = p => { x.beginPath(); x.moveTo(p[0].x, p[0].y); for (const q of p) x.lineTo(q.x, q.y); x.closePath(); x.fill(); };
+  const sm = chaikin(pts, 2); poly(sm); if (sym) poly(mirror(sm));
+  x.restore(); lasso = null; renderLayers(); requestRender();
+}
+
+/* ================================================================ fill bucket */
+function dilate(mask, w, h, r) {
+  if (r <= 0) return mask;
+  let a = mask, b = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) { // horizontal running max
+    let run = -1e9; const row = y * w;
+    for (let x = 0; x < w; x++) { if (a[row + x]) run = x; b[row + x] = x - run <= r ? 1 : 0; }
+    run = 1e9; for (let x = w - 1; x >= 0; x--) { if (a[row + x]) run = x; if (run - x <= r) b[row + x] = 1; }
+  }
+  const c = new Uint8Array(w * h);
+  for (let x = 0; x < w; x++) {
+    let run = -1e9; for (let y = 0; y < h; y++) { if (b[y * w + x]) run = y; c[y * w + x] = y - run <= r ? 1 : 0; }
+    run = 1e9; for (let y = h - 1; y >= 0; y--) { if (b[y * w + x]) run = y; if (run - y <= r) c[y * w + x] = 1; }
+  }
+  return c;
+}
+function flood(pass, w, h, sx, sy) {
+  const out = new Uint8Array(w * h), st = [sx, sy];
+  if (!pass[sy * w + sx]) return out;
+  while (st.length) {
+    let y = st.pop(), x = st.pop(), i = y * w + x;
+    while (x >= 0 && pass[i] && !out[i]) { x--; i--; } x++; i++;
+    let up = false, dn = false;
+    while (x < w && pass[i] && !out[i]) {
+      out[i] = 1;
+      if (y > 0) { const j = i - w; if (pass[j] && !out[j]) { if (!up) { st.push(x, y - 1); up = true; } } else up = false; }
+      if (y < h - 1) { const j = i + w; if (pass[j] && !out[j]) { if (!dn) { st.push(x, y + 1); dn = true; } } else dn = false; }
+      x++; i++;
+    }
+  }
+  return out;
+}
+function bucket(p) {
+  const w = doc.w, h = doc.h, sx = Math.floor(p.x), sy = Math.floor(p.y);
+  if (sx < 0 || sy < 0 || sx >= w || sy >= h) return;
+  const s = mk(w, h), sxx = ctx2(s);
+  const all = $('#fAll').checked;
+  for (let i = 0; i < layers.length; i++) { const L = layers[i]; if (L.visible && (all || L.ref || i === active)) { sxx.globalAlpha = all ? L.opacity : 1; sxx.drawImage(L.c, 0, 0); } }
+  const d = sxx.getImageData(0, 0, w, h).data, si = (sy * w + sx) * 4;
+  const sa = d[si + 3], sr = d[si] * sa / 255, sg = d[si + 1] * sa / 255, sb = d[si + 2] * sa / 255, tol = F.tol;
+  const pass = new Uint8Array(w * h);
+  for (let i = 0, j = 0; j < w * h; i += 4, j++) {
+    const a = d[i + 3], r = d[i] * a / 255, g = d[i + 1] * a / 255, b = d[i + 2] * a / 255;
+    pass[j] = Math.max(Math.abs(r - sr), Math.abs(g - sg), Math.abs(b - sb), Math.abs(a - sa)) <= tol ? 1 : 0;
+  }
+  let region;
+  if (F.gap > 0) {
+    const barrier = new Uint8Array(w * h); for (let j = 0; j < w * h; j++) barrier[j] = pass[j] ? 0 : 1;
+    const db = dilate(barrier, w, h, F.gap), p2 = new Uint8Array(w * h); for (let j = 0; j < w * h; j++) p2[j] = pass[j] && !db[j] ? 1 : 0;
+    region = p2[sy * w + sx] ? flood(p2, w, h, sx, sy) : flood(pass, w, h, sx, sy);
+    if (p2[sy * w + sx]) { region = dilate(region, w, h, F.gap); for (let j = 0; j < w * h; j++) region[j] = region[j] && pass[j] ? 1 : 0; }
+  } else region = flood(pass, w, h, sx, sy);
+  if (F.grow > 0) region = dilate(region, w, h, F.grow);
+  let count = 0; for (let j = 0; j < w * h; j++) count += region[j];
+  if (count > w * h * 0.97) { toast('That would fill the whole canvas. Close the outline, raise “Close gaps”, or click inside a shape.'); return; }
+  const L = layers[active]; pushHist([L]);
+  const fc = mk(w, h), fx = fc.getContext('2d'), id = fx.createImageData(w, h), od = id.data, [r, g, b] = hexRgb(B.color);
+  for (let j = 0, i = 0; j < w * h; j++, i += 4) if (region[j]) { od[i] = r; od[i + 1] = g; od[i + 2] = b; od[i + 3] = 255; }
+  fx.putImageData(id, 0, 0);
+  const x = L.c.getContext('2d'); x.save(); x.globalAlpha = B.opa; x.globalCompositeOperation = L.lock ? 'source-atop' : 'source-over'; x.drawImage(fc, 0, 0); x.restore();
+  renderLayers(); requestRender();
+}
+
+/* ================================================================ auto shading */
+function autoShade(rim) {
+  const src = findLayer('Colour'); if (!src) return toast('Needs a layer called “Colour” with your flat colours');
+  let target = findLayer(rim ? 'Light' : 'Shading');
+  pushHist(target ? [target] : []);
+  if (!target) { const i = layers.indexOf(src) + 1; target = mkLayer(rim ? 'Light' : 'Shading', { clip: true, blend: rim ? 'screen' : 'multiply' }); layers.splice(i, 0, target); }
+  const w = doc.w, h = doc.h, d = ctx2(src.c).getImageData(0, 0, w, h).data;
+  const a = SH.ang * Math.PI / 180, lx = Math.cos(a), ly = -Math.sin(a);   // vector pointing toward the light
+  // a rim is a thin edge highlight, so it uses a much shallower depth than the shadow
+  const depth = rim ? Math.max(2, SH.dep * 0.35) : SH.dep;
+  const dir = rim ? 1 : -1, ox = Math.round(lx * depth * dir), oy = Math.round(ly * depth * dir);
+  const out = new Uint8ClampedArray(w * h * 4), [cr, cg, cb] = hexRgb($(rim ? '#rimCol' : '#shCol').value);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = (y * w + x) * 4; if (d[i + 3] < 128) continue;
+    if (rim && d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114 < 80) continue; // rim light on black cloth just looks grey
+    const qx = x + ox, qy = y + oy; let edge;
+    if (qx < 0 || qy < 0 || qx >= w || qy >= h) edge = true;
+    else { const j = (qy * w + qx) * 4; edge = d[j + 3] < 128 || Math.abs(d[j] - d[i]) + Math.abs(d[j + 1] - d[i + 1]) + Math.abs(d[j + 2] - d[i + 2]) > 36; }
+    if (edge) { out[i] = cr; out[i + 1] = cg; out[i + 2] = cb; out[i + 3] = 255; }
+  }
+  const m = mk(w, h); m.getContext('2d').putImageData(new ImageData(out, w, h), 0, 0);
+  const x = target.c.getContext('2d'); x.save(); if (SH.soft > 0) x.filter = `blur(${SH.soft}px)`; x.drawImage(m, 0, 0); x.restore();
+  // keep the result inside the flats even after blurring
+  x.save(); x.globalCompositeOperation = 'destination-in'; x.drawImage(src.c, 0, 0); x.restore();
+  active = layers.indexOf(target); renderLayers(); requestRender();
+  toast(rim ? 'Rim light added to the Light layer' : 'Shadows added to the Shading layer. Erase any you don’t want.');
+}
+$('#bShade').onclick = () => autoShade(false);
+$('#bRim').onclick = () => autoShade(true);
+
+/* ================================================================ sketch → lines & flats */
+function sketchData() { const L = layers[active]; return { L, d: ctx2(L.c).getImageData(0, 0, doc.w, doc.h).data }; }
+function lineMask(d, w, h) {
+  const thr = EX.thr, dark = new Uint8Array(w * h), alpha = new Float32Array(w * h);
+  for (let j = 0, i = 0; j < w * h; j++, i += 4) {
+    const a = d[i + 3] / 255; if (a < 0.1) continue;
+    const r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255;
+    const lum = (0.299 * r + 0.587 * g + 0.114 * b) * a + (1 - a), sat = Math.max(r, g, b) - Math.min(r, g, b);
+    if (lum < thr && sat < 0.3) { dark[j] = 1; alpha[j] = clamp((thr - lum) / (thr * 0.55), 0.25, 1); }
+  }
+  if ($('#exThin').checked) {
+    const k = Math.max(3, Math.round(Math.min(w, h) / 700) + 2);
+    // erode: a pixel survives if everything within k is dark, i.e. it is inside a big dark area
+    const notDark = new Uint8Array(w * h); for (let j = 0; j < w * h; j++) notDark[j] = dark[j] ? 0 : 1;
+    const nearLight = dilate(notDark, w, h, k), core = new Uint8Array(w * h);
+    for (let j = 0; j < w * h; j++) core[j] = dark[j] && !nearLight[j] ? 1 : 0;
+    const blob = dilate(core, w, h, k + 1);
+    for (let j = 0; j < w * h; j++) if (blob[j]) { dark[j] = 0; alpha[j] = 0; }
+  }
+  return { dark, alpha };
+}
+$('#bExLines').onclick = () => {
+  const { L, d } = sketchData(), w = doc.w, h = doc.h;
+  const { dark, alpha } = lineMask(d, w, h);
+  let lines = findLayer('Lines'); if (!lines) { lines = mkLayer('Lines', { ref: true }); layers.push(lines); }
+  pushHist([lines]);
+  const [r, g, b] = hexRgb($('#exCol').value), out = new Uint8ClampedArray(w * h * 4);
+  let n = 0;
+  for (let j = 0, i = 0; j < w * h; j++, i += 4) if (dark[j]) { out[i] = r; out[i + 1] = g; out[i + 2] = b; out[i + 3] = alpha[j] * 255; n++; }
+  const x = lines.c.getContext('2d'); x.clearRect(0, 0, w, h); x.putImageData(new ImageData(out, w, h), 0, 0);
+  lines.ref = true; L.opacity = Math.min(L.opacity, 0.35); active = layers.indexOf(lines);
+  renderLayers(); requestRender(); toast(n ? 'Lines extracted. Dim or hide the Sketch layer to see them.' : 'No lines found. Raise “Line darkness”.');
+};
+// k-means on the opaque pixels, then snap every pixel to its cluster and clean speckles with a 3x3 majority pass
+function simplifyColours(px, w, h, k) {
+  const N = w * h, idx = [];
+  for (let j = 0; j < N; j++) if (px[j * 4 + 3]) idx.push(j);
+  if (idx.length < k) return;
+  const rnd = (() => { let s = 99; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+  const samp = []; for (let n = 0; n < Math.min(30000, idx.length); n++) samp.push(idx[(rnd() * idx.length) | 0]);
+  let C = []; for (let c = 0; c < k; c++) { const j = samp[(rnd() * samp.length) | 0]; C.push([px[j * 4], px[j * 4 + 1], px[j * 4 + 2]]); }
+  const near = (r, g, b) => { let bi = 0, bd = 1e9; for (let c = 0; c < C.length; c++) { const dd = (C[c][0] - r) ** 2 + (C[c][1] - g) ** 2 * 1.4 + (C[c][2] - b) ** 2; if (dd < bd) { bd = dd; bi = c; } } return bi; };
+  for (let it = 0; it < 10; it++) {
+    const S = C.map(() => [0, 0, 0, 0]);
+    for (const j of samp) { const c = near(px[j * 4], px[j * 4 + 1], px[j * 4 + 2]); S[c][0] += px[j * 4]; S[c][1] += px[j * 4 + 1]; S[c][2] += px[j * 4 + 2]; S[c][3]++; }
+    C = C.map((c, i) => S[i][3] ? [S[i][0] / S[i][3], S[i][1] / S[i][3], S[i][2] / S[i][3]] : c);
+  }
+  const lab = new Int16Array(N).fill(-1);
+  for (const j of idx) lab[j] = near(px[j * 4], px[j * 4 + 1], px[j * 4 + 2]);
+  const lab2 = Int16Array.from(lab), cnt = new Uint16Array(k);
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    const j = y * w + x; if (lab[j] < 0) continue;
+    cnt.fill(0); let best = lab[j], bc = 0;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const l = lab[j + dy * w + dx]; if (l >= 0 && ++cnt[l] > bc) { bc = cnt[l]; best = l; } }
+    lab2[j] = bc >= 5 ? best : lab[j];
+  }
+  for (const j of idx) { const c = C[lab2[j]]; px[j * 4] = c[0]; px[j * 4 + 1] = c[1]; px[j * 4 + 2] = c[2]; }
+}
+$('#bExFlats').onclick = () => {
+  const { L, d } = sketchData(), w = doc.w, h = doc.h, N = w * h;
+  const { dark } = lineMask(d, w, h);
+  const isLine = dilate(dark, w, h, 1);
+  // light antialiasing pixels hugging a line would otherwise become a cream halo; let them take the neighbouring colour instead
+  const nearLine = dilate(dark, w, h, Math.max(3, Math.round(Math.min(w, h) / 300)));
+  for (let j = 0, i = 0; j < N; j++, i += 4) {
+    if (!nearLine[j] || isLine[j]) continue;
+    const mx = Math.max(d[i], d[i + 1], d[i + 2]), mn = Math.min(d[i], d[i + 1], d[i + 2]);
+    // near-white halo, or the soft grey edge of an ink line
+    if (mn > 205 || (mx - mn < 40 && mx < 200)) isLine[j] = 1;
+  }
+  // background = near-white connected to the border, stopping at lines
+  const bgPass = new Uint8Array(N);
+  for (let j = 0, i = 0; j < N; j++, i += 4) {
+    const a = d[i + 3]; if (a < 20) { bgPass[j] = 1; continue; }
+    const mx = Math.max(d[i], d[i + 1], d[i + 2]), mn = Math.min(d[i], d[i + 1], d[i + 2]);
+    bgPass[j] = !isLine[j] && mn > 225 && mx - mn < 22 ? 1 : 0;
+  }
+  const bg = new Uint8Array(N);
+  for (let x = 0; x < w; x++) for (const y of [0, h - 1]) if (bgPass[y * w + x] && !bg[y * w + x]) { const f = flood(bgPass, w, h, x, y); for (let j = 0; j < N; j++) if (f[j]) bg[j] = 1; }
+  for (let y = 0; y < h; y++) for (const x of [0, w - 1]) if (bgPass[y * w + x] && !bg[y * w + x]) { const f = flood(bgPass, w, h, x, y); for (let j = 0; j < N; j++) if (f[j]) bg[j] = 1; }
+  // colour every non-background pixel; line pixels take the colour of the nearest non-line neighbour (multi-source BFS)
+  const out = new Uint8ClampedArray(N * 4), done = new Uint8Array(N), q = new Int32Array(N); let qh = 0, qt = 0;
+  for (let j = 0, i = 0; j < N; j++, i += 4) if (!bg[j] && !isLine[j]) { out[i] = d[i]; out[i + 1] = d[i + 1]; out[i + 2] = d[i + 2]; out[i + 3] = 255; done[j] = 1; q[qt++] = j; }
+  while (qh < qt) {
+    const j = q[qh++], x = j % w, y = (j / w) | 0;
+    for (const n of [x > 0 ? j - 1 : -1, x < w - 1 ? j + 1 : -1, y > 0 ? j - w : -1, y < h - 1 ? j + w : -1]) {
+      if (n < 0 || done[n] || bg[n]) continue;
+      done[n] = 1; out[n * 4] = out[j * 4]; out[n * 4 + 1] = out[j * 4 + 1]; out[n * 4 + 2] = out[j * 4 + 2]; out[n * 4 + 3] = 255; q[qt++] = n;
+    }
+  }
+  if ($('#exSimplify').checked) simplifyColours(out, w, h, +$('#exK').value);
+  let col = findLayer('Colour'); if (!col) { col = mkLayer('Colour'); layers.splice(1, 0, col); }
+  pushHist([col]);
+  const x = col.c.getContext('2d'); x.clearRect(0, 0, w, h); x.putImageData(new ImageData(out, w, h), 0, 0);
+  active = layers.indexOf(col); renderLayers(); requestRender();
+  toast('Flat colours extracted to the Colour layer. If the background leaked in, fix gaps in the outline and try again.', 4000);
+};
+
+/* ================================================================ mannequin (3D, turnable) */
+// Joints in "head" units for a 7-heads-tall figure: x = to the right, y = down from the top of the head,
+// z = towards you. Turning the view rotates the figure around its vertical axis, so you can see
+// any pose from the front, three-quarter, side or back.
+const STAND = {
+  head: [0, 0.5, 0], neck: [0, 1.05, 0], chest: [0, 1.75, 0.05], pelvis: [0, 3.3, 0],
+  ls: [-0.78, 1.35, 0], le: [-0.98, 2.45, -0.05], lh: [-1.02, 3.45, 0.05],
+  rs: [0.78, 1.35, 0], re: [0.98, 2.45, -0.05], rh: [1.02, 3.45, 0.05],
+  lp: [-0.42, 3.45, 0], lk: [-0.45, 5.0, 0.05], lf: [-0.45, 6.75, 0],
+  rp: [0.42, 3.45, 0], rk: [0.45, 5.0, 0.05], rf: [0.45, 6.75, 0],
+};
+const POSES = {
+  'Standing': {},
+  'Shy, hands together': { head: [0.12, 0.55, 0.05], le: [-0.72, 2.5, 0.1], lh: [-0.12, 3.4, 0.4], re: [0.72, 2.5, 0.1], rh: [0.12, 3.4, 0.4], lk: [-0.28, 5.0, 0.08], rk: [0.28, 5.0, 0.08], lf: [-0.4, 6.75, 0], rf: [0.4, 6.75, 0] },
+  'Confident, hand up': { pelvis: [0.12, 3.3, 0], re: [1.25, 1.05, 0], rh: [0.55, 0.42, 0.15], le: [-1.08, 2.4, 0], lh: [-1.3, 3.35, 0], lk: [-0.62, 5.0, 0.05], lf: [-0.85, 6.75, 0], rk: [0.5, 5.0, 0.05], rf: [0.62, 6.75, 0] },
+  'Hand by face': { head: [0.1, 0.5, 0], le: [-1.05, 1.5, 0.2], lh: [-0.2, 0.85, 0.4], rh: [0.98, 3.4, 0], lk: [-0.22, 5.0, 0.05], rk: [0.25, 5.0, 0.05], lf: [-0.35, 6.75, 0], rf: [0.45, 6.75, 0] },
+  'Arms crossed': { le: [-0.9, 2.35, 0.25], lh: [0.55, 2.15, 0.35], re: [0.9, 2.4, 0.25], rh: [-0.55, 2.3, 0.4] },
+  'Hand on hip': { pelvis: [-0.08, 3.3, 0], re: [1.4, 2.25, -0.1], rh: [0.62, 3.05, 0.1] },
+  'Hands in pockets': { le: [-1.05, 2.45, -0.05], lh: [-0.62, 3.2, 0.12], re: [1.05, 2.45, -0.05], rh: [0.62, 3.2, 0.12] },
+  'Waving': { re: [1.35, 1.0, 0.1], rh: [1.45, 0.1, 0.15] },
+  'Walking': { lk: [-0.45, 4.95, 0.45], lf: [-0.45, 6.55, 0.75], rk: [0.45, 5.05, -0.25], rf: [0.45, 6.75, -0.65], le: [-0.98, 2.45, -0.25], lh: [-1.0, 3.35, -0.55], re: [0.98, 2.45, 0.25], rh: [1.0, 3.35, 0.55] },
+  'Looking at phone': { head: [0, 0.62, 0.22], neck: [0, 1.1, 0.1], le: [-0.75, 2.5, 0.15], lh: [-0.12, 2.55, 0.65], re: [0.75, 2.5, 0.15], rh: [0.12, 2.5, 0.65] },
+  'Face in hands': { head: [0, 0.65, 0.25], neck: [0, 1.12, 0.12], le: [-0.55, 2.0, 0.55], lh: [-0.18, 0.85, 0.55], re: [0.55, 2.0, 0.55], rh: [0.18, 0.85, 0.55] },
+  'Hugging': { le: [-0.95, 2.0, 0.6], lh: [-0.3, 1.85, 1.15], re: [0.95, 2.0, 0.6], rh: [0.3, 1.85, 1.15] },
+  'Leaning on a wall': { head: [0.08, 0.5, 0], chest: [0.05, 1.75, -0.1], pelvis: [0.15, 3.3, -0.1], le: [-0.9, 2.35, 0.25], lh: [0.5, 2.2, 0.35], re: [0.92, 2.4, 0.25], rh: [-0.5, 2.3, 0.4], rk: [0.3, 5.0, 0.4], rf: [0.05, 6.7, 0.2], lf: [-0.5, 6.75, 0.1] },
+  'Sitting (chair / bed)': { lk: [-0.45, 3.55, 1.55], rk: [0.45, 3.55, 1.55], lf: [-0.45, 5.3, 1.65], rf: [0.45, 5.3, 1.65], le: [-0.95, 2.5, 0.35], lh: [-0.55, 3.45, 1.0], re: [0.95, 2.5, 0.35], rh: [0.55, 3.45, 1.0] },
+  'Sitting, legs swinging': { head: [0.05, 0.5, 0.05], lk: [-0.45, 3.55, 1.5], lf: [-0.5, 5.15, 2.3], rk: [0.45, 3.55, 1.5], rf: [0.45, 5.3, 1.2], le: [-0.95, 2.5, 0], lh: [-0.85, 3.5, 0.1], re: [0.95, 2.5, 0], rh: [0.85, 3.5, 0.1] },
+  'Floor, hugging knees': { head: [0, 2.35, 0.35], neck: [0, 2.85, 0.3], chest: [0, 3.5, 0.2], pelvis: [0, 5.0, 0], ls: [-0.72, 3.1, 0.25], rs: [0.72, 3.1, 0.25], lp: [-0.42, 5.1, 0], rp: [0.42, 5.1, 0], lk: [-0.36, 3.95, 1.3], rk: [0.36, 3.95, 1.3], lf: [-0.4, 5.75, 1.85], rf: [0.4, 5.75, 1.85], le: [-0.95, 4.05, 0.85], lh: [-0.05, 4.2, 1.55], re: [0.95, 4.05, 0.85], rh: [0.05, 4.25, 1.55] },
+  'Sitting on stairs': { head: [0, 2.45, 0.45], neck: [0, 2.9, 0.35], chest: [0, 3.5, 0.2], pelvis: [0, 5.0, 0], ls: [-0.72, 3.1, 0.25], rs: [0.72, 3.1, 0.25], lp: [-0.42, 5.1, 0], rp: [0.42, 5.1, 0], lk: [-0.45, 4.2, 1.35], rk: [0.45, 4.2, 1.35], lf: [-0.45, 5.95, 1.7], rf: [0.45, 5.95, 1.7], le: [-0.95, 4.0, 0.6], lh: [-0.45, 3.95, 1.25], re: [0.95, 4.0, 0.6], rh: [0.45, 3.95, 1.25] },
+};
+const PARENT = { head: 'neck', neck: 'chest', chest: 'pelvis', ls: 'chest', le: 'ls', lh: 'le', rs: 'chest', re: 'rs', rh: 're', lp: 'pelvis', lk: 'lp', lf: 'lk', rp: 'pelvis', rk: 'rp', rf: 'rk' };
+const guide = { show: false, heads: 7, scale: 0.92, opacity: 0.6, face: true, yaw: 0, headTurn: 0, cx: 0, top: 0, P: {}, J: {} };
+function headUnit() { return doc.h * guide.scale / guide.heads; }
+const stretchY = y => y <= 1 ? 1 : (guide.heads - 1) / 6;                 // body below the head stretches with "heads tall"
+const mapY = y => y <= 1 ? y : 1 + (y - 1) * (guide.heads - 1) / 6;
+function project(p) {
+  const H = headUnit(), a = guide.yaw * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+  return { x: guide.cx + (p[0] * c + p[2] * s) * H, y: guide.top + mapY(p[1]) * H, z: -p[0] * s + p[2] * c };
+}
+function updateJ() { guide.J = {}; for (const k in guide.P) guide.J[k] = project(guide.P[k]); }
+function guideReset() {
+  const pose = POSES[$('#gPose').value] || {}, H = headUnit();
+  guide.P = {}; for (const k in STAND) guide.P[k] = [...(pose[k] || STAND[k])];
+  guide.cx = doc.w / 2; guide.top = (doc.h - H * guide.heads) / 2;
+  updateJ();
+}
+function descendants(k) { const out = [k]; for (const c in PARENT) if (PARENT[c] === k) out.push(...descendants(c)); return out; }
+function capsulePath(p, a, b, wa, wb) {
+  const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l;
+  p.moveTo(a.x + nx * wa, a.y + ny * wa); p.lineTo(b.x + nx * wb, b.y + ny * wb);
+  p.arc(b.x, b.y, wb, Math.atan2(ny, nx), Math.atan2(-ny, -nx), true); p.lineTo(a.x - nx * wa, a.y - ny * wa);
+  p.arc(a.x, a.y, wa, Math.atan2(-ny, -nx), Math.atan2(ny, nx), true); p.closePath();
+}
+// body parts grouped (torso, head, each arm, each leg) and sorted far → near, so overlaps read correctly at any angle
+function mannequinGroups() {
+  const J = guide.J, H = headUnit(), a = guide.yaw * Math.PI / 180, ac = Math.abs(Math.cos(a)), as = Math.abs(Math.sin(a));
+  const mid = (p, q) => ({ x: (p.x + q.x) / 2, y: (p.y + q.y) / 2, z: (p.z + q.z) / 2 });
+  const groups = [];
+  const spine = Math.atan2(-(J.pelvis.x - J.neck.x), J.pelvis.y - J.neck.y);
+  { // torso
+    const ps = [], sh = mid(J.ls, J.rs), rib = mid(sh, J.chest);
+    let p = new Path2D(); p.ellipse(rib.x, rib.y + H * 0.22, H * (0.6 * ac + 0.4 * as), H * 0.62, spine, 0, Math.PI * 2); ps.push(p);
+    p = new Path2D(); p.ellipse(J.pelvis.x, J.pelvis.y - H * 0.05, H * (0.56 * ac + 0.38 * as), H * 0.42, spine, 0, Math.PI * 2); ps.push(p);
+    p = new Path2D(); capsulePath(p, J.chest, J.pelvis, H * (0.36 * ac + 0.3 * as), H * (0.34 * ac + 0.3 * as)); ps.push(p);
+    p = new Path2D(); capsulePath(p, J.neck, sh, H * 0.12, H * 0.14); ps.push(p);
+    p = new Path2D(); capsulePath(p, J.ls, J.rs, H * 0.17, H * 0.17); ps.push(p);
+    groups.push({ name: 'torso', z: (J.chest.z + J.pelvis.z) / 2, paths: ps });
+  }
+  { // head
+    const p = new Path2D(), tilt = Math.atan2(J.head.x - J.neck.x, J.neck.y - J.head.y);
+    p.ellipse(J.head.x, J.head.y, H * 0.4, H * 0.5, tilt, 0, Math.PI * 2);
+    groups.push({ name: 'head', z: J.head.z + 0.05, paths: [p] });
+  }
+  for (const s of ['l', 'r']) {
+    const S = J[s + 's'], E = J[s + 'e'], Hd = J[s + 'h'], ps = [];
+    let p = new Path2D(); capsulePath(p, S, E, H * 0.16, H * 0.13); ps.push(p);
+    p = new Path2D(); capsulePath(p, E, Hd, H * 0.13, H * 0.09); ps.push(p);
+    const fx = Hd.x - E.x, fy = Hd.y - E.y, fl = Math.hypot(fx, fy) || 1;
+    p = new Path2D(); p.ellipse(Hd.x + fx / fl * H * 0.12, Hd.y + fy / fl * H * 0.12, H * 0.12, H * 0.18, Math.atan2(-fx, fy), 0, Math.PI * 2); ps.push(p);
+    groups.push({ name: 'arm' + s, z: (S.z + E.z + Hd.z) / 3, paths: ps });
+    const P = J[s + 'p'], K = J[s + 'k'], F = J[s + 'f'], ft = guide.P[s + 'f'], toe = project([ft[0], ft[1] + 0.1, ft[2] + 0.32]), lg = [];
+    p = new Path2D(); capsulePath(p, P, K, H * 0.25, H * 0.17); lg.push(p);
+    p = new Path2D(); capsulePath(p, K, F, H * 0.17, H * 0.1); lg.push(p);
+    p = new Path2D(); capsulePath(p, F, toe, H * 0.11, H * 0.09); lg.push(p);
+    groups.push({ name: 'leg' + s, z: (P.z + K.z + F.z) / 3, paths: lg });
+  }
+  return groups.sort((g1, g2) => g1.z - g2.z);
+}
+function drawGuide() {
+  if (!guide.show || !guide.J.head) return;
+  const J = guide.J, H = headUnit(), x = octx;
+  x.save(); x.globalAlpha = guide.opacity; x.lineJoin = 'round'; x.lineWidth = Math.max(1.5, 2 / view.zoom);
+  for (const g of mannequinGroups()) {
+    const t = clamp((g.z + 1.2) / 2.4, 0, 1);                 // nearer parts are bolder
+    x.fillStyle = `rgba(120,170,255,${0.08 + 0.16 * t})`; x.strokeStyle = `rgba(120,170,255,${0.5 + 0.45 * t})`;
+    for (const p of g.paths) { x.fill(p); x.stroke(p); }
+  }
+  // face guide follows where the head is facing
+  const hy = (guide.yaw + guide.headTurn) * Math.PI / 180, sn = Math.sin(hy), cs = Math.cos(hy), rx = H * 0.4, ry = H * 0.5;
+  const tilt = Math.atan2(J.head.x - J.neck.x, J.neck.y - J.head.y);
+  if (guide.face && cs > -0.1) {
+    x.save(); x.translate(J.head.x, J.head.y); x.rotate(tilt); x.strokeStyle = 'rgba(120,170,255,0.95)';
+    x.setLineDash([6 / view.zoom, 5 / view.zoom]);
+    x.beginPath(); for (let i = 0; i <= 24; i++) { const f = -Math.PI / 2 + Math.PI * i / 24, px = rx * sn * Math.cos(f), py = ry * Math.sin(f); i ? x.lineTo(px, py) : x.moveTo(px, py); } x.stroke();   // centre line wraps round the head
+    x.beginPath(); x.moveTo(-rx, H * 0.06); x.lineTo(rx, H * 0.06); x.stroke();                                    // eye line
+    x.setLineDash([]);
+    for (const e of [-0.42, 0.42]) { const ang = hy + e; if (Math.cos(ang) > 0.08) { x.beginPath(); x.ellipse(rx * Math.sin(ang), H * 0.1, H * 0.085 * Math.cos(ang), H * 0.06, 0, 0, Math.PI * 2); x.stroke(); } }
+    x.beginPath(); x.moveTo(rx * sn * 0.92, H * 0.14); x.lineTo(rx * sn * 1.06, H * 0.27); x.lineTo(rx * sn * 0.9, H * 0.29); x.stroke();   // nose
+    x.beginPath(); x.moveTo(rx * sn * 0.95 - H * 0.12 * cs, H * 0.38); x.lineTo(rx * sn * 0.95 + H * 0.12 * cs, H * 0.38); x.stroke();     // mouth
+    x.restore();
+  }
+  if (tool === 'pose') {
+    x.globalAlpha = 1;
+    for (const k in J) { x.beginPath(); x.arc(J[k].x, J[k].y, (k === 'pelvis' ? 9 : 7) / view.zoom, 0, Math.PI * 2); x.fillStyle = k === 'pelvis' ? '#f08aa8' : '#8fb6ff'; x.fill(); x.strokeStyle = '#0d0c12'; x.stroke(); }
+  }
+  x.restore();
+}
+function poseDragStart(k, p) {
+  if (k === 'pelvis') return { k, p, cx: guide.cx, top: guide.top };
+  return { k, p, orig: Object.fromEntries(descendants(k).map(j => [j, [...guide.P[j]]])) };
+}
+function poseDragMove(d, p) {
+  const dx = p.x - d.p.x, dy = p.y - d.p.y;
+  if (d.k === 'pelvis') { guide.cx = d.cx + dx; guide.top = d.top + dy; }
+  else {
+    const H = headUnit(), a = guide.yaw * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+    // a sideways drag on screen moves the joint along the direction the figure is turned
+    for (const j in d.orig) { const o = d.orig[j]; guide.P[j] = [o[0] + dx / H * c, o[1] + dy / H / stretchY(o[1]), o[2] + dx / H * s]; }
+  }
+  updateJ();
+}
+function setYaw(v) { guide.yaw = v; $('#gYaw').value = v; $('#gYawV').textContent = v + '°'; $$('#gViews button').forEach(b => b.classList.toggle('on', +b.dataset.v === v)); updateJ(); drawOverlay(); }
+(function buildGuideUI() {
+  const s = $('#gPose'), grid = $('#gPoseBtns');
+  for (const k in POSES) {
+    s.add(new Option(k, k));
+    const b = document.createElement('button'); b.textContent = k; b.dataset.pose = k;
+    b.onclick = () => { s.value = k; guideReset(); guide.show = true; $('#bGuide').classList.add('on'); $$('#gPoseBtns button').forEach(x => x.classList.toggle('on', x === b)); drawOverlay(); };
+    grid.append(b);
+  }
+  grid.firstChild.classList.add('on');
+  s.onchange = () => { guideReset(); guide.show = true; $('#bGuide').classList.add('on'); drawOverlay(); };
+  for (const [name, v] of [['Front', 0], ['¾', 35], ['Side', 90], ['¾ back', 145], ['Back', 180]]) {
+    const b = document.createElement('button'); b.textContent = name; b.dataset.v = v; b.onclick = () => setYaw(v); $('#gViews').append(b);
+  }
+  $('#gYaw').oninput = e => setYaw(+e.target.value);
+  $('#gHead').oninput = e => { guide.headTurn = +e.target.value; $('#gHeadV').textContent = guide.headTurn + '°'; drawOverlay(); };
+  bindR('gHeads', guide, 'heads', v => v.toFixed(1)); bindR('gScale', guide, 'scale', v => Math.round(v * 100) + '%'); bindR('gOpa', guide, 'opacity', v => Math.round(v * 100) + '%');
+  $('#gHeads').addEventListener('input', () => { updateJ(); drawOverlay(); }); $('#gScale').addEventListener('input', () => { const H = headUnit(); guide.top = (doc.h - H * guide.heads) / 2; updateJ(); drawOverlay(); });
+  $('#gFlip').onclick = () => { const m = {}; for (const k in guide.P) { const o = k[0] === 'l' ? 'r' + k.slice(1) : k[0] === 'r' ? 'l' + k.slice(1) : k; const [px, py, pz] = guide.P[k]; m[o] = [-px, py, pz]; } guide.P = m; updateJ(); drawOverlay(); };
+  $('#gFace').onclick = e => { guide.face = !guide.face; e.target.textContent = 'Face guide: ' + (guide.face ? 'on' : 'off'); drawOverlay(); };
+  $('#gYawV').textContent = '0°'; $('#gHeadV').textContent = '0°';
+})();
+
+/* ================================================================ overlay */
+let pointer = null, shape = null, cropBox = null;
+function drawOverlay() {
+  if (!booted) return;
+  octx.clearRect(0, 0, doc.w, doc.h);
+  drawGuide();
+  const lw = 1.5 / view.zoom;
+  if (sym) { octx.save(); octx.strokeStyle = 'rgba(240,138,168,.8)'; octx.lineWidth = lw; octx.setLineDash([8 / view.zoom, 6 / view.zoom]); octx.beginPath(); octx.moveTo(symX * doc.w, 0); octx.lineTo(symX * doc.w, doc.h); octx.stroke(); octx.restore(); }
+  if (lasso) {
+    octx.save(); octx.beginPath(); lasso.pts.forEach((p, i) => i ? octx.lineTo(p.x, p.y) : octx.moveTo(p.x, p.y)); octx.closePath();
+    octx.fillStyle = lasso.erase ? 'rgba(255,107,107,.25)' : B.color + '55'; octx.fill(); octx.strokeStyle = '#fff'; octx.lineWidth = lw; octx.setLineDash([5 / view.zoom, 4 / view.zoom]); octx.stroke(); octx.restore();
+  }
+  if (cropBox) { const { x0, y0, x1, y1 } = cropBox; octx.save(); octx.fillStyle = 'rgba(0,0,0,.45)'; octx.fillRect(0, 0, doc.w, doc.h); octx.clearRect(Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0)); octx.strokeStyle = '#fff'; octx.lineWidth = lw; octx.strokeRect(Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0)); octx.restore(); }
+  if (pointer && (BRUSHES.includes(tool) || tool === 'line' || tool === 'ellipse')) {
+    const r = Math.max(1, (tool === 'pencil' ? B.size * 0.6 : B.size) / 2);
+    octx.save(); octx.lineWidth = lw; octx.strokeStyle = 'rgba(0,0,0,.7)'; octx.beginPath(); octx.arc(pointer.x, pointer.y, r, 0, 7); octx.stroke();
+    octx.strokeStyle = 'rgba(255,255,255,.9)'; octx.setLineDash([3 / view.zoom, 3 / view.zoom]); octx.stroke();
+    if (stroke && B.stab > 0 && !stroke.snapped) { octx.setLineDash([]); octx.strokeStyle = 'rgba(143,182,255,.7)'; octx.beginPath(); octx.moveTo(stroke.sp.x, stroke.sp.y); octx.lineTo(pointer.x, pointer.y); octx.stroke(); }
+    octx.restore();
+  }
+  if (tool === 'face' && pointer) { octx.save(); octx.globalAlpha = 0.55; drawFace(octx, pointer.x, pointer.y); octx.restore(); }
+}
+
+/* ================================================================ tools & pointer */
+function setTool(t) { tool = t; $$('#tools button').forEach(b => b.classList.toggle('on', b.dataset.tool === t)); vp.style.cursor = t === 'hand' ? 'grab' : t === 'move' ? 'move' : t === 'pose' ? 'default' : 'crosshair'; if (t === 'pose' && !guide.show) { guide.show = true; $('#bGuide').classList.add('on'); } drawOverlay(); }
+$$('#tools button').forEach(b => b.onclick = () => setTool(b.dataset.tool));
+
+function pickAt(p) {
+  const c = mk(doc.w, doc.h), x = ctx2(c); composite(x, true);
+  const d = x.getImageData(clamp(Math.floor(p.x), 0, doc.w - 1), clamp(Math.floor(p.y), 0, doc.h - 1), 1, 1).data;
+  if (d[3] < 10) return toast('Nothing there to pick');
+  setColor(rgbHex(d[0], d[1], d[2]));
+}
+
+let panning = null, spaceDown = false, poseDrag = null, moveStart = null;
+vp.addEventListener('pointerdown', e => {
+  vp.setPointerCapture(e.pointerId);
+  const p = toDoc(e);
+  if (e.button === 1 || spaceDown || tool === 'hand') { panning = { sx: e.clientX, sy: e.clientY, x: view.x, y: view.y }; vp.style.cursor = 'grabbing'; return; }
+  if (e.button !== 0) return;
+  const L = layers[active];
+  if (e.altKey && tool !== 'lasso') return pickAt(p);
+  if (tool === 'picker') return pickAt(p);
+  if (tool === 'face') return stampFace(p.x, p.y);
+  if (!L.visible && !['pose', 'crop'].includes(tool)) return toast('This layer is hidden');
+  if (BRUSHES.includes(tool)) {
+    if (e.shiftKey && lastEnd) { stroke = lineStroke(lastEnd, p, tool === 'eraser' ? 'eraser' : tool); stroke.sp = { ...p }; live = { alpha: B.opa, op: tool === 'eraser' ? 'erase' : 'paint' }; commitStroke(); return; }
+    painting = true; still = { x: e.clientX, y: e.clientY, t: performance.now() }; beginStroke(p, tool); return;
+  }
+  if (tool === 'line' || tool === 'ellipse') { shape = { a: p, b: p }; live = { alpha: B.opa, op: 'paint' }; return; }
+  if (tool === 'lasso') { lasso = { pts: [p], erase: e.altKey }; drawOverlay(); return; }
+  if (tool === 'fill') return bucket(p);
+  if (tool === 'move') { moveStart = p; moveOff = { x: 0, y: 0 }; return; }
+  if (tool === 'crop') { cropBox = { x0: p.x, y0: p.y, x1: p.x, y1: p.y }; return; }
+  if (tool === 'pose') {
+    let best = null, bd = 18 / view.zoom;
+    for (const k in guide.J) { const d = Math.hypot(guide.J[k].x - p.x, guide.J[k].y - p.y); if (d < bd) { bd = d; best = k; } }
+    if (best) poseDrag = poseDragStart(best, p);
+  }
+});
+vp.addEventListener('pointermove', e => {
+  if (panning) { view.x = panning.x + e.clientX - panning.sx; view.y = panning.y + e.clientY - panning.sy; applyView(); return; }
+  const p = toDoc(e); pointer = p;
+  if (painting && stroke) { trackStill(e); extendStroke(p); drawOverlay(); return; }
+  if (shape) {
+    shape.b = p; stroke = tool === 'line' ? lineStroke(shape.a, e.shiftKey ? snap45(shape.a, p) : p, 'pen') : ellipseStroke(shape.a, p, e.shiftKey);
+    stroke.sp = { ...p }; renderStroke(true); requestRender(); return;
+  }
+  if (lasso) { const l = lasso.pts[lasso.pts.length - 1]; if (Math.hypot(p.x - l.x, p.y - l.y) > 2 / view.zoom) lasso.pts.push(p); drawOverlay(); return; }
+  if (moveOff && moveStart) { moveOff = { x: Math.round(p.x - moveStart.x), y: Math.round(p.y - moveStart.y) }; requestRender(); return; }
+  if (cropBox) { cropBox.x1 = p.x; cropBox.y1 = p.y; drawOverlay(); return; }
+  if (poseDrag) { poseDragMove(poseDrag, p); drawOverlay(); return; }
+  drawOverlay();
+});
+function snap45(a, b) { const dx = b.x - a.x, dy = b.y - a.y, ang = Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) * Math.PI / 4, l = Math.hypot(dx, dy); return { x: a.x + Math.cos(ang) * l, y: a.y + Math.sin(ang) * l, t: b.t }; }
+function endPointer(e) {
+  if (panning) { panning = null; setTool(tool); return; }
+  const p = e && e.clientX != null ? toDoc(e) : null;
+  if (painting) { painting = false; commitStroke(p); return; }
+  if (shape) { shape = null; if (stroke) commitStroke(); else live = null; return; }
+  if (lasso) { commitLasso(); drawOverlay(); return; }
+  if (moveOff) {
+    const L = layers[active], off = moveOff; moveOff = null; moveStart = null;
+    if (off.x || off.y) { pushHist([L]); const c = copyC(L.c), x = L.c.getContext('2d'); x.clearRect(0, 0, doc.w, doc.h); x.drawImage(c, off.x, off.y); renderLayers(); }
+    requestRender(); return;
+  }
+  if (cropBox) { const b = cropBox; cropBox = null; doCrop(b); return; }
+  if (poseDrag) poseDrag = null;
+}
+vp.addEventListener('pointerup', endPointer);
+vp.addEventListener('pointercancel', endPointer);
+vp.addEventListener('pointerleave', () => { pointer = null; drawOverlay(); });
+vp.addEventListener('wheel', e => { e.preventDefault(); const r = vp.getBoundingClientRect(); zoomAt(e.deltaY < 0 ? 1.12 : 1 / 1.12, e.clientX - r.left, e.clientY - r.top); }, { passive: false });
+
+function doCrop(b) {
+  const x = Math.round(clamp(Math.min(b.x0, b.x1), 0, doc.w)), y = Math.round(clamp(Math.min(b.y0, b.y1), 0, doc.h));
+  const w = Math.round(clamp(Math.abs(b.x1 - b.x0), 0, doc.w - x)), h = Math.round(clamp(Math.abs(b.y1 - b.y0), 0, doc.h - y));
+  if (w < 16 || h < 16) { drawOverlay(); return; }
+  pushHist(layers);
+  for (const L of layers) { const c = mk(w, h); c.getContext('2d').drawImage(L.c, x, y, w, h, 0, 0, w, h); L.c = c; }
+  guide.cx -= x; guide.top -= y; if (guide.P.head) updateJ();
+  doc.w = w; doc.h = h; resizeSurfaces(); fit(); renderLayers(); requestRender(); setTool('pen');
+  toast(`Cropped to ${w}×${h}`);
+}
+
+/* ================================================================ header actions */
+$('#bNew').onclick = () => $('#newModal').classList.add('show');
+$$('#newModal [data-size]').forEach(b => b.onclick = () => {
+  if (dirty && !confirm('Start a new canvas? Unsaved work will be lost.')) return;
+  const [w, h] = b.dataset.size.split('x').map(Number); newDoc(w, h); $('#newModal').classList.remove('show');
+});
+function loadImg(file) { return new Promise((res, rej) => { const u = URL.createObjectURL(file), i = new Image(); i.onload = () => { URL.revokeObjectURL(u); res(i); }; i.onerror = () => rej(new Error('Could not read that image')); i.src = u; }); }
+$('#bSketch').onclick = () => $('#fSketch').click();
+$('#fSketch').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try {
+    const img = await loadImg(f);
+    if (dirty && !confirm('Open as a new canvas? Choose Cancel to place it into the current Sketch layer instead.')) {
+      const s = findLayer('Sketch') || layers[0]; pushHist([s]); const k = Math.min(doc.w / img.width, doc.h / img.height), x = s.c.getContext('2d');
+      x.clearRect(0, 0, doc.w, doc.h); x.drawImage(img, (doc.w - img.width * k) / 2, (doc.h - img.height * k) / 2, img.width * k, img.height * k); active = layers.indexOf(s); renderLayers(); requestRender(); return;
+    }
+    const sc0 = Math.min(1, 3000 / Math.max(img.width, img.height));
+    newDoc(Math.round(img.width * sc0), Math.round(img.height * sc0), img);
+    $('#exName').value = f.name.replace(/\.[^.]+$/, '');
+    toast('Sketch opened. Crop one character, then use “From your sketch”, or ink over it on the Lines layer.', 4500);
+  } catch (err) { toast(err.message); }
+};
+$('#bUndo').onclick = undo; $('#bRedo').onclick = redo;
+$('#bSym').onclick = () => { sym = !sym; $('#bSym').classList.toggle('on', sym); drawOverlay(); };
+$('#bGuide').onclick = () => { guide.show = !guide.show; $('#bGuide').classList.toggle('on', guide.show); drawOverlay(); };
+$('#bg').onchange = e => {
+  bgMode = e.target.value; stage.classList.toggle('checker', bgMode === 'checker');
+  if (bgMode === 'scene') $('#fScene').click(); requestRender();
+};
+$('#fScene').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f) { $('#bg').value = 'checker'; bgMode = 'checker'; stage.classList.add('checker'); return; } sceneImg = await loadImg(f); stage.classList.remove('checker'); requestRender(); };
+$('#bFit').onclick = fit; $('#bZoomIn').onclick = () => zoomAt(1.25); $('#bZoomOut').onclick = () => zoomAt(0.8);
+$('#bHelp').onclick = () => $('#help').classList.add('show');
+
+/* ================================================================ save / load / export */
+let dirHandle = null;
+$('#bFolder').onclick = async () => {
+  if (!window.showDirectoryPicker) return toast('Use Chrome or Edge to connect a folder');
+  try { dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' }); $('#folderInfo').textContent = 'Saving into: ' + dirHandle.name; } catch { }
+};
+async function saveBlob(blob, name, sub = 'characters', quiet = false) {
+  if (api) {
+    const rel = sub + '/' + name;
+    if (!quiet) {
+      const ex = await (await fetch('/api/exists?path=' + encodeURIComponent(rel))).json();
+      if (ex.exists && !confirm(name + ' already exists in ' + sub + '/. Replace it?')) return false;
+    }
+    const r = await fetch('/api/save?path=' + encodeURIComponent(rel), { method: 'POST', body: blob });
+    const j = await r.json(); if (!r.ok) throw new Error(j.error || 'Save failed');
+    return true;
+  }
+  if (quiet) return false;
+  if (dirHandle) {
+    let exists = false; try { await dirHandle.getFileHandle(name); exists = true; } catch { }
+    if (exists && !confirm(name + ' already exists. Replace it?')) return false;
+    const fh = await dirHandle.getFileHandle(name, { create: true }), w = await fh.createWritable(); await w.write(blob); await w.close(); return true;
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); return true;
+}
+$('#bExport').onclick = async () => {
+  const full = mk(doc.w, doc.h), fx = ctx2(full); composite(fx, true);
+  let x0 = 0, y0 = 0, x1 = doc.w, y1 = doc.h;
+  if ($('#exTrim').checked) {
+    const d = fx.getImageData(0, 0, doc.w, doc.h).data; x0 = doc.w; y0 = doc.h; x1 = 0; y1 = 0;
+    for (let y = 0; y < doc.h; y++) for (let x = 0; x < doc.w; x++) if (d[(y * doc.w + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < x0) return toast('Nothing to export. Hidden layers and the Sketch layer are left out.');
+    const pad = Math.round(Math.max(doc.w, doc.h) * 0.01); x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(doc.w, x1 + pad + 1); y1 = Math.min(doc.h, y1 + pad + 1);
+  }
+  const w = x1 - x0, h = y1 - y0, th = +$('#exH').value || h, k = th / h;
+  const out = mk(w * k, h * k), ox = out.getContext('2d'); ox.imageSmoothingQuality = 'high'; ox.drawImage(full, x0, y0, w, h, 0, 0, w * k, h * k);
+  const blob = await new Promise(r => out.toBlob(r, 'image/png'));
+  const name = ($('#exName').value.trim() || 'character').replace(/\.png$/i, '') + '.png';
+  try { if (await saveBlob(blob, name)) toast(`Exported ${name} (${out.width}×${out.height})` + (api ? ' into characters/' : '')); } catch (e) { toast(e.message); }
+};
+function projectBlob() {
+  const data = { app: 'dm-character-studio', v: 1, w: doc.w, h: doc.h, guide: { ...guide }, name: $('#exName').value.trim(), layers: layers.map(L => ({ name: L.name, visible: L.visible, opacity: L.opacity, blend: L.blend, clip: L.clip, lock: L.lock, ref: L.ref, png: L.c.toDataURL('image/png') })) };
+  return new Blob([JSON.stringify(data)], { type: 'application/json' });
+}
+async function saveProject() {
+  const name = ($('#exName').value.trim() || 'character') + '.dmchar';
+  try { if (await saveBlob(projectBlob(), name, 'characters/projects')) { dirty = false; toast('Project saved as ' + name + (api ? ' in characters/projects/' : '')); } } catch (e) { toast(e.message); }
+}
+async function loadProject(data, name) {
+  if (data.app !== 'dm-character-studio') throw new Error('Not a Character Studio project');
+  doc.w = data.w; doc.h = data.h; uid = 1;
+  layers = await Promise.all(data.layers.map(async o => { const L = mkLayer(o.name, { visible: o.visible, opacity: o.opacity, blend: o.blend, clip: o.clip, lock: o.lock, ref: o.ref }); const img = new Image(); img.src = o.png; await img.decode(); L.c.getContext('2d').drawImage(img, 0, 0); return L; }));
+  Object.assign(guide, data.guide || {}); if (!guide.P || !guide.P.head || !Array.isArray(guide.P.head)) guideReset(); else updateJ();
+  active = layers.length - 1; hist = []; fut = []; dirty = false;
+  if (name) $('#exName').value = name;
+  resizeSurfaces(); fit(); renderLayers(); requestRender();
+}
+$('#bSaveProj').onclick = saveProject;
+$('#bOpenProj').onclick = () => $('#fProj').click();
+$('#fProj').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { await loadProject(JSON.parse(await f.text()), f.name.replace(/\.dmchar$/i, '')); toast('Project opened'); } catch (err) { toast(err.message); }
+};
+window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ================================================================ assists: smoothing, joining, snapping */
+let still = { x: null, y: null, t: 0 };
+function trackStill(e) {
+  if (still.x == null || Math.hypot(e.clientX - still.x, e.clientY - still.y) > 4) still = { x: e.clientX, y: e.clientY, t: performance.now() };
+}
+function smoothPts(pts, amt) {
+  let p = pts; const passes = Math.round(amt * 6);
+  for (let k = 0; k < passes && p.length > 2; k++) {
+    const q = [p[0]];
+    for (let i = 1; i < p.length - 1; i++) q.push({ x: (p[i - 1].x + 2 * p[i].x + p[i + 1].x) / 4, y: (p[i - 1].y + 2 * p[i].y + p[i + 1].y) / 4, t: p[i].t });
+    q.push(p[p.length - 1]); p = q;
+  }
+  return p;
+}
+// if a stroke ends just short of an existing line on this layer, finish the gap so bucket fills don't leak
+function joinEnds(L, pts) {
+  if (pts.length < 2) return;
+  const r = Math.max(8, B.size * 1.6);
+  const nearest = e => {
+    const x0 = Math.max(0, Math.floor(e.x - r)), y0 = Math.max(0, Math.floor(e.y - r));
+    const w = Math.min(doc.w - x0, Math.ceil(r * 2) + 1), h = Math.min(doc.h - y0, Math.ceil(r * 2) + 1);
+    if (w <= 0 || h <= 0) return null;
+    const d = L.c.getContext('2d').getImageData(x0, y0, w, h).data; let best = null, bd = r;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      if (d[(y * w + x) * 4 + 3] < 140) continue;
+      const dist = Math.hypot(x0 + x - e.x, y0 + y - e.y);
+      if (dist < bd && dist > 1.5) { bd = dist; best = { x: x0 + x + 0.5, y: y0 + y + 0.5 }; }
+    }
+    return best;
+  };
+  const a = pts[0], b = pts[pts.length - 1];
+  const sa = nearest(a), sb = nearest(b);
+  if (sa) pts.unshift({ x: sa.x, y: sa.y, t: (a.t || 0) - 16 });
+  if (sb) pts.push({ x: sb.x, y: sb.y, t: (b.t || 0) + 16 });
+}
+// hold the mouse still at the end of a stroke: it becomes a clean line, ellipse or arc
+function snapNow() {
+  const raw = [...stroke.pts]; if (pointer) raw.push({ ...pointer });
+  let len = 0; for (let i = 1; i < raw.length; i++) len += Math.hypot(raw[i].x - raw[i - 1].x, raw[i].y - raw[i - 1].y);
+  if (len < 24) return;
+  const a = raw[0], b = raw[raw.length - 1], chord = Math.hypot(b.x - a.x, b.y - a.y);
+  let pts, what;
+  if (chord / len > 0.9) { pts = lineStroke(a, b, stroke.kind).pts; what = 'line'; }
+  else if (chord < len * 0.22) {
+    let mx = 0, my = 0; for (const p of raw) { mx += p.x; my += p.y; } mx /= raw.length; my /= raw.length;
+    let sxx = 0, syy = 0, sxy = 0; for (const p of raw) { sxx += (p.x - mx) ** 2; syy += (p.y - my) ** 2; sxy += (p.x - mx) * (p.y - my); }
+    sxx /= raw.length; syy /= raw.length; sxy /= raw.length;
+    const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), m = (sxx + syy) / 2, dd = Math.sqrt(((sxx - syy) / 2) ** 2 + sxy * sxy);
+    let ra = Math.sqrt(2 * (m + dd)), rb = Math.sqrt(2 * Math.max(1, m - dd));
+    if (rb / ra > 0.85) { ra = rb = (ra + rb) / 2; what = 'circle'; } else what = 'ellipse';
+    const n = Math.max(32, Math.ceil(Math.PI * (ra + rb) / 3)); pts = [];
+    for (let i = 0; i <= n; i++) { const t = i / n * Math.PI * 2, x = Math.cos(t) * ra, y = Math.sin(t) * rb; pts.push({ x: mx + x * Math.cos(th) - y * Math.sin(th), y: my + x * Math.sin(th) + y * Math.cos(th), t: i * 8 }); }
+    stroke.noTaper = true; stroke.closed = true;
+  } else {
+    const m = raw[Math.floor(raw.length / 2)];
+    const d = 2 * (a.x * (m.y - b.y) + m.x * (b.y - a.y) + b.x * (a.y - m.y));
+    if (Math.abs(d) < 1e-6) { pts = lineStroke(a, b, stroke.kind).pts; what = 'line'; }
+    else {
+      const ux = ((a.x ** 2 + a.y ** 2) * (m.y - b.y) + (m.x ** 2 + m.y ** 2) * (b.y - a.y) + (b.x ** 2 + b.y ** 2) * (a.y - m.y)) / d;
+      const uy = ((a.x ** 2 + a.y ** 2) * (b.x - m.x) + (m.x ** 2 + m.y ** 2) * (a.x - b.x) + (b.x ** 2 + b.y ** 2) * (m.x - a.x)) / d;
+      const R = Math.hypot(a.x - ux, a.y - uy), A0 = Math.atan2(a.y - uy, a.x - ux), Am = Math.atan2(m.y - uy, m.x - ux), A1 = Math.atan2(b.y - uy, b.x - ux);
+      const norm = v => ((v % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      let sweep = norm(A1 - A0); if (norm(Am - A0) > sweep) sweep -= 2 * Math.PI;   // go the way that passes the middle point
+      const n = Math.max(12, Math.ceil(Math.abs(sweep) * R / 3)); pts = [];
+      for (let i = 0; i <= n; i++) { const t = A0 + sweep * i / n; pts.push({ x: ux + Math.cos(t) * R, y: uy + Math.sin(t) * R, t: i * 8 }); }
+      what = 'curve';
+    }
+  }
+  stroke.pts = pts; stroke.snapped = true; stroke.noCatch = true;
+  renderStroke(false); requestRender(); toast('Snapped to a clean ' + what + '. Let go to keep it, or undo after.', 1600);
+}
+setInterval(() => {
+  if (painting && stroke && !stroke.snapped && $('#aSnap').checked && stroke.pts.length > 6 && still.t && performance.now() - still.t > 600 && ['pen', 'pencil', 'marker', 'eraser'].includes(stroke.kind)) snapNow();
+}, 100);
+$('#aSmooth').oninput = e => $('#aSmoothV').textContent = Math.round(e.target.value * 100) + '%'; $('#aSmoothV').textContent = '40%';
+
+/* ================================================================ steadiness presets & matching colours */
+(function () {
+  const host = $('#stabSeg');
+  for (const [name, v] of [['Off', 0], ['Light', 12], ['Medium', 28], ['Strong', 50], ['Max', 80]]) {
+    const b = document.createElement('button'); b.textContent = name; b.dataset.v = v;
+    b.onclick = () => { const el = $('#stab'); el.value = v; el.oninput(); markStab(); };
+    host.append(b);
+  }
+})();
+function markStab() { $$('#stabSeg button').forEach(b => b.classList.toggle('on', +b.dataset.v === B.stab)); }
+$('#stab').addEventListener('input', markStab);
+function hexToHsl(h) { let [r, g, b] = hexRgb(h).map(v => v / 255); const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2; let hh = 0, s = 0; if (mx !== mn) { const d = mx - mn; s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn); hh = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; hh *= 60; } return [hh, s, l]; }
+function hslToHex(h, s, l) { h = ((h % 360) + 360) % 360; s = clamp(s, 0, 1); l = clamp(l, 0, 1); const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)); return rgbHex(f(0) * 255, f(8) * 255, f(4) * 255); }
+const towards = (h, target, amt) => { let d = ((target - h + 540) % 360) - 180; return h + Math.sign(d) * Math.min(Math.abs(d), amt); };
+function updateHarmony() {
+  const [h, s, l] = hexToHsl(B.color);
+  const sh = hslToHex(towards(h, 250, 16), s + 0.08, l - 0.16), li = hslToHex(towards(h, 50, 10), s - 0.04, l + 0.12);
+  for (const [id, c] of [['hShadow', sh], ['hBase', B.color], ['hLight', li]]) { const el = $('#' + id); el.style.background = c; el.onclick = () => setColor(c); }
+}
+const _setColor = setColor;
+setColor = function (c, addRecent = true) { _setColor(c, addRecent); updateHarmony(); };
+
+/* ================================================================ resize / rotate layer */
+let xf = { s: 1, r: 0 };
+function applyXf(x) { x.translate(doc.w / 2, doc.h / 2); x.rotate(xf.r * Math.PI / 180); x.scale(xf.s, xf.s); x.translate(-doc.w / 2, -doc.h / 2); }
+for (const [id, key, fmt] of [['xfS', 's', v => Math.round(v * 100) + '%'], ['xfR', 'r', v => v + '°']]) {
+  const el = $('#' + id), lab = $('#' + id + 'V'); const up = () => { xf[key] = +el.value; lab.textContent = fmt(xf[key]); requestRender(); }; el.oninput = up; lab.textContent = fmt(+el.value);
+}
+function resetXf() { xf = { s: 1, r: 0 }; $('#xfS').value = 1; $('#xfR').value = 0; $('#xfSV').textContent = '100%'; $('#xfRV').textContent = '0°'; requestRender(); }
+$('#xfCancel').onclick = resetXf;
+$('#xfApply').onclick = () => {
+  if (xf.s === 1 && xf.r === 0) return; const L = layers[active]; pushHist([L]);
+  const c = copyC(L.c), x = L.c.getContext('2d'); x.clearRect(0, 0, doc.w, doc.h); x.save(); applyXf(x); x.drawImage(c, 0, 0); x.restore();
+  resetXf(); renderLayers(); toast('Layer resized');
+};
+
+/* ================================================================ body base from the mannequin */
+// Each part (torso, head, arms, legs) is outlined then filled, far parts first, so a near arm keeps
+// its outline over the body while joins inside a part stay clean.
+$('#gBody').onclick = () => {
+  if (!guide.J || !guide.J.head) guideReset();
+  const H = headUnit();
+  pushHist();
+  let L = findLayer('Body');
+  if (!L) { L = mkLayer('Body'); const s = layers.indexOf(findLayer('Sketch')); layers.splice(s >= 0 ? s + 1 : 0, 0, L); }
+  const x = L.c.getContext('2d'); x.clearRect(0, 0, doc.w, doc.h);
+  x.lineJoin = 'round'; x.lineCap = 'round'; x.strokeStyle = '#1d1a22'; x.lineWidth = Math.max(4, H * 0.045); x.fillStyle = $('#gSkin').value;
+  for (const g of mannequinGroups()) { for (const p of g.paths) x.stroke(p); for (const p of g.paths) x.fill(p); }
+  active = layers.indexOf(L); renderLayers(); requestRender();
+  toast('Body base made on its own layer. Draw clothes and hair on Lines above it.');
+};
+
+/* ================================================================ auto-colour every closed area */
+$('#bAutoFlats').onclick = () => {
+  const w = doc.w, h = doc.h, N = w * h, s = mk(w, h), sx = ctx2(s);
+  let any = false; for (const L of layers) if (L.visible && L.ref) { sx.drawImage(L.c, 0, 0); any = true; }
+  if (!any) return toast('Needs line art: draw on the Lines layer first (or tick “Fill reference” on your line layer)');
+  const d = sx.getImageData(0, 0, w, h).data, bar = new Uint8Array(N);
+  for (let j = 0; j < N; j++) bar[j] = d[j * 4 + 3] > 90 ? 1 : 0;
+  const wall = dilate(bar, w, h, 1), lab = new Int32Array(N), sizes = [0], border = [false]; let n = 0;
+  const st = new Int32Array(N);
+  for (let j0 = 0; j0 < N; j0++) {
+    if (wall[j0] || lab[j0]) continue;
+    n++; let sp = 0, cnt = 0, touches = false; st[sp++] = j0; lab[j0] = n;
+    while (sp) {
+      const j = st[--sp], x = j % w, y = (j / w) | 0; cnt++;
+      if (x === 0 || y === 0 || x === w - 1 || y === h - 1) touches = true;
+      if (x > 0 && !wall[j - 1] && !lab[j - 1]) { lab[j - 1] = n; st[sp++] = j - 1; }
+      if (x < w - 1 && !wall[j + 1] && !lab[j + 1]) { lab[j + 1] = n; st[sp++] = j + 1; }
+      if (y > 0 && !wall[j - w] && !lab[j - w]) { lab[j - w] = n; st[sp++] = j - w; }
+      if (y < h - 1 && !wall[j + w] && !lab[j + w]) { lab[j + w] = n; st[sp++] = j + w; }
+    }
+    sizes.push(cnt); border.push(touches);
+  }
+  // let each area creep under the line so no white gaps show
+  for (let pass = 0; pass < 3; pass++) {
+    const prev = Int32Array.from(lab);
+    for (let j = 0; j < N; j++) if (!prev[j]) { const x = j % w; const nb = (x > 0 && prev[j - 1]) || (x < w - 1 && prev[j + 1]) || (j >= w && prev[j - w]) || (j < N - w && prev[j + w]); if (nb) lab[j] = nb; }
+  }
+  const cols = sizes.map((_, i) => hexRgb(hslToHex(i * 137.508, 0.5, 0.8)));
+  const out = new Uint8ClampedArray(N * 4); let areas = 0; const counted = new Set();
+  for (let j = 0; j < N; j++) { const l = lab[j]; if (!l || border[l] || sizes[l] < 40) continue; const c = cols[l]; out[j * 4] = c[0]; out[j * 4 + 1] = c[1]; out[j * 4 + 2] = c[2]; out[j * 4 + 3] = 255; if (!counted.has(l)) { counted.add(l); areas++; } }
+  if (!areas) return toast('No closed areas found. Close up the outlines (the join assist helps) and try again.');
+  let col = findLayer('Colour'); if (!col) { col = mkLayer('Colour'); layers.splice(1, 0, col); }
+  pushHist([col]); const x = col.c.getContext('2d'); x.clearRect(0, 0, w, h); x.putImageData(new ImageData(out, w, h), 0, 0);
+  active = layers.indexOf(col); setTool('fill'); renderLayers(); requestRender();
+  toast(`Coloured ${areas} areas. Now pick a palette colour and click an area to swap it.`, 4500);
+};
+
+/* ================================================================ face & expressions */
+const EYES = {
+  round: { peak: -0.34, low: 0.2, iris: [0.24, 0.3], slant: 0 },
+  sharp: { peak: -0.24, low: 0.13, iris: [0.2, 0.25], slant: -0.08 },
+  sleepy: { peak: -0.13, low: 0.16, iris: [0.24, 0.3], slant: 0 },
+  wide: { peak: -0.44, low: 0.3, iris: [0.15, 0.18], slant: 0 },
+  happy: { closed: 'up' },
+  closed: { closed: 'down' },
+};
+const BROWS = { neutral: [-0.62, -0.62, -0.1], worried: [-0.82, -0.56, -0.04], angry: [-0.46, -0.74, -0.06], raised: [-0.86, -0.84, -0.16], none: null };
+const MOUTHS = ['flat', 'small', 'smile', 'bigsmile', 'frown', 'o', 'smirk', 'wavy'];
+const EXPR = {
+  Neutral: { eyes: 'round', rot: 0, brows: 'neutral', mouth: 'flat', blush: false },
+  Smile: { eyes: 'round', rot: 0, brows: 'neutral', mouth: 'smile', blush: false },
+  Happy: { eyes: 'happy', rot: 0, brows: 'raised', mouth: 'bigsmile', blush: true },
+  Shy: { eyes: 'round', rot: 0.1, brows: 'worried', mouth: 'small', blush: true },
+  Sad: { eyes: 'round', rot: 0.22, brows: 'worried', mouth: 'frown', blush: false },
+  Crying: { eyes: 'closed', rot: 0.15, brows: 'worried', mouth: 'wavy', blush: true },
+  Angry: { eyes: 'sharp', rot: -0.2, brows: 'angry', mouth: 'frown', blush: false },
+  Surprised: { eyes: 'wide', rot: 0, brows: 'raised', mouth: 'o', blush: false },
+  Worried: { eyes: 'round', rot: 0.14, brows: 'worried', mouth: 'wavy', blush: false },
+  Sleepy: { eyes: 'sleepy', rot: 0.05, brows: 'neutral', mouth: 'flat', blush: false },
+  Smug: { eyes: 'sleepy', rot: -0.06, brows: 'raised', mouth: 'smirk', blush: false },
+  Cold: { eyes: 'sharp', rot: 0, brows: 'neutral', mouth: 'flat', blush: false },
+};
+const FACE = { eyes: 'round', rot: 0, brows: 'neutral', mouth: 'flat', size: 80, gap: 0.35, eyeCol: '#4a3d3a', blush: true };
+const LINE = '#1d1a22';
+function drawEye(x, S, type, col, rot) {
+  const E = EYES[type]; x.save(); x.rotate(rot);
+  x.strokeStyle = LINE; x.fillStyle = LINE; x.lineCap = 'round'; x.lineJoin = 'round';
+  if (E.closed) {
+    x.lineWidth = S * 0.08; x.beginPath();
+    if (E.closed === 'up') { x.moveTo(-S * 0.45, S * 0.06); x.quadraticCurveTo(0, -S * 0.32, S * 0.45, S * 0.06); }
+    else { x.moveTo(-S * 0.45, -S * 0.04); x.quadraticCurveTo(0, S * 0.22, S * 0.45, -S * 0.04); }
+    x.stroke(); x.lineWidth = S * 0.05; x.beginPath(); x.moveTo(S * 0.42, S * (E.closed === 'up' ? 0.04 : -0.03)); x.lineTo(S * 0.58, S * (E.closed === 'up' ? -0.06 : -0.1)); x.stroke();
+    x.restore(); return;
+  }
+  const opening = new Path2D();
+  opening.moveTo(-S * 0.5, 0); opening.quadraticCurveTo(0, E.peak * 2 * S, S * 0.5, E.slant * S); opening.quadraticCurveTo(0, E.low * 2 * S, -S * 0.5, 0); opening.closePath();
+  x.save(); x.clip(opening);
+  x.fillStyle = '#fbf8f6'; x.fill(opening);
+  const [rx, ry] = [E.iris[0] * S, E.iris[1] * S], iy = S * 0.03;
+  const g = x.createLinearGradient(0, iy - ry, 0, iy + ry); g.addColorStop(0, shade(col, -0.35)); g.addColorStop(0.55, col); g.addColorStop(1, shade(col, 0.25));
+  x.fillStyle = g; x.beginPath(); x.ellipse(0, iy, rx, ry, 0, 0, Math.PI * 2); x.fill();
+  x.strokeStyle = shade(col, -0.5); x.lineWidth = S * 0.02; x.stroke();
+  x.fillStyle = '#1a1416'; x.beginPath(); x.ellipse(0, iy + ry * 0.05, rx * 0.45, ry * 0.55, 0, 0, Math.PI * 2); x.fill();
+  const lid = x.createLinearGradient(0, E.peak * S, 0, 0); lid.addColorStop(0, 'rgba(40,30,40,.45)'); lid.addColorStop(1, 'rgba(40,30,40,0)'); x.fillStyle = lid; x.fillRect(-S, E.peak * S * 1.2, S * 2, -E.peak * S * 1.2);
+  x.fillStyle = '#fff'; x.beginPath(); x.arc(-rx * 0.35, iy - ry * 0.38, rx * 0.3, 0, Math.PI * 2); x.fill();
+  x.beginPath(); x.arc(rx * 0.38, iy + ry * 0.38, rx * 0.13, 0, Math.PI * 2); x.fill();
+  x.restore();
+  x.strokeStyle = LINE; x.lineWidth = S * 0.085; x.beginPath(); x.moveTo(-S * 0.5, S * 0.02); x.quadraticCurveTo(0, E.peak * 2 * S, S * 0.53, E.slant * S - S * 0.02); x.stroke();
+  x.lineWidth = S * 0.05; x.beginPath(); x.moveTo(S * 0.5, E.slant * S - S * 0.02); x.lineTo(S * 0.66, E.slant * S - S * 0.13); x.stroke();
+  x.lineWidth = S * 0.035; x.beginPath(); x.moveTo(S * 0.08, E.low * S * 0.98); x.quadraticCurveTo(S * 0.3, E.low * S, S * 0.44, E.low * S * 0.45); x.stroke();
+  x.restore();
+}
+function shade(hex, amt) { const [h, s, l] = hexToHsl(hex); return hslToHex(h, s, l + amt * (amt < 0 ? l : 1 - l)); }
+function drawBrow(x, S, type) {
+  const b = BROWS[type]; if (!b) return; const [yi, yo, arch] = b;
+  x.strokeStyle = LINE; x.lineCap = 'round'; x.lineWidth = S * 0.075;
+  x.beginPath(); x.moveTo(-S * 0.38, yi * S); x.quadraticCurveTo(S * 0.1, (Math.min(yi, yo) + arch) * S, S * 0.56, yo * S); x.stroke();
+}
+function drawMouth(x, S, type) {
+  const W = S * 0.42; x.strokeStyle = LINE; x.lineCap = 'round'; x.lineJoin = 'round'; x.lineWidth = S * 0.045;
+  x.beginPath();
+  if (type === 'flat') { x.moveTo(-W * 0.3, 0); x.lineTo(W * 0.3, 0); x.stroke(); }
+  else if (type === 'small') { x.moveTo(-W * 0.2, 0); x.quadraticCurveTo(0, S * 0.07, W * 0.2, 0); x.stroke(); }
+  else if (type === 'smile') { x.moveTo(-W * 0.5, -S * 0.02); x.quadraticCurveTo(0, S * 0.2, W * 0.5, -S * 0.02); x.stroke(); }
+  else if (type === 'frown') { x.moveTo(-W * 0.4, S * 0.06); x.quadraticCurveTo(0, -S * 0.1, W * 0.4, S * 0.06); x.stroke(); }
+  else if (type === 'smirk') { x.moveTo(-W * 0.35, S * 0.02); x.quadraticCurveTo(W * 0.15, S * 0.07, W * 0.45, -S * 0.07); x.stroke(); }
+  else if (type === 'wavy') { x.moveTo(-W * 0.4, 0); for (let i = 1; i <= 4; i++) x.lineTo(-W * 0.4 + i * W * 0.2, (i % 2 ? -1 : 1) * S * 0.04); x.stroke(); }
+  else if (type === 'o') { x.fillStyle = '#5a2030'; x.ellipse(0, S * 0.04, S * 0.08, S * 0.11, 0, 0, Math.PI * 2); x.fill(); x.stroke(); }
+  else if (type === 'bigsmile') {
+    const p = new Path2D(); p.moveTo(-W * 0.5, 0); p.lineTo(W * 0.5, 0); p.quadraticCurveTo(0, S * 0.5, -W * 0.5, 0); p.closePath();
+    x.fillStyle = '#7a2a3a'; x.fill(p); x.save(); x.clip(p); x.fillStyle = '#e57f8f'; x.beginPath(); x.ellipse(0, S * 0.24, W * 0.3, S * 0.1, 0, 0, Math.PI * 2); x.fill(); x.restore(); x.stroke(p);
+  }
+}
+// (cx, cy) = the point between the eyes, on the eye line
+function drawFace(x, cx, cy, f = FACE) {
+  const S = f.size, D = S * (1 + f.gap);
+  if (f.blush) for (const sgn of [-1, 1]) { const bx = cx + sgn * D * 0.55, by = cy + S * 0.5, g = x.createRadialGradient(bx, by, 0, bx, by, S * 0.38); g.addColorStop(0, 'rgba(255,128,150,.45)'); g.addColorStop(1, 'rgba(255,128,150,0)'); x.fillStyle = g; x.beginPath(); x.ellipse(bx, by, S * 0.38, S * 0.22, 0, 0, Math.PI * 2); x.fill(); }
+  for (const sgn of [1, -1]) {
+    x.save(); x.translate(cx + sgn * D / 2, cy); x.scale(sgn, 1);   // the left eye is the right eye mirrored
+    drawEye(x, S, f.eyes, f.eyeCol, f.rot); drawBrow(x, S, f.brows); x.restore();
+  }
+  x.save(); x.translate(cx, cy + S * 1.25); drawMouth(x, S, f.mouth); x.restore();
+}
+function stampFace(cx, cy) {
+  let L = findLayer('Face');
+  pushHist(L ? [L] : []);
+  if (!L) { L = mkLayer('Face'); const li = layers.indexOf(findLayer('Lines')); layers.splice(li >= 0 ? li + 1 : layers.length, 0, L); }
+  drawFace(L.c.getContext('2d'), cx, cy);
+  active = layers.indexOf(L); renderLayers(); requestRender();
+  toast('Face placed on the “Face” layer. Undo to try another spot or expression.');
+}
+(function buildFaceUI() {
+  for (const name in EXPR) {
+    const b = document.createElement('button'); b.textContent = name;
+    b.onclick = () => { Object.assign(FACE, EXPR[name]); syncFaceUI(); $$('#exprBtns button').forEach(x => x.classList.toggle('on', x === b)); setTool('face'); };
+    $('#exprBtns').append(b);
+  }
+  for (const k in EYES) $('#fEyes').add(new Option(k, k));
+  for (const k in BROWS) $('#fBrows').add(new Option(k, k));
+  for (const k of MOUTHS) $('#fMouth').add(new Option(k, k));
+  $('#fEyes').onchange = e => { FACE.eyes = e.target.value; drawOverlay(); };
+  $('#fBrows').onchange = e => { FACE.brows = e.target.value; drawOverlay(); };
+  $('#fMouth').onchange = e => { FACE.mouth = e.target.value; drawOverlay(); };
+  $('#fSize').oninput = e => { FACE.size = +e.target.value; $('#fSizeV').textContent = FACE.size + 'px'; drawOverlay(); };
+  $('#fGapE').oninput = e => { FACE.gap = +e.target.value; $('#fGapEV').textContent = Math.round(FACE.gap * 100) + '%'; drawOverlay(); };
+  $('#fEyeCol').oninput = e => { FACE.eyeCol = e.target.value; drawOverlay(); };
+  $('#fBlush').onchange = e => { FACE.blush = e.target.checked; drawOverlay(); };
+  $('#bFaceTool').onclick = () => setTool('face');
+  $('#bFaceGuide').onclick = () => {
+    if (!guide.J || !guide.J.head) guideReset();
+    const H = headUnit(), hy = (guide.yaw + guide.headTurn) * Math.PI / 180;
+    if (Math.cos(hy) < 0.25) return toast('The head is turned away. Face stamps work from front to about ¾ view.');
+    // turned heads: the face slides toward the side it faces and the eyes sit closer together
+    FACE.size = Math.round(H * 0.26); FACE.gap = Math.max(-0.35, 0.34 * Math.cos(hy) / 0.26 - 1); syncFaceUI();
+    const tilt = Math.atan2(guide.J.head.x - guide.J.neck.x, guide.J.neck.y - guide.J.head.y), off = H * 0.4 * Math.sin(hy) * 0.85;
+    stampFace(guide.J.head.x + off * Math.cos(tilt) - H * 0.08 * Math.sin(tilt), guide.J.head.y + off * Math.sin(tilt) + H * 0.08 * Math.cos(tilt));
+  };
+  syncFaceUI();
+})();
+function syncFaceUI() {
+  $('#fEyes').value = FACE.eyes; $('#fBrows').value = FACE.brows; $('#fMouth').value = FACE.mouth;
+  $('#fSize').value = FACE.size; $('#fSizeV').textContent = FACE.size + 'px'; $('#fGapE').value = FACE.gap; $('#fGapEV').textContent = Math.round(FACE.gap * 100) + '%';
+  $('#fEyeCol').value = FACE.eyeCol; $('#fBlush').checked = FACE.blush; drawOverlay();
+}
+// clicking an eye colour in a palette while the face tool is on sets the eye colour
+const _setColor2 = setColor;
+setColor = function (c, addRecent = true) { _setColor2(c, addRecent); if (tool === 'face') { FACE.eyeCol = c; $('#fEyeCol').value = c; drawOverlay(); } };
+
+/* ================================================================ hints, steps, beginner mode */
+const HINTS = {
+  pen: '<b>Pen</b> · draw in long, confident strokes · <b>hold still</b> at the end to snap a clean curve · Shift+click = straight line from your last stroke · [ ] size',
+  pencil: '<b>Pencil</b> · for rough shapes. Messy is fine: you’ll trace over it with the pen',
+  marker: '<b>Marker</b> · flat colour that doesn’t darken where strokes overlap',
+  air: '<b>Airbrush</b> · soft glow. Try blush on the cheeks or light in the eyes on the Light layer',
+  eraser: '<b>Eraser</b> · same smooth stroke as the pen. Hold still to erase in a clean line',
+  fill: '<b>Bucket</b> · click inside an area to fill it. Small gaps in the lines are ignored',
+  lasso: '<b>Lasso</b> · draw around a shape and let go to fill it · start with <b>Alt</b> held to cut out instead',
+  line: '<b>Line</b> · drag · hold Shift to snap to 45°', ellipse: '<b>Ellipse</b> · drag · hold Shift for a circle',
+  picker: '<b>Pick colour</b> · click anything to copy its colour (Alt+click works with every tool)',
+  face: '<b>Face</b> · click the spot <b>between the eyes</b> · choose an expression on the right · undo if it’s off',
+  move: '<b>Move</b> · drag to move everything on this layer', pose: '<b>Pose</b> · drag the blue dots · the pink dot moves the whole body',
+  crop: '<b>Crop</b> · drag a box around the part to keep', hand: '<b>Pan</b> · drag to move around · wheel zooms',
+};
+function updateHint() {
+  const el = $('#hintbar'); if (!el) return;
+  if (!$('#aHints').checked) { el.style.display = 'none'; return; }
+  el.style.display = ''; const L = layers[active];
+  el.innerHTML = (HINTS[tool] || '') + (L ? ` &nbsp;·&nbsp; on layer <b>${L.name}</b>` : '');
+}
+$('#aHints').onchange = updateHint;
+const _setTool = setTool; setTool = function (t) { _setTool(t); updateHint(); };
+const _renderLayers = renderLayers; renderLayers = function () { _renderLayers(); updateHint(); };
+
+const STEPS = [
+  ['1', 'Pose', 'In <b>Who &amp; pose</b> just below: pick the character, then one of their poses, then turn it to the angle you want to draw. Drag the dots to adjust. <b>Make body base</b> gives you a clean body to dress.', () => {
+    guide.show = true; $('#bGuide').classList.add('on'); setTool('pose'); $('#whoBox').open = true;
+  }, [['Make body base', () => $('#gBody').click()]]],
+  ['2', 'Sketch', 'Rough shapes on the faded Sketch layer: hair outline, clothes, where the arms go. Messy is fine.', () => {
+    useLayer('Sketch', { opacity: 0.7 }); setTool('pencil'); setColor('#6f8fd8', false); setSize(5); setStab(12);
+  }],
+  ['3', 'Ink', 'Trace your sketch on the Lines layer in long strokes. <b>Hold still</b> at the end of a stroke to snap it clean. Turn on <b>Symmetry</b> for the face.', () => {
+    const s = findLayer('Sketch'); if (s) s.opacity = 0.3; useLayer('Lines'); setTool('pen'); setColor(LINE, false); setSize(6); setStab(50); requestRender();
+  }, [['Symmetry on/off', () => $('#bSym').click()]]],
+  ['4', 'Colour', 'Press <b>Auto-colour</b>, then pick a colour from the palettes and click each area with the bucket.', () => {
+    useLayer('Colour'); setTool('fill');
+  }, [['Auto-colour every area', () => $('#bAutoFlats').click()]]],
+  ['5', 'Shade', 'One click adds cel shading. Then fix bits with the lasso on the Shading layer (hold Alt to cut out).', () => {
+    useLayer('Shading'); setTool('lasso'); setColor('#a597c9', false);
+  }, [['Add shadows', () => autoShade(false)], ['Add rim light', () => autoShade(true)]]],
+  ['6', 'Face', 'Choose an expression, then click between where the eyes go, or put it straight on the mannequin.', () => {
+    setTool('face'); $('#exprBtns').closest('details').open = true;
+  }, [['Put on mannequin', () => $('#bFaceGuide').click()]]],
+  ['7', 'Export', 'Hide the mannequin and export your sprite. Save the project too, so you can make other expressions later.', () => {
+    guide.show = false; $('#bGuide').classList.remove('on'); drawOverlay();
+  }, [['Export PNG', () => $('#bExport').click()], ['Save project', () => saveProject()]]],
+];
+function useLayer(name, o = {}) { let L = findLayer(name); if (!L) { pushHist(); L = mkLayer(name); layers.push(L); } Object.assign(L, o, { visible: true }); active = layers.indexOf(L); renderLayers(); requestRender(); }
+function setSize(v) { const el = $('#size'); el.value = v; el.oninput(); }
+function setStab(v) { const el = $('#stab'); el.value = v; el.oninput(); markStab(); }
+function goStep(i) {
+  const [, name, text, act, btns = []] = STEPS[i]; act();
+  $$('#steps button').forEach((b, j) => b.classList.toggle('on', j === i));
+  const c = $('#coach'); c.innerHTML = `<b>Step ${i + 1}: ${name}</b><br>${text}`;
+  const row = document.createElement('div'); row.className = 'row2';
+  for (const [label, fn] of btns) { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; row.append(b); }
+  if (i < STEPS.length - 1) { const nx = document.createElement('button'); nx.className = 'primary'; nx.textContent = 'Next step →'; nx.onclick = () => goStep(i + 1); row.append(nx); }
+  c.append(row);
+}
+STEPS.forEach(([n, name], i) => { const b = document.createElement('button'); b.innerHTML = `${n}. ${name}`; b.onclick = () => goStep(i); $('#steps').append(b); });
+
+function setMode(beg) {
+  document.body.classList.toggle('beginner', beg); $('#bMode').classList.toggle('on', beg);
+  $('#bMode').textContent = beg ? 'Beginner mode' : 'Advanced mode';
+  try { localStorage.setItem('dm-char-mode', beg ? 'beginner' : 'advanced'); } catch { }
+}
+$('#bMode').onclick = () => setMode(!document.body.classList.contains('beginner'));
+
+/* ================================================================ desktop app: saving into the game folder + autosave */
+var api = false;
+async function detectApi() {
+  try {
+    const j = await (await fetch('/api/ping')).json(); if (j.app !== 'dm-tools') return;
+    api = true; $('#bFolder').style.display = 'none';
+    $('#folderInfo').textContent = 'Desktop app: PNGs go into ' + j.root + '/characters, projects into characters/projects.';
+    setInterval(() => fetch('/api/ping').catch(() => { }), 5000);
+    setInterval(async () => { if (dirty) { try { await saveBlob(projectBlob(), '_autosave.dmchar', 'characters/projects', true); } catch { } } }, 60000);
+    const list = await (await fetch('/api/list?dir=characters/projects')).json();
+    const auto = list.find(f => f.name === '_autosave.dmchar');
+    if (auto && Date.now() - auto.mtime < 7 * 864e5 && confirm('Restore your last session (autosaved ' + new Date(auto.mtime).toLocaleString() + ')?')) {
+      const data = await (await fetch('/characters/projects/_autosave.dmchar')).json(); await loadProject(data, data.name || 'character'); toast('Restored your last session');
+    }
+  } catch { }
+}
+
+/* ================================================================ who are you drawing? */
+// colours come from the design sheets; poses are the ones each character is in during the game
+const CHARS = {
+  'Iris': { pal: 'Iris', file: 'iris', eye: '#4a3d3a', skin: '#ffe3d5', heads: 7, poses: ['Standing', 'Shy, hands together', 'Sitting (chair / bed)', 'Floor, hugging knees', 'Face in hands', 'Looking at phone', 'Hugging', 'Walking'] },
+  'Naomi': { pal: 'Naomi', file: 'naomi', eye: '#3a8de8', skin: '#ffe3d5', heads: 7, poses: ['Standing', 'Arms crossed', 'Hand on hip', 'Hand by face', 'Sitting on stairs', 'Looking at phone', 'Hugging', 'Walking'] },
+  'Maeve': { pal: 'Maeve', file: 'maeve', eye: '#e0343c', skin: '#f3ebea', heads: 7.5, poses: ['Standing', 'Confident, hand up', 'Leaning on a wall', 'Sitting, legs swinging', 'Hands in pockets', 'Waving', 'Arms crossed', 'Walking'] },
+  'Blond boy': { pal: 'Blond boy', file: 'blond-boy', eye: '#4b5fd6', skin: '#f9dbd1', heads: 7.5, poses: ['Standing', 'Hands in pockets', 'Walking', 'Sitting (chair / bed)', 'Looking at phone', 'Face in hands', 'Hugging', 'Arms crossed'] },
+  'Glasses boy': { pal: 'Glasses boy', file: 'glasses-boy', eye: '#4a3d3a', skin: '#fdeee8', heads: 7.5, poses: ['Standing', 'Hands in pockets', 'Walking', 'Sitting (chair / bed)', 'Looking at phone', 'Face in hands', 'Hugging', 'Arms crossed'] },
+  'Other': { poses: null },
+};
+let who = 'Other';
+function showPoses() {
+  const list = $('#gAllPoses').checked ? null : CHARS[who].poses;
+  $$('#gPoseBtns button').forEach(b => b.style.display = !list || list.includes(b.dataset.pose) ? '' : 'none');
+  $('#whoPoseNote').textContent = list ? `(${who}'s poses from the story)` : '';
+}
+function selectWho(name) {
+  who = name; const c = CHARS[name];
+  $$('#whoBtns button').forEach(b => b.classList.toggle('on', b.textContent === name));
+  if (c.skin) $('#gSkin').value = c.skin;
+  if (c.eye) { FACE.eyeCol = c.eye; syncFaceUI(); }
+  if (c.heads) { const el = $('#gHeads'); el.value = c.heads; el.oninput(); updateJ(); }
+  if (c.file) $('#exName').value = c.file + '-neutral';
+  $$('.pal').forEach(p => p.classList.toggle('hl', p.querySelector('b').textContent === c.pal));
+  showPoses();
+  const first = [...$$('#gPoseBtns button')].find(b => b.style.display !== 'none'); if (first) first.click();
+  if (c.pal) toast(`Drawing ${name}: their colours are highlighted in Palettes, export name set to ${c.file}-neutral`);
+}
+for (const name in CHARS) { const b = document.createElement('button'); b.textContent = name; b.onclick = () => selectWho(name); $('#whoBtns').append(b); }
+$('#gAllPoses').onchange = showPoses;
+
+/* ================================================================ keyboard & drop */
+const KEYS = { t: 'face', p: 'pen', n: 'pencil', k: 'marker', a: 'air', e: 'eraser', f: 'fill', l: 'lasso', u: 'line', o: 'ellipse', i: 'picker', v: 'move', j: 'pose', c: 'crop', h: 'hand' };
+window.addEventListener('keydown', e => {
+  if (e.target.matches('input[type=text],input[type=number],select')) return;
+  const k = e.key.toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+  if ((e.ctrlKey || e.metaKey) && k === 'y') { e.preventDefault(); redo(); return; }
+  if ((e.ctrlKey || e.metaKey) && k === 's') { e.preventDefault(); saveProject(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.code === 'Space') { e.preventDefault(); if (!spaceDown) { spaceDown = true; vp.style.cursor = 'grab'; } return; }
+  if (KEYS[k]) return setTool(KEYS[k]);
+  if (k === 'y') return $('#bSym').click();
+  if (k === 'g') return $('#bGuide').click();
+  if (e.key === '[' || e.key === ']') { const el = $('#size'); el.value = clamp(Math.round(+el.value * (e.key === ']' ? 1.2 : 0.83)) + (e.key === ']' ? 1 : 0), 1, 200); el.oninput(); return; }
+  if (e.key === '0') fit(); else if (e.key === '+' || e.key === '=') zoomAt(1.25); else if (e.key === '-') zoomAt(0.8);
+  else if (e.key === 'Escape') { $$('.modal').forEach(m => m.classList.remove('show')); lasso = null; cropBox = null; drawOverlay(); }
+});
+window.addEventListener('keyup', e => { if (e.code === 'Space') { spaceDown = false; setTool(tool); } });
+vp.addEventListener('dragover', e => e.preventDefault());
+vp.addEventListener('drop', async e => {
+  e.preventDefault(); const f = [...e.dataTransfer.files].find(f => f.type.startsWith('image/')); if (!f) return;
+  const img = await loadImg(f), L = mkLayer(f.name.replace(/\.[^.]+$/, '')); pushHist();
+  const k = Math.min(1, doc.w / img.width, doc.h / img.height); L.c.getContext('2d').drawImage(img, (doc.w - img.width * k) / 2, (doc.h - img.height * k) / 2, img.width * k, img.height * k);
+  layers.splice(active + 1, 0, L); active++; renderLayers(); requestRender(); toast('Image added as a new layer');
+});
+
+/* ================================================================ boot */
+booted = true; setColor('#1d1a22'); setTool('pen'); newDoc(1200, 2400);
+let modePref = 'beginner'; try { modePref = localStorage.getItem('dm-char-mode') || 'beginner'; } catch { }
+setMode(modePref === 'beginner'); markStab(); updateHarmony(); updateHint();
+if (modePref === 'beginner') goStep(0);
+detectApi();
+</script>
+</body>
+</html>
