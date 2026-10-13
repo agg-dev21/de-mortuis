@@ -172,7 +172,7 @@ tw-story[tags~="bg-black"]           { --bg: none; --ov: none; background-color:
 
 
 :: clamp
-(set: $iris to (max: 0, (min: 100, $iris, $baseI + 20)))(set: $naomi to (max: 0, (min: 100, $naomi, $baseN + 20)))(if: $lockI)[(set: $iris to (min: $iris, $frzI))](if: $lockN)[(set: $naomi to (min: $naomi, $frzN))]
+(set: $iris to (max: 0, (min: 100, $iris, $baseI + (cond: $react is "pizza", 12, $react is "post", 16, 20))))(set: $naomi to (max: 0, (min: 100, $naomi, $baseN + 20)))(if: $lockI)[(set: $iris to (min: $iris, $frzI))](if: $lockN)[(set: $naomi to (min: $naomi, $frzN))]
 
 
 :: pick iris
@@ -850,7 +850,7 @@ Your phone lights up on the carpet.
 <div class="meter"><span class="who">Iris</span><div class="bar">(print: '<div class="fill iris" style="width:' + (str: $iris) + '%"></div>')</div><span class="num">$iris</span></div>
 <div class="meter"><span class="who">Naomi</span><div class="bar">(print: '<div class="fill naomi" style="width:' + (str: $naomi) + '%"></div>')</div><span class="num">$naomi</span></div>
 
-(if: $dating)[(if: $iris >= 35 and $naomi >= 35 and not $lockI and not $lockN)[(link-goto: "...", "End She Waits")](else:)[(link-goto: "...", "End All Three")]](else-if: $iris < 35 or $naomi < 35 or $lockI or $lockN)[(link-goto: "...", "End Bad")](else-if: $iris >= 60 and $naomi >= 60 and $leaks is 0 and not $capI and not $capN)[(link-goto: "...", "End Good")](else:)[(link-goto: "...", "End Middle")]
+(if: $dating)[(if: $iris >= 35 and $naomi >= 35 and not $lockI and not $lockN)[(link-goto: "...", "End She Waits")](else:)[(link-goto: "...", "End All Three")]](else-if: $iris < 35 or $naomi < 35 or $lockI or $lockN)[(link-goto: "...", "End Bad")](else-if: $iris >= (cond: $react is "pizza", 90, $react is "post", 75, 60) and $naomi >= 60 and $leaks is 0 and not $capI and not $capN)[(link-goto: "...", "End Good")](else:)[(link-goto: "...", "End Middle")]
 
 
 :: D1 Midday [bg-hall-brick day hub]
