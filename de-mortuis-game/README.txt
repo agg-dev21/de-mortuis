@@ -5,12 +5,13 @@ de-mortuis.html   Playable game. Keep it next to the img/ folder.
 de-mortuis.twee   The source. Import into Twine: Library > Import > pick this file.
 img/              Background photos (your campus shots, resized to 1600px).
 
-ROOM PHOTOS STILL NEEDED
-Drop these into img/ with exactly these names. Until then those scenes show a dark background.
-  room-mc.jpg          your room       (waking up, Day 6 night, night texts, She Waits ending)
-  room-naomi.jpg       Naomi's room    (Days 2-6)
-
 WHICH PHOTO IS WHERE
+  Scenes with Iris, Naomi or Maeve use the versions with her drawn in, e.g.
+  img/room-iris--iris.jpg (made from img/room-iris.jpg). The list of which scene uses which
+  is in img-with-characters/WHICH-SCENE.txt. The list below is the plain photos.
+  room-mc.jpg              your room by day (waking up)
+  room-mc-night.jpg        your room at night: night texts, Day 6 scrolling, She Waits ending
+  room-naomi.jpg           Naomi's room (made from Iris's tidy room, mirrored and warm)
   between-1/2/3.jpg        Death's voice: revival, Day 7 morning / "one more time" / All Three ending
   room-iris.jpg            Iris's room by day (Days 1-6)
   room-iris-2.jpg          Iris's room at night (Day 2 confession, Day 3 evening, Day 6 night)
@@ -80,6 +81,21 @@ FONTS (fonts/)
   Story and choices: BIZ UDMincho. Day titles: Aurora. Rumours and meters: DK Jambo.
   Death's voice: Extra Blur. A girl losing herself: Megalomania.
   Iris doing better: Stay With Me. Naomi doing better: Reenie Beanie (embedded, works offline).
+
+SOUND (sounds/)
+  music.mp3   "Sad Lofi" by prettyjohn1 (Pixabay). Loops under every normal scene.
+  piano.mp3   "Sad Piano" (freesound community, Pixabay). Replaces the lofi on passages
+              tagged "piano": the prologue and every ending.
+  rain.mp3    "Calming Rain" by liecio (Pixabay). Added on passages tagged "rain":
+              the prologue and the bad ending. Re-cut so it loops seamlessly.
+  buzz.mp3    phone buzz (freesound community). Plays when a passage shows an incoming
+              text, twice if there are several.
+  whoosh.mp3  creepy whoosh (freesound community). Plays when Death breaks in and when
+              you arrive in the between.
+  Tag a passage "silence" to fade everything out (2:07 on Day 7, Maeve's last scene).
+  Nothing plays before the first click (browsers block it); the corner button mutes it all.
+  All are free to use under the Pixabay licence, no credit required.
+  Like the photos, sound only plays in the published HTML, not in Twine's Play/Test.
 
 NOTES
 - In Twine's own Play/Test window the photos won't load (it can't see the img/ folder).
