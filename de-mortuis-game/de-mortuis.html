@@ -370,14 +370,14 @@ She sits on her bed with her laptop open to a page she closes when you look.
 
 They probably did. You know what she was crying about. You might be the only one who does.
 
-(link-reveal-goto: (cond: $devI &gt;= $devN, &quot;Go to Iris&#39;s. Bad tea. A movie neither of you watches.&quot;, &quot;Go see Iris. You haven&#39;t, much.&quot;), &quot;D3 Evening Iris&quot;)[(display: &quot;pick iris&quot;)]
+(link-reveal-goto: (cond: $devI &gt;= $devN, &quot;Go to Iris&#39;s. See how she is after last night.&quot;, &quot;Go see Iris. You haven&#39;t, much.&quot;), &quot;D3 Evening Iris&quot;)[(display: &quot;pick iris&quot;)]
 (link-reveal-goto: (cond: $devN &gt;= $devI, &quot;Naomi&#39;s doing laundry. Keep her company.&quot;, &quot;Naomi&#39;s doing laundry alone. She hasn&#39;t asked for anyone.&quot;), &quot;D3 Evening Naomi&quot;)[(display: &quot;pick naomi&quot;)]
-(link-reveal-goto: &quot;Walk the long way home. Alone.&quot;, &quot;Alone&quot;)[(set: $next to &quot;D3 Night&quot;)(display: &quot;go alone&quot;)]</tw-passagedata><tw-passagedata pid="22" name="D3 Walk" tags="bg-hall-red night" position="125,250" size="100,100">It&#39;s late when you leave her room. Your phone buzzes on the stairs.
+(link-reveal-goto: &quot;Walk the long way home. Alone.&quot;, &quot;Alone&quot;)[(set: $next to &quot;D3 Night&quot;)(display: &quot;go alone&quot;)]</tw-passagedata><tw-passagedata pid="22" name="D3 Walk" tags="bg-hall-red night" position="125,250" size="100,100">It&#39;s late. Your phone buzzes on the way back from the vending machine.
 
 &lt;span class=&quot;phone&quot;&gt;u alive&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Naomi&lt;/span&gt;
 (if: $dating)[&lt;span class=&quot;phone&quot;&gt;come outside babe&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Maeve&lt;/span&gt;]
 
-(link-reveal-goto: &quot;Go back up. Walk Iris to the dining hall before it closes.&quot;, &quot;Walk home&quot;)[(set: $walked to &quot;iris&quot;, $iris to it + 5)]
+(link-reveal-goto: &quot;Go to Iris&#39;s. Walk her to the dining hall before it closes.&quot;, &quot;Walk home&quot;)[(set: $walked to &quot;iris&quot;, $iris to it + 5)]
 (link-reveal-goto: &quot;Wait for Naomi outside her building.&quot;, &quot;Walk home&quot;)[(set: $walked to &quot;naomi&quot;, $naomi to it + 5)]
 (if: $dating)[(link-reveal-goto: &quot;Go outside. Maeve&#39;s waiting.&quot;, &quot;Walk home&quot;)[(set: $walked to &quot;maeve&quot;)]
 ](link-reveal-goto: &quot;Walk home alone.&quot;, &quot;Walk home&quot;)[(set: $walked to &quot;alone&quot;)]</tw-passagedata><tw-passagedata pid="23" name="Day 4" tags="bg-hall-posters day hub" position="250,250" size="100,100">(save-game: &quot;auto&quot;)&lt;div class=&quot;dayhead&quot;&gt;THURSDAY&lt;/div&gt;&lt;div class=&quot;whisper&quot;&gt;she slept with hale&lt;/div&gt;
@@ -397,7 +397,7 @@ It&#39;s the most she&#39;s said all week.
 (link-reveal-goto: &quot;Okay. Leave her alone.&quot;, &quot;D4 Midday&quot;)[(set: $naomi to it - 5)]</tw-passagedata><tw-passagedata pid="26" name="D4 Night" tags="bg-black night" position="625,250" size="100,100">The two messages come in four minutes apart.
 
 &lt;span class=&quot;phone&quot;&gt;(if: $irisTold)[my mom had a bad night](else:)[cant sleep]&lt;/span&gt;
-&lt;span class=&quot;phone&quot;&gt;you dont have to come&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Iris&lt;/span&gt;
+&lt;span class=&quot;phone&quot;&gt;im in the lab. you dont have to come&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Iris&lt;/span&gt;
 
 &lt;span class=&quot;phone&quot;&gt;i need to tell you something&lt;/span&gt;
 &lt;span class=&quot;phone&quot;&gt;i think i worked something out. come over&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Naomi&lt;/span&gt;
@@ -546,7 +546,7 @@ You know exactly whose fault it is. You don&#39;t say it.
 
 (link-reveal-goto: (cond: $devI &gt;= $devN, &quot;Go see Iris.&quot;, &quot;Iris noticed you were weird. Go before she worries.&quot;), &quot;D6 Iris&quot;)[(display: &quot;pick iris&quot;)]
 (link-reveal-goto: (cond: $devN &gt;= $devI, &quot;Stay for Naomi&#39;s terrible movie.&quot;, &quot;Stay at Naomi&#39;s. Even if it&#39;s quiet.&quot;), &quot;D6 Naomi&quot;)[(display: &quot;pick naomi&quot;)]
-(link-reveal-goto: &quot;You can&#39;t face either of them yet. Go out alone.&quot;, &quot;Alone&quot;)[(set: $next to &quot;D6 Later&quot;)(display: &quot;go alone&quot;)]</tw-passagedata><tw-passagedata pid="40" name="D6 Iris" tags="bg-room-iris day iris" position="1125,375" size="100,100">She&#39;s okay today. Really okay, or close to it. She made tea in her room even though it&#39;s against the rules.
+(link-reveal-goto: &quot;You can&#39;t face either of them yet. Go out alone.&quot;, &quot;Alone&quot;)[(set: $next to &quot;D6 Later&quot;)(display: &quot;go alone&quot;)]</tw-passagedata><tw-passagedata pid="40" name="D6 Iris" tags="bg-room-iris day iris" position="1125,375" size="100,100">(if: $iris &gt;= 50)[She&#39;s okay today. Really okay, or close to it. She made tea in her room even though it&#39;s against the rules.](else:)[She says she&#39;s okay today. She made tea in her room even though it&#39;s against the rules. She doesn&#39;t drink it.]
 
 &quot;You look like you&#39;ve been carrying something,&quot; she says.
 
@@ -582,7 +582,7 @@ Her desk is cleared. Her sketchbook is closed with a hair tie around it, like so
 
 ]
 (link-reveal-goto: &quot;\&quot;I need to tell you something. It started with me.\&quot;&quot;, &quot;D7 Truth&quot;)[(set: $confessedIris to true, $iris to it - 5)(display: &quot;clamp&quot;)]
-(link-reveal-goto: &quot;Not tonight. She has enough.&quot;, &quot;D7 Ask&quot;)[(set: $hidIris to true)]</tw-passagedata><tw-passagedata pid="46" name="D7 Truth" tags="bg-room-iris-clean night iris" position="625,500" size="100,100">&quot;The rumour. The money part. Naomi told one person, and it grew from there. But Naomi only knew because I told her. The night you told me. I texted her like it was nothing, and I forgot I even did it. I&#39;m so sorry.&quot;
+(link-reveal-goto: &quot;Not tonight. She has enough.&quot;, &quot;D7 Ask&quot;)[(set: $hidIris to true)]</tw-passagedata><tw-passagedata pid="46" name="D7 Truth" tags="bg-room-iris-clean night iris" position="625,500" size="100,100">&quot;The rumour. The money part. Naomi told one person, and it grew from there. But Naomi only knew because I told her. Two weeks ago, the night you first told me about the scholarship. I texted her like it was nothing, and I forgot I even did it. I&#39;m so sorry.&quot;
 
 Iris doesn&#39;t yell. She just closes her eyes.
 
@@ -615,7 +615,7 @@ You call 988 together on speaker, sitting on her floor. The woman who answers ha
 [[...-&gt;D7 Naomi]]</tw-passagedata><tw-passagedata pid="49" name="D7 Naomi" tags="bg-room-iris-clean night iris" position="1000,500" size="100,100">Your phone is in your hand. Naomi&#39;s name is right there.
 
 (link-reveal-goto: &quot;Text Naomi: can you come to iris&#39;s. please.&quot;, &quot;D7 Door&quot;)[(if: $confessedNaomi)[(set: $iris to it + 10, $naomi to it + 10)](else-if: $hidNaomi)[](else:)[(set: $iris to it + 5, $naomi to it + 5)](display: &quot;clamp&quot;)]
-(link-reveal-goto: &quot;Don&#39;t. It&#39;s just you and Iris tonight.&quot;, &quot;D7 Night&quot;)[]</tw-passagedata><tw-passagedata pid="50" name="D7 Door" tags="bg-room-iris-clean night iris naomi" position="1125,500" size="100,100">(if: $hidNaomi)[You wait an hour. The message says //read//. Nobody knocks.](else:)[Around ten, there&#39;s a knock. Naomi is standing in the doorway holding three coffees, looking more scared than you&#39;ve ever seen her.
+(link-reveal-goto: &quot;Don&#39;t. It&#39;s just you and Iris tonight.&quot;, &quot;D7 Night&quot;)[]</tw-passagedata><tw-passagedata pid="50" name="D7 Door" tags="bg-room-iris-clean night iris naomi" position="1125,500" size="100,100">(if: $hidNaomi)[You wait an hour. The message says //read//. Nobody knocks.](else:)[(set: $naomiCame to true)Around ten, there&#39;s a knock. Naomi is standing in the doorway holding three coffees, looking more scared than you&#39;ve ever seen her.
 
 &quot;They messed up my order,&quot; she says to Iris. &quot;I got too many.&quot;
 
@@ -926,10 +926,10 @@ She fixed your collar, gently. &quot;Tell them how it feels too. Not just the fa
 
 The motion light didn&#39;t come on for her.
 
-You took out your phone and sent the hardest text of the week to both of them, even though they were ten feet away through a door.
+(if: $naomiCame)[You took out your phone and sent the hardest text of the week to both of them, even though they were ten feet away through a door.](else:)[You took out your phone and sent the hardest text of the week to both of them. Iris, ten feet away through a door. Naomi, across campus, awake.]
 
 &lt;span class=&quot;phone me&quot;&gt;im not okay either. can we talk about it tomorrow&lt;/span&gt;
-&lt;span class=&quot;phone&quot;&gt;obviously. idiot. get back in here&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Naomi&lt;/span&gt;
+&lt;span class=&quot;phone&quot;&gt;obviously. idiot. (if: $naomiCame)[get back in here](else:)[im coming over. right now]&lt;/span&gt; &amp;nbsp;&lt;span class=&quot;quiet&quot;&gt;Naomi&lt;/span&gt;
 
 [[The end-&gt;Credits]]</tw-passagedata><tw-passagedata pid="94" name="End Middle" tags="bg-gallery day" position="375,1125" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;A MONTH LATER&lt;/div&gt;
 Everyone makes it to the end of the week. That&#39;s the most important thing, and you know it. You tell yourself that a lot.
@@ -952,7 +952,7 @@ You stand at the back of both. You know what you did, all of it, and you never t
 
 That night your room is very quiet. Your phone is face down. You don&#39;t answer it.](else:)[It&#39;s Naomi this time. The one who said she didn&#39;t care. The one who always brought two coffees. She went on the last night, alone, believing all of it was hers.
 
-Iris stands at the back with you, shaking. She doesn&#39;t look at you. She knows whose sentence it really was.
+Iris stands at the back with you, shaking. (if: $confessedIris)[She doesn&#39;t look at you. She knows whose sentence it really was.](else:)[She holds your sleeve. She doesn&#39;t know whose sentence it really was. You never told her.]
 
 You know what you did, all of it, and you never told anyone how it felt. That night your room is very quiet. Your phone is face down. You don&#39;t answer it.
 
@@ -997,7 +997,7 @@ The page goes black. There&#39;s nothing after this.
 (set: $dating to false, $day to 1, $leaks to 0, $walked to &quot;&quot;, $sawMaeve to false, $metMaeve to false, $signDay to 0)
 (set: $mid1 to &quot;&quot;, $mid2 to &quot;&quot;, $mid3 to &quot;&quot;, $mid4 to &quot;&quot;, $mid5 to &quot;&quot;, $mid6 to &quot;&quot;, $mid7 to &quot;&quot;, $replied to &quot;&quot;)
 (set: $hidMom to false, $hidNaomi to false, $hidIris to false, $irisTold to false)
-(set: $naomiAlone to false, $naomiFound to false, $confessedNaomi to false, $confessedIris to false, $askedDirect to false)
+(set: $naomiAlone to false, $naomiFound to false, $confessedNaomi to false, $confessedIris to false, $askedDirect to false, $naomiCame to false)
 (set: $lockI to false, $lockN to false, $capI to false, $capN to false, $frzI to 0, $frzN to 0)
 (set: $dip to false, $pops to 0, $mtSkip to false, $tA to &quot;&quot;, $mtFrom to &quot;&quot;, $mtS to 0, $mtC to 0)</tw-passagedata><tw-passagedata pid="100" name="mood header" tags="header" position="1125,1125" size="100,100">(if: $loop is 1 and (passage:)&#39;s tags contains &quot;hub&quot;)[(if: $iris &lt; 20 and not $dip and $pops &lt; 2)[(set: $dip to true, $pops to it + 1)&lt;div class=&quot;deathpop&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;death&quot;&gt;(if: $pops is 1)[It looks like you&#39;re really coming back to me.](else:)[I can hear her from here. She&#39;s gone very quiet.]&lt;/span&gt;&lt;/div&gt;](else-if: $iris &gt;= 25)[(set: $dip to false)]]
 (if: (passage:)&#39;s tags contains &quot;iris&quot;)[(if: $iris &lt; 35)[&lt;span class=&quot;lost&quot;&gt;(if: $day &lt; 3)[dont be a lot. dont be a lot.](else-if: $day &lt; 6)[one less thing](else:)[its almost done]&lt;/span&gt;](else-if: $iris &gt;= 60)[&lt;span class=&quot;glow iris&quot;&gt;(if: $day &lt; 4)[maybe tomorrow is okay](else:)[next week. a next-week thing]&lt;/span&gt;]]
@@ -1523,7 +1523,7 @@ It doesn&#39;t sound fine.](show: ?ch)], or (link: &quot;leave it&quot;)[(set: $
 &lt;span class=&quot;phone&quot;&gt;ok&lt;/span&gt;](show: ?ch)], or (link: &quot;say you&#39;ll call later&quot;)[(set: $tA to &quot;later&quot;, $mtS to 0, $mtC to 0)(display: &quot;mt apply&quot;)(replace: ?mt)[&lt;span class=&quot;phone me&quot;&gt;cant talk rn. later&lt;/span&gt;
 &lt;span class=&quot;phone&quot;&gt;k&lt;/span&gt;](show: ?ch)], or (link: &quot;leave it&quot;)[(set: $tA to &quot;leave&quot;, $mtS to -5, $mtC to 0)(display: &quot;mt apply&quot;)(replace: ?mt)[You leave it. You&#39;ll answer later. You tell yourself you&#39;ll answer later.](show: ?ch)].](else:)[You could (link: &quot;send something dumb back&quot;)[(set: $tA to &quot;text&quot;, $mtS to 2, $mtC to -1)(display: &quot;mt apply&quot;)(replace: ?mt)[You send back something dumb. She sends back something dumber.](show: ?ch)] or (link: &quot;leave it for later&quot;)[(set: $tA to &quot;leave&quot;, $mtS to 0, $mtC to 0)(display: &quot;mt apply&quot;)(replace: ?mt)[You smile at it and put it away. She won&#39;t mind. Not today.](show: ?ch)].]&lt;/span&gt;(if: $loop is 1)[&lt;span class=&quot;timer&quot;&gt;&lt;/span&gt;]](if: $loop is 1)[(live: 14s)[(stop:)(if: $tA is &quot;&quot;)[(set: $tA to &quot;late&quot;, $mtS to (cond: _lv is &quot;low&quot;, -10, _lv is &quot;mid&quot;, -5, 0), $mtC to 0)(display: &quot;mt apply&quot;)(replace: ?mt)[(if: _lv is &quot;high&quot;)[You don&#39;t get to it. She won&#39;t mind. Not today.](else-if: _lv is &quot;mid&quot;)[You take too long. The screen goes dark. You&#39;ll answer later. You tell yourself you&#39;ll answer later.](else:)[You take too long. The screen goes dark. When you look again, there&#39;s nothing new. That&#39;s worse.]](show: ?ch)]]]]</tw-passagedata><tw-passagedata pid="168" name="mt apply" tags="" position="875,2000" size="100,100">(if: $mtFrom is &quot;iris&quot;)[(set: $iris to it + $mtS, $naomi to it + $mtC)](else:)[(set: $naomi to it + $mtS, $iris to it + $mtC)](display: &quot;clamp&quot;)</tw-passagedata><tw-passagedata pid="169" name="D2 Evening" tags="bg-room-iris night iris" position="1000,2000" size="100,100">Iris texts after dinner. &lt;span class=&quot;phone&quot;&gt;can you come over. dont have to talk&lt;/span&gt;
 
-(if: $last is &quot;naomi&quot;)[You&#39;ve barely seen her today. You go anyway.]
+(if: $last is &quot;naomi&quot;)[You&#39;ve barely seen her today. You go anyway.](else:)[You only left her an hour ago. You go back.]
 
 You end up on her floor. Bad tea. A movie neither of you is watching.
 
@@ -1561,7 +1561,7 @@ You order it. You eat it. She doesn&#39;t say anything else about her mom. Not t
 
 Somewhere a long way down, you hear the rain.]
 
-[[Head home-&gt;D2 Night]]</tw-passagedata><tw-passagedata pid="171" name="D3 Evening Iris" tags="bg-room-iris night iris" position="0,2125" size="100,100">You end up on Iris&#39;s floor. Bad tea. A movie neither of you is watching.
+[[Head home-&gt;D2 Night]]</tw-passagedata><tw-passagedata pid="171" name="D3 Evening Iris" tags="bg-room-iris night iris" position="0,2125" size="100,100">Iris has her window open even though it&#39;s cold. She&#39;s drawing, actually drawing, with the pencil moving.
 
 Her phone buzzes. //Mom.// She picks up this time, and she doesn&#39;t leave the room to do it.
 

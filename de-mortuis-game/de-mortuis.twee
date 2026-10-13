@@ -457,18 +457,18 @@ Evening. The rumour has a new detail today: someone says they saw Iris crying in
 
 They probably did. You know what she was crying about. You might be the only one who does.
 
-(link-reveal-goto: (cond: $devI >= $devN, "Go to Iris's. Bad tea. A movie neither of you watches.", "Go see Iris. You haven't, much."), "D3 Evening Iris")[(display: "pick iris")]
+(link-reveal-goto: (cond: $devI >= $devN, "Go to Iris's. See how she is after last night.", "Go see Iris. You haven't, much."), "D3 Evening Iris")[(display: "pick iris")]
 (link-reveal-goto: (cond: $devN >= $devI, "Naomi's doing laundry. Keep her company.", "Naomi's doing laundry alone. She hasn't asked for anyone."), "D3 Evening Naomi")[(display: "pick naomi")]
 (link-reveal-goto: "Walk the long way home. Alone.", "Alone")[(set: $next to "D3 Night")(display: "go alone")]
 
 
 :: D3 Walk [bg-hall-red night]
-It's late when you leave her room. Your phone buzzes on the stairs.
+It's late. Your phone buzzes on the way back from the vending machine.
 
 <span class="phone">u alive</span> &nbsp;<span class="quiet">Naomi</span>
 (if: $dating)[<span class="phone">come outside babe</span> &nbsp;<span class="quiet">Maeve</span>]
 
-(link-reveal-goto: "Go back up. Walk Iris to the dining hall before it closes.", "Walk home")[(set: $walked to "iris", $iris to it + 5)]
+(link-reveal-goto: "Go to Iris's. Walk her to the dining hall before it closes.", "Walk home")[(set: $walked to "iris", $iris to it + 5)]
 (link-reveal-goto: "Wait for Naomi outside her building.", "Walk home")[(set: $walked to "naomi", $naomi to it + 5)]
 (if: $dating)[(link-reveal-goto: "Go outside. Maeve's waiting.", "Walk home")[(set: $walked to "maeve")]
 ](link-reveal-goto: "Walk home alone.", "Walk home")[(set: $walked to "alone")]
@@ -504,7 +504,7 @@ She's in an empty classroom, pretending to study. She looks like she hasn't slep
 The two messages come in four minutes apart.
 
 <span class="phone">(if: $irisTold)[my mom had a bad night](else:)[cant sleep]</span>
-<span class="phone">you dont have to come</span> &nbsp;<span class="quiet">Iris</span>
+<span class="phone">im in the lab. you dont have to come</span> &nbsp;<span class="quiet">Iris</span>
 
 <span class="phone">i need to tell you something</span>
 <span class="phone">i think i worked something out. come over</span> &nbsp;<span class="quiet">Naomi</span>
@@ -709,7 +709,7 @@ You know exactly whose fault it is. You don't say it.
 
 
 :: D6 Iris [bg-room-iris day iris]
-She's okay today. Really okay, or close to it. She made tea in her room even though it's against the rules.
+(if: $iris >= 50)[She's okay today. Really okay, or close to it. She made tea in her room even though it's against the rules.](else:)[She says she's okay today. She made tea in her room even though it's against the rules. She doesn't drink it.]
 
 "You look like you've been carrying something," she says.
 
@@ -769,7 +769,7 @@ Her desk is cleared. Her sketchbook is closed with a hair tie around it, like so
 
 
 :: D7 Truth [bg-room-iris-clean night iris]
-"The rumour. The money part. Naomi told one person, and it grew from there. But Naomi only knew because I told her. The night you told me. I texted her like it was nothing, and I forgot I even did it. I'm so sorry."
+"The rumour. The money part. Naomi told one person, and it grew from there. But Naomi only knew because I told her. Two weeks ago, the night you first told me about the scholarship. I texted her like it was nothing, and I forgot I even did it. I'm so sorry."
 
 Iris doesn't yell. She just closes her eyes.
 
@@ -818,7 +818,7 @@ Your phone is in your hand. Naomi's name is right there.
 
 
 :: D7 Door [bg-room-iris-clean night iris naomi]
-(if: $hidNaomi)[You wait an hour. The message says //read//. Nobody knocks.](else:)[Around ten, there's a knock. Naomi is standing in the doorway holding three coffees, looking more scared than you've ever seen her.
+(if: $hidNaomi)[You wait an hour. The message says //read//. Nobody knocks.](else:)[(set: $naomiCame to true)Around ten, there's a knock. Naomi is standing in the doorway holding three coffees, looking more scared than you've ever seen her.
 
 "They messed up my order," she says to Iris. "I got too many."
 
@@ -1301,10 +1301,10 @@ She fixed your collar, gently. "Tell them how it feels too. Not just the facts. 
 
 The motion light didn't come on for her.
 
-You took out your phone and sent the hardest text of the week to both of them, even though they were ten feet away through a door.
+(if: $naomiCame)[You took out your phone and sent the hardest text of the week to both of them, even though they were ten feet away through a door.](else:)[You took out your phone and sent the hardest text of the week to both of them. Iris, ten feet away through a door. Naomi, across campus, awake.]
 
 <span class="phone me">im not okay either. can we talk about it tomorrow</span>
-<span class="phone">obviously. idiot. get back in here</span> &nbsp;<span class="quiet">Naomi</span>
+<span class="phone">obviously. idiot. (if: $naomiCame)[get back in here](else:)[im coming over. right now]</span> &nbsp;<span class="quiet">Naomi</span>
 
 [[The end->Credits]]
 
@@ -1335,7 +1335,7 @@ You stand at the back of both. You know what you did, all of it, and you never t
 
 That night your room is very quiet. Your phone is face down. You don't answer it.](else:)[It's Naomi this time. The one who said she didn't care. The one who always brought two coffees. She went on the last night, alone, believing all of it was hers.
 
-Iris stands at the back with you, shaking. She doesn't look at you. She knows whose sentence it really was.
+Iris stands at the back with you, shaking. (if: $confessedIris)[She doesn't look at you. She knows whose sentence it really was.](else:)[She holds your sleeve. She doesn't know whose sentence it really was. You never told her.]
 
 You know what you did, all of it, and you never told anyone how it felt. That night your room is very quiet. Your phone is face down. You don't answer it.
 
@@ -1394,7 +1394,7 @@ The page goes black. There's nothing after this.
 (set: $dating to false, $day to 1, $leaks to 0, $walked to "", $sawMaeve to false, $metMaeve to false, $signDay to 0)
 (set: $mid1 to "", $mid2 to "", $mid3 to "", $mid4 to "", $mid5 to "", $mid6 to "", $mid7 to "", $replied to "")
 (set: $hidMom to false, $hidNaomi to false, $hidIris to false, $irisTold to false)
-(set: $naomiAlone to false, $naomiFound to false, $confessedNaomi to false, $confessedIris to false, $askedDirect to false)
+(set: $naomiAlone to false, $naomiFound to false, $confessedNaomi to false, $confessedIris to false, $askedDirect to false, $naomiCame to false)
 (set: $lockI to false, $lockN to false, $capI to false, $capN to false, $frzI to 0, $frzN to 0)
 (set: $dip to false, $pops to 0, $mtSkip to false, $tA to "", $mtFrom to "", $mtS to 0, $mtC to 0)
 
@@ -2200,7 +2200,7 @@ It doesn't sound fine.](show: ?ch)], or (link: "leave it")[(set: $tA to "leave",
 :: D2 Evening [bg-room-iris night iris]
 Iris texts after dinner. <span class="phone">can you come over. dont have to talk</span>
 
-(if: $last is "naomi")[You've barely seen her today. You go anyway.]
+(if: $last is "naomi")[You've barely seen her today. You go anyway.](else:)[You only left her an hour ago. You go back.]
 
 You end up on her floor. Bad tea. A movie neither of you is watching.
 
@@ -2246,7 +2246,7 @@ Somewhere a long way down, you hear the rain.]
 
 
 :: D3 Evening Iris [bg-room-iris night iris]
-You end up on Iris's floor. Bad tea. A movie neither of you is watching.
+Iris has her window open even though it's cold. She's drawing, actually drawing, with the pencil moving.
 
 Her phone buzzes. //Mom.// She picks up this time, and she doesn't leave the room to do it.
 
