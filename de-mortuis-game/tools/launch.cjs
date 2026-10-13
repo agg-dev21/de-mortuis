@@ -19,7 +19,7 @@ const app = APPS[which];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.json': 'application/json', '.dmchar': 'application/json', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
 const SAVE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.dmchar', '.json']);
-const SAVE_DIRS = ['img', 'characters'];                    // the tools may only write in here
+const SAVE_DIRS = ['IMG', 'characters'];                    // the tools may only write in here
 
 // resolve a client path safely inside ROOT
 function safe(rel) {
@@ -60,7 +60,7 @@ const server = http.createServer((req, res) => {
 
   if (url.pathname === '/api/save' && req.method === 'POST') {
     const p = safe(url.searchParams.get('path'));
-    if (!p || !canWrite(p)) return json(res, 400, { error: 'Can only save images/projects inside img/ or characters/' });
+    if (!p || !canWrite(p)) return json(res, 400, { error: 'Can only save images/projects inside IMG/ or characters/' });
     const chunks = []; let size = 0;
     req.on('data', c => { size += c.length; if (size > 80 * 1024 * 1024) req.destroy(); else chunks.push(c); });
     req.on('end', () => {

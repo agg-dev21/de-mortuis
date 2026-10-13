@@ -248,7 +248,7 @@ const LOOKS = [
   ['Warm', 'golden, cosy', { exposure: 0.05, contrast: 1.05, temp: 0.45, saturation: 1.1, glow: 0.25, vignette: 0.25, shadows: 0.1 }],
 ];
 
-// One per location in the game. `file` is the name the game loads from img/.
+// One per location in the game. `file` is the name the game loads from IMG/.
 const ENVS = [
   ['Campus · Day 1', 'gallery.jpg', 'uneasy, a bit cold', { exposure: -0.15, contrast: 1.1, saturation: 0.75, temp: -0.15, vignette: 0.35, grain: 0.08, haze: 0.1, hazeColor: '#9fb3d1' }],
   ['Library · Naomi', 'library.jpg', 'warm window light', { exposure: 0.1, contrast: 1.05, shadows: 0.15, temp: 0.35, saturation: 1.05, glow: 0.2, vignette: 0.25 }],
@@ -866,7 +866,7 @@ $('#quick').onchange = async e => {
   try {
     let blob, name = v.slice(v.indexOf(':') + 1);
     if (v.startsWith('dir:')) blob = await (await dirHandle.getFileHandle(name)).getFile();
-    else { const r = await fetch('../img/' + name); if (!r.ok) throw new Error(name + " isn't in img/ yet"); blob = await r.blob(); }
+    else { const r = await fetch('../IMG/' + name); if (!r.ok) throw new Error(name + " isn't in IMG/ yet"); blob = await r.blob(); }
     const img = await loadImageFromBlob(blob); setBase(img, name);
   } catch (err) { toast(err.message); }
 };
@@ -928,9 +928,9 @@ $('#exW').addEventListener('change', syncFrameUI); $('#frameY').addEventListener
 function canvasToBlob(c, fmt, q) { return new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error('Could not encode the image')), fmt === 'png' ? 'image/png' : 'image/jpeg', q)); }
 async function saveBlob(blob, name) {
   if (api) {
-    const rel = 'img/' + name;
+    const rel = 'IMG/' + name;
     const ex = await (await fetch('/api/exists?path=' + encodeURIComponent(rel))).json();
-    if (ex.exists && !confirm(name + ' already exists in img/. Replace it?')) return false;
+    if (ex.exists && !confirm(name + ' already exists in IMG/. Replace it?')) return false;
     const r = await fetch('/api/save?path=' + encodeURIComponent(rel), { method: 'POST', body: blob });
     const j = await r.json(); if (!r.ok) throw new Error(j.error || 'Save failed');
     refreshQuick(); return true;
@@ -1002,7 +1002,7 @@ window.addEventListener('keyup', e => {
 });
 
 /* ------------------------------------------------------------------ boot */
-// When started from the desktop shortcut, a local helper serves the game folder and can save into img/ directly.
+// When started from the desktop shortcut, a local helper serves the game folder and can save into IMG/ directly.
 var api = false;
 buildSliders(); syncSliders(); buildPresets(); renderLayers(); syncFrameUI();
 fetch('/api/ping').then(r => r.ok ? r.json() : null).then(j => {
@@ -1014,7 +1014,7 @@ fetch('/api/ping').then(r => r.ok ? r.json() : null).then(j => {
   }
 }).catch(() => { }).finally(refreshQuick);
 const qs = new URLSearchParams(location.search).get('open');
-if (qs && location.protocol.startsWith('http')) fetch('../img/' + qs).then(r => r.blob()).then(loadImageFromBlob).then(img => setBase(img, qs)).catch(() => { });
+if (qs && location.protocol.startsWith('http')) fetch('../IMG/' + qs).then(r => r.blob()).then(loadImageFromBlob).then(img => setBase(img, qs)).catch(() => { });
 </script>
 </body>
 </html>

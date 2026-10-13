@@ -1,9 +1,9 @@
 DE MORTUIS - game folder
 ========================
 
-de-mortuis.html   Playable game. Keep it next to the img/ folder.
+de-mortuis.html   Playable game. Keep it next to the IMG/ folder.
 de-mortuis.twee   The source. Import into Twine: Library > Import > pick this file.
-img/              Background photos (your campus shots, resized to 1600px).
+IMG/              Background photos (your campus shots, resized to 1600px).
 
 WHICH PHOTO IS WHERE
   Backgrounds are plain photos only, with no characters in them. The characters will be
@@ -34,11 +34,11 @@ WHICH PHOTO IS WHERE
   stairs-yellow.jpg        good ending
 
 CHANGING OR ADDING ENVIRONMENTS
-  1. Save the picture into img/ (the Environment Editor does this). Any name works,
-     e.g. img/library-night.jpg.
+  1. Save the picture into IMG/ (the Environment Editor does this). Any name works,
+     e.g. IMG/library-night.jpg.
   2. If anyone changed the story in Twine: Twine > Build > Export as Twee, save it over
      de-mortuis.twee in this folder first, so their edits aren't lost.
-  3. Double-click "Update Story Images". It embeds every picture in img/ into the story
+  3. Double-click "Update Story Images". It embeds every picture in IMG/ into the story
      (so Twine's Play/Test shows them), gives new pictures a tag, and rebuilds
      de-mortuis.html. It keeps the previous story file as de-mortuis.twee.bak.
   4. In Twine: Library > Import > de-mortuis.twee > replace.
@@ -47,7 +47,7 @@ CHANGING OR ADDING ENVIRONMENTS
 
 DESKTOP APPS
   Double-click "Environment Editor" or "Character Studio" in this folder. Each opens in its
-  own window and saves straight into img/ (environments) or characters/ (sprites,
+  own window and saves straight into IMG/ (environments) or characters/ (sprites,
   characters/projects for projects). Character Studio autosaves every minute.
   Needs Node.js (installed) and Edge or Chrome. Closing the window stops it.
   The HTML files in tools/ also still work on their own in a browser.
@@ -56,7 +56,7 @@ TOOLS (tools/ - open in Chrome or Edge, work offline)
   environment-editor.html  Turn photos into scenes. One preset per game location (also sets
                            the save name), clone/blur/cover tools for posters and names,
                            image layers for photobashing, batch "night versions".
-                           Click "Connect game img folder" and choose img/ to save straight in.
+                           Click "Connect game img folder" and choose IMG/ to save straight in.
   character-studio.html    Finish characters with a mouse. Open your sketch, Crop one
                            character, "Extract lines" + "Extract flat colours", then
                            "Add shadows". Smoothed tapered pen, symmetry, bucket fill that
@@ -81,7 +81,7 @@ FONTS (fonts/)
   Death's voice: Extra Blur. A girl losing herself: Megalomania.
   Iris doing better: Stay With Me. Naomi doing better: Reenie Beanie (embedded, works offline).
 
-SOUND (sounds/)
+SOUND (SOUNDS/)
   music.mp3   "Sad Lofi" by prettyjohn1 (Pixabay). Loops under every normal scene.
   piano.mp3   "Sad Piano" (freesound community, Pixabay). Replaces the lofi on passages
               tagged "piano": the prologue and every ending.
@@ -97,6 +97,6 @@ SOUND (sounds/)
   Like the photos, sound only plays in the published HTML, not in Twine's Play/Test.
 
 NOTES
-- In Twine's own Play/Test window the photos won't load (it can't see the img/ folder).
+- In Twine's own Play/Test window the photos won't load (it can't see the IMG/ folder).
   Publish to File, save the HTML into this folder, and open it from here.
 - Meter values, starting numbers and every +/-10 live in the twee. Search "set: $iris" or "set: $naomi".

@@ -1,16 +1,16 @@
 // Update Story Images
-// 1. Every picture in img/ is embedded into de-mortuis.twee so it also shows in Twine's Play/Test.
-//    A new picture gets its own tag automatically: img/library-night.jpg -> tag a passage "bg-library-night".
-// 2. img/title.webp (the logo) is refreshed too.
+// 1. Every picture in IMG/ is embedded into de-mortuis.twee so it also shows in Twine's Play/Test.
+//    A new picture gets its own tag automatically: IMG/library-night.jpg -> tag a passage "bg-library-night".
+// 2. IMG/title.webp (the logo) is refreshed too.
 // 3. de-mortuis.html is rebuilt with Twine's own Harlowe engine.
-// The img/ file stays listed before the embedded copy, so the published game always uses the latest file.
+// The IMG/ file stays listed before the embedded copy, so the published game always uses the latest file.
 'use strict';
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const TWEE = path.join(ROOT, 'de-mortuis.twee');
-const IMG = path.join(ROOT, 'img');
+const IMG = path.join(ROOT, 'IMG');
 const MIME = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
 const report = [];
 const out = msg => report.push(msg);
@@ -21,15 +21,15 @@ function embedImages(src) {
   const dataUrl = f => `url(data:${MIME[path.extname(f).toLowerCase()]};base64,${fs.readFileSync(path.join(IMG, f)).toString('base64')})`;
   let updated = 0, added = [];
   // refresh rules that point at a file
-  src = src.replace(/(tw-story\[tags~="(bg-[\w-]+)"\]\s*\{\s*--bg:\s*)url\("img\/([^"]+)"\)(?:,\s*url\(data:[^)]*\))?(\s*;)/g, (all, pre, tag, file, post) => {
-    if (!fs.existsSync(path.join(IMG, file))) return `${pre}url("img/${file}")${post}`;
-    updated++; return `${pre}url("img/${file}"), ${dataUrl(file)}${post}`;
+  src = src.replace(/(tw-story\[tags~="(bg-[\w-]+)"\]\s*\{\s*--bg:\s*)url\("IMG\/([^"]+)"\)(?:,\s*url\(data:[^)]*\))?(\s*;)/g, (all, pre, tag, file, post) => {
+    if (!fs.existsSync(path.join(IMG, file))) return `${pre}url("IMG/${file}")${post}`;
+    updated++; return `${pre}url("IMG/${file}"), ${dataUrl(file)}${post}`;
   });
   // add rules for pictures that don't have one yet
   const marker = 'tw-story[tags~="bg-black"]';
   for (const f of files) {
-    if (src.includes(`url("img/${f}")`)) continue;
-    const rule = `tw-story[tags~="${tagOf(f)}"] { --bg: url("img/${f}"), ${dataUrl(f)}; }\n`;
+    if (src.includes(`url("IMG/${f}")`)) continue;
+    const rule = `tw-story[tags~="${tagOf(f)}"] { --bg: url("IMG/${f}"), ${dataUrl(f)}; }\n`;
     if (!src.includes(marker)) throw new Error('Could not find where the background rules are in the stylesheet.');
     src = src.replace(marker, rule + marker); added.push(`${f}  ->  tag "${tagOf(f)}"`);
   }
