@@ -1,75 +1,43 @@
-DE MORTUIS - CHARACTER POSES TO DRAW
-====================================
+DE MORTUIS - CHARACTER SPRITES TO DRAW
+======================================
+
+9 drawings: each girl, standing, in 3 expressions.
 
 HOW TO DRAW THEM
   - Same outfits, hair and colours as the design sheets in characters/refs/.
-  - Waist-up is enough (legs are never shown in the game). Full body is fine if it's easier.
-  - Facing the viewer, slightly turned is fine. Leave some space around the figure.
-  - Transparent background, PNG, about 1500 px tall.
-  - Draw each FACE on its own layer, so faces can be swapped onto the same body.
-    Export: body without face + one PNG per face (same canvas size, lined up).
-  - Name files like:  iris-pose1.png, iris-face-tired.png, naomi-pose2.png ...
-  - Start with pose 1 for each girl + all her faces. That alone covers about 70% of the scenes.
+  - Standing, facing the viewer (slightly turned is fine). Waist-up or full body.
+  - Use the SAME pose for all three expressions of a girl, so only the face
+    (and maybe shoulders/arms) changes. Then they can swap mid-scene without jumping.
+  - Transparent background, PNG, about 1500 px tall, same canvas size for all three.
+  - File names:
+        iris-normal.png    iris-flustered.png    iris-depressed.png
+        naomi-normal.png   naomi-flustered.png   naomi-depressed.png
+        maeve-normal.png   maeve-flustered.png   maeve-depressed.png
+  - Put them in characters/ (or send them over) and they go into the game.
 
 
-IRIS (long blue hair) - quiet, hurting, slowly opening up
-----------------------------------------------------------
-  Pose 1  Standing, arms wrapped around herself, shoulders hunched, head a little down.
-          (hallways, classroom, "thank you for this week")
-  Pose 2  Sitting with knees pulled up to her chest, arms around her legs.
-          (her room, the pink chair in the lounge, sitting on the dryer)
-  Pose 3  Holding her sketchbook flat against her chest with both arms.
-          (art hallway Day 3, drawing again Day 5, giving you her drawing Day 6)
-  Pose 4  Looking down at her phone, held in both hands.
-          (her mom's calls, the scholarship email, the lab at night)
+WHERE EACH EXPRESSION SHOWS (the game picks it automatically)
 
-  Faces:  tired / blank            (used most)
-          small shy smile
-          about to cry
-          crying                   (Day 7, the 988 call)
-          calm and polite          (scary: Day 7 when she's very low, "already decided")
-          surprised / caught off guard
+IRIS (long blue hair)
+  normal      most scenes
+  flustered   warm moments: looking at her drawing, the pillow, "Deal.", when you ask
+              if she wants people to know
+  depressed   whenever her meter is low (her room also turns grey then)
 
+NAOMI (blonde twin tails, blue ribbons)
+  normal      most scenes (arms crossed suits her)
+  flustered   her tsundere moments: the coffees, "don't make it weird",
+              and after you tell her the truth
+  depressed   when her meter is low, or after she finds out it was her
+              and you haven't told her the truth
 
-NAOMI (blonde twin tails, blue ribbons) - tsundere, guilty, falling apart slowly
-------------------------------------------------------------------------------
-  Pose 1  Arms crossed, weight on one leg, looking away.        (default: library, café, hallways)
-  Pose 2  Holding two coffees, holding one out toward the viewer.
-          ("They messed up my order." Day 1, Day 7, three coffees on the last night)
-  Pose 3  Looking at her phone or laptop, typing, shoulders tense.
-          (café, library, empty classroom, the apology text)
-  Pose 4  Hood up, sitting and hugging her knees.               (Day 5 stairwell, the night she finds out)
-  Pose 5  Standing up angry: fists clenched, or one arm pointing.
-          (ripping down the printouts Day 4, standing up in class Day 5)
-
-  Faces:  annoyed                  (used most)
-          blushing                 ("don't make it weird")
-          hiding sadness, eyes down
-          crying but angry
-          shouting
-          laughing                 (only after you tell her the truth)
-
-
-MAEVE (white hair, red eyes, black suit) - Death. Playful, very "mommy", never says what she is
----------------------------------------------------------------------------------------------
-  Pose 1  Leaning back against a wall / vending machine, arms crossed, relaxed.
-          (her most-used pose: vending machine, every "go alone" scene)
-  Pose 2  Sitting on a bench, legs swinging, hands on the bench edge.   (Day 6 bench)
-  Pose 3  Leaning toward the viewer, one hand reaching out (fixing your collar).
-          (the last scene at the vending machine, the endings, the date)
-
-  Faces:  playful smirk            (used most)
-          soft "mommy" smile
-          pout / sulking           (good ending: "I was having such a nice week")
-          cold smile that doesn't reach her eyes   (All Three ending)
-          blank stare              (when she's being Death)
+MAEVE (white hair, red eyes, black suit) - Death
+  normal      playful smirk: her usual self, the vending machine, going alone
+  flustered   flirty: the date, her second-run teasing, the She Waits ending
+  depressed   her Death side: the bad ending, "Mommy doesn't share",
+              sulking in the good ending
 
 
 NOT NEEDED
-  The boys on boys-sheet.jpg aren't used: the story is first person, so the main character is
-  never shown, and Professor Hale doesn't appear in any scene.
-
-
-TOTAL: 12 poses + 17 faces.  Minimum to start: Iris 1, Naomi 1, Maeve 1 + their faces.
-When they're done, drop them in characters/ and they get placed into the scenes the same way
-as the current images (img-with-characters/).
+  The boys on boys-sheet.jpg: the main character is never shown and
+  Professor Hale doesn't appear in any scene.
