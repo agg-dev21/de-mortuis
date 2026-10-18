@@ -242,6 +242,70 @@ tw-sidebar:hover { opacity: 0.9; }
 /* setup passages that only print blank lines */
 tw-include[name="StoryInit"], tw-include[name="echo footer"]:empty { display: none; }
 
+/* ---------- stage: the scene art, cross-faded by the story script ----------
+   With the script running, the art moves from tw-story's ::before/::after onto two pairs of layers
+   that fade into each other. Without it, the ::before/::after art above still works. */
+html.dm-staged tw-story::before, html.dm-staged tw-story::after { display: none; }
+html.dm-staged, html.dm-staged body { background: #0d0c12; }
+html.dm-staged tw-story { background-color: transparent; }
+.dm-stage { position: fixed; left: 0; top: 0; width: var(--art-w); height: 100vh; z-index: 0; pointer-events: none; transition: opacity 0.8s ease; }
+.dm-stage.dm-hidden { opacity: 0; }
+.dm-bg, .dm-spr { position: absolute; inset: 0; opacity: 0; }
+.dm-bg { background-size: cover; background-position: center; transition: opacity 1.1s ease; }
+.dm-spr { background-repeat: no-repeat; background-size: auto 88vh; transition: opacity 0.55s ease, transform 0.7s ease; }
+.dm-spr.rise { transform: translateY(14px); }
+.dm-bg.on, .dm-spr.on { opacity: 1; transform: none; }
+.dm-spr.night { filter: brightness(0.62) saturate(0.8); }
+
+/* ---------- text: each paragraph fades in after the one before ---------- */
+.dm-line { animation: dmLine 0.6s ease both; }
+@keyframes dmLine { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+tw-passage.dm-shown .dm-line, html.dm-no-anim .dm-line { animation: none; opacity: 1; transform: none; }
+html.dm-no-anim .dm-bg, html.dm-no-anim .dm-spr, html.dm-no-anim .dm-stage { transition: none; }
+
+/* ---------- settings ---------- */
+tw-passage { font-size: calc(100% * var(--dm-text, 1)); }
+html.dm-voice-clear .death { font-family: 'BIZ UDMincho'; font-style: italic; letter-spacing: 3px; text-shadow: 0 0 10px rgba(185, 166, 232, 0.6); }
+.dm-mute, .dm-gear {
+  position: fixed; bottom: 14px; z-index: 60; font: inherit; font-size: 14px; color: #fbf7f1;
+  background: rgba(11, 9, 16, 0.75); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 999px; padding: 6px 12px; cursor: pointer; opacity: 0.7;
+}
+.dm-mute { right: 14px; }
+.dm-gear { right: 86px; }
+.dm-mute:hover, .dm-gear:hover { opacity: 1; }
+.dm-settings {
+  position: fixed; right: 14px; bottom: 56px; z-index: 61; width: 340px; box-sizing: border-box; padding: 18px 20px;
+  background: #16131e; color: #fbf7f1; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 14px; font-size: 15px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.dm-settings[hidden] { display: none; }
+.dm-s-title { font-family: 'Aurora Pro', 'BIZ UDMincho'; color: #ff9cc0; font-size: 1.2em; letter-spacing: 0.08em; margin-bottom: 12px; }
+.dm-settings label { display: block; margin: 10px 0; color: #bab4c8; }
+.dm-settings input[type=range] { display: block; width: 100%; margin-top: 6px; accent-color: #ff9cc0; }
+.dm-s-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0; color: #bab4c8; }
+.dm-s-row span { width: 100%; }
+.dm-settings button { font: inherit; font-size: 14px; color: #fbf7f1; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 8px; padding: 5px 10px; cursor: pointer; }
+.dm-settings button.sel { background: rgba(255, 122, 168, 0.22); border-color: #ff7aa8; }
+.dm-s-close { margin-top: 6px; width: 100%; }
+
+/* ---------- back button: Harlowe's undo arrow, made readable ---------- */
+tw-sidebar { opacity: 0.75; }
+tw-sidebar tw-icon { font-family: 'BIZ UDMincho'; font-size: 15px; color: #fbf7f1; background: rgba(11, 9, 16, 0.75); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 999px; padding: 5px 12px; margin: 0 6px 0 0; }
+tw-sidebar tw-icon[title="Undo"]::after { content: " Back"; }
+tw-sidebar tw-icon[title="Redo"] { display: none; }
+
+/* ---------- title page: endings and chapters ---------- */
+.dm-extras { position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; background: rgba(5, 5, 8, 0.86); }
+.dm-extras-box { width: min(760px, 90vw); max-height: 90vh; overflow: auto; box-sizing: border-box; padding: 26px 30px; background: #16131e; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; text-align: left; }
+.dm-extras h2 { font-family: 'Aurora Pro', 'BIZ UDMincho'; font-weight: normal; color: #ff9cc0; letter-spacing: 0.08em; font-size: 1.3em; margin: 0 0 10px; }
+.dm-g-head { color: #bab4c8; margin-bottom: 10px; }
+.dm-g-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+.dm-g-chip { padding: 10px 12px; border-radius: 10px; border: 1px dashed rgba(255, 255, 255, 0.2); color: #bab4c8; font-size: 0.8em; line-height: 1.35; }
+.dm-g-chip b { display: block; font-size: 1.1em; color: #fbf7f1; margin-bottom: 4px; }
+.dm-g-chip.got { border: 1px solid #ff7aa8; background: rgba(255, 122, 168, 0.1); }
+.dm-chapters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.dm-chapters .none { color: #bab4c8; font-size: 0.85em; }
+
 
 :: StoryInit [startup]
 (set: $loop to 1, $name to "")
@@ -269,6 +333,8 @@ tw-include[name="StoryInit"], tw-include[name="echo footer"]:empty { display: no
 :: Content note [bg-black]
 <div class="logo" role="img" aria-label="De Mortuis"></div><div class="subtitle">nil nisi bonum</div><p class="byline">a game by Anish Goel</p><div class="premise"><p>A rumour went round campus about Iris. Within a week she was gone, and so were you. Now a voice in the dark has sent you back to the start of that week.</p><p class="goal"><b>Your goal:</b> you have seven days. Choose who to stand beside each day, watch how Iris and Naomi are holding up, and keep them both alive until the week is over.</p></div><p class="center quiet note">This story deals with grief and suicide. Nothing is ever shown, but it's there. You can stop at any time. If you're struggling, you don't have to carry it alone. In the US you can call or text 988, any time.</p>
 (if: (saved-games:) contains "auto")[<p class="center">(link: "Continue")[(load-game: "auto")] &nbsp;·&nbsp; [[New game->Name]]</p>](else:)[<p class="center">[[Begin->Name]]</p>]
+<p class="center quiet">(link-repeat: "Endings and chapters")[(show: ?extras)]</p>
+|extras)[<div class="dm-extras"><div class="dm-extras-box"><h2>Endings</h2><div class="dm-gallery"></div><h2>Chapters</h2><div class="dm-chapters">(unless: (saved-games:) contains "day2")[<span class="none">Chapters open up as you reach each day.</span>](if: (saved-games:) contains "day2")[(link: "Day 2")[(load-game: "day2")]](if: (saved-games:) contains "day3")[(link: "Day 3")[(load-game: "day3")]](if: (saved-games:) contains "day4")[(link: "Day 4")[(load-game: "day4")]](if: (saved-games:) contains "day5")[(link: "Day 5")[(load-game: "day5")]](if: (saved-games:) contains "day6")[(link: "Day 6")[(load-game: "day6")]](if: (saved-games:) contains "day7")[(link: "Day 7")[(load-game: "day7")]]</div><p class="center">(link-repeat: "Close")[(hide: ?extras)]</p></div></div>]
 
 
 :: Prologue [bg-black rain piano]
@@ -327,7 +393,7 @@ Iris is still alive. For now.]
 
 
 :: Day 1 [bg-gallery day]
-(save-game: "auto")<div class="dayhead">MONDAY</div><div class="whisper">she slept with hale. that's how she lost it</div>
+(save-game: "auto")(save-game: "day1")<div class="dayhead">MONDAY</div><div class="whisper">she slept with hale. that's how she lost it</div>
 Campus looks exactly the same, which is the worst part.
 
 Same coffee line. Same guy playing guitar badly by the fountain. But every few steps you hear it. //Her.// //That girl.// //The Hale thing.// People say it like they're talking about a TV show.
@@ -394,7 +460,7 @@ At the end of the day your phone buzzes twice.
 
 
 :: Day 2 [bg-classroom day hub]
-(save-game: "auto")<div class="dayhead">TUESDAY</div><div class="whisper">everyone knows about her and hale</div>
+(save-game: "auto")(save-game: "day2")<div class="dayhead">TUESDAY</div><div class="whisper">everyone knows about her and hale</div>
 Someone has written HALE + IRIS on the whiteboard in your first class. The professor erases it without a word. Nobody looks at anybody.
 
 <span class="phone">hasnt left her room since yesterday btw</span> &nbsp;<span class="quiet">Iris's roommate</span>
@@ -478,7 +544,7 @@ Your phone buzzes before you've made it to your door.
 
 
 :: Day 3 [bg-lab day hub]
-(save-game: "auto")<div class="dayhead">WEDNESDAY</div><div class="whisper">i always thought she was weird with him</div>
+(save-game: "auto")(save-game: "day3")<div class="dayhead">WEDNESDAY</div><div class="whisper">i always thought she was weird with him</div>
 Someone made a post. You don't open it. You don't have to. Everyone around you already has.
 
 Your phone buzzes twice before you're out of bed. Four minutes apart.
@@ -554,7 +620,7 @@ It's late. Your phone buzzes on the way back from the vending machine.
 
 
 :: Day 4 [bg-hall-posters day hub]
-(save-game: "auto")<div class="dayhead">THURSDAY</div><div class="whisper">she slept with hale</div>
+(save-game: "auto")(save-game: "day4")<div class="dayhead">THURSDAY</div><div class="whisper">she slept with hale</div>
 You hear it again in the bathroom line. The same story, told like it's old news. None of it is true.
 
 (link-reveal-goto: (cond: $devI >= $devN, "Text Iris to see if she wants to get out for a bit.", "Text Iris. You don't know how last night left her."), "D4 Iris")[(display: "pick iris")]
@@ -627,7 +693,7 @@ Your phone buzzes once. <span class="phone">its ok. dont worry about me.</span> 
 
 
 :: Day 5 [bg-stairwell day naomi hub]
-(save-game: "auto")<div class="dayhead">FRIDAY</div><div class="whisper">why is she even still here</div>
+(save-game: "auto")(save-game: "day5")<div class="dayhead">FRIDAY</div><div class="whisper">why is she even still here</div>
 (if: $naomiAlone)[(set: $naomiFound to true, $naomi to it - 20)(display: "clamp")Naomi isn't at the library. Her table is empty.
 
 You find her in the back stairwell, the one nobody uses, sitting on the steps with her hood up.
@@ -689,7 +755,7 @@ The building is emptying out. Friday night. Music from somewhere upstairs.
 
 
 :: Day 6 [bg-room-mc-night night hub]
-(save-game: "auto")(set: $lockI to $iris < 15, $lockN to $naomi < 15, $capI to $iris < 40, $capN to $naomi < 40, $frzI to $iris, $frzN to $naomi)<div class="dayhead">SATURDAY</div><div class="whisper">...</div>
+(save-game: "auto")(save-game: "day6")(set: $lockI to $iris < 15, $lockN to $naomi < 15, $capI to $iris < 40, $capN to $naomi < 40, $frzI to $iris, $frzN to $naomi)<div class="dayhead">SATURDAY</div><div class="whisper">...</div>
 You can't sleep, so you scroll.
 
 You open your messages with Naomi. You just want something from before. Some dumb meme. Proof there was a time when everything was normal.
@@ -827,7 +893,7 @@ Tomorrow is the night. You know it the way you know your own name.
 
 
 :: Day 7 [bg-between-1]
-(save-game: "auto")You fall asleep on Saturday night and wake up somewhere that isn't anywhere.
+(save-game: "auto")(save-game: "day7")You fall asleep on Saturday night and wake up somewhere that isn't anywhere.
 
 The same nothing as before. The same voice.
 
@@ -1332,7 +1398,7 @@ You don't have an answer. She seems to like that.](else-if: $day is 4)[She's wai
 (link-goto: "Sleep", "Day " + (str: $day))
 
 
-:: End Good [bg-stairs-yellow day piano]
+:: End Good [bg-stairs-yellow day piano ending-good]
 <div class="dayhead">A MONTH LATER</div>
 The rumour is old news. Not because anyone apologised. People just found something else to talk about. That's how it works.
 
@@ -1370,7 +1436,7 @@ The motion light didn't come on for her.
 [[The end->Credits]]
 
 
-:: End Middle [bg-gallery day piano]
+:: End Middle [bg-gallery day piano ending-middle]
 <div class="dayhead">A MONTH LATER</div>
 Everyone makes it to the end of the week. That's the most important thing, and you know it. You tell yourself that a lot.
 
@@ -1385,7 +1451,7 @@ You're all alive. You walk past each other on campus. It's quiet, and it's sad, 
 [[The end->Credits]]
 
 
-:: End Bad [bg-black rain piano]
+:: End Bad [bg-black rain piano ending-bad]
 It rains on the day of the funeral. Just like last time.
 
 (if: $iris < 35)[Iris goes first, on the last night, at the same minute as before. Her mother is at the front again. You know exactly where she'll reach for the edge of the casket. She does.
@@ -1411,7 +1477,7 @@ The page goes dark.
 [[...->Credits]]
 
 
-:: End She Waits [bg-room-mc-night night maeve piano]
+:: End She Waits [bg-room-mc-night night maeve piano ending-waits]
 On the last night Maeve is sitting on your bed. She's been your girlfriend for four days. She's been Death for a lot longer.
 
 "You did the hard thing," she says. "Holding on to them, with me dragging on your arm the whole time." She kisses your forehead. Her lips are cold. "Not now. I'm really patient, (print: $name). I'm literally the most patient person you'll ever meet."
@@ -1426,7 +1492,7 @@ The door opens. Maeve walks in, looking exactly the same.
 [[The end->Credits]]
 
 
-:: End All Three [bg-between-3 night maeve piano]
+:: End All Three [bg-between-3 night maeve piano ending-three]
 The week went soft and warm and blurry. Maeve was always there. She was so easy to be with. She never asked for anything.
 
 Iris stopped texting. Naomi stopped texting. You didn't notice when.
@@ -1454,92 +1520,279 @@ The page goes black. There's nothing after this.
 
 
 :: StoryScript [script]
-/* Sound for the game. Files live in sounds/.
-   Loops, picked by the passage's tags and cross-faded:
-     music.mp3  the lofi track, under every normal scene
-     piano.mp3  replaces it on passages tagged "piano" (prologue, endings)
-     rain.mp3   layered on top for passages tagged "rain"
-     "silence"  fades everything out (2:07, Maeve's last scene)
-   One-shots: buzz.mp3 when a new passage shows an incoming text (twice for 2+),
-   whoosh.mp3 when Death breaks in or you arrive in the between.
-   Nothing plays before the first click (browsers block it); the corner button mutes all of it. */
+/* De Mortuis: everything the story needs that Harlowe can't do on its own.
+   SOUND    loops picked by the passage's tags (music / piano / rain, "silence" fades all out),
+            played on two alternating copies so every loop point is a soft cross-fade, never a gap.
+            One-shots: buzz for incoming texts (the music ducks under it), whoosh for the voice.
+   STAGE    the scene art (photo + sprites) cross-fades between passages instead of cutting.
+   TEXT     each paragraph fades in after the one before; a click or key shows it all at once.
+   SETTINGS music and effects volume, text size, text animation, a clearer font for the voice.
+   ENDINGS  every ending reached is remembered on this computer for the title page's gallery.
+   Nothing makes sound before the first click (browsers block it). Settings live in localStorage. */
 (function () {
-  if (window.dmSound) return;
-  function loop(src, vol) { var a = new Audio(src); a.loop = true; a.volume = 0; a.preload = 'auto'; return { el: a, vol: vol, timer: null }; }
-  // the files are mastered to sit together (music/piano soft, rain softer, buzz and whoosh never above the music),
-  // so they play at their own level
-  var loops = { music: loop('SOUNDS/music.mp3', 1), piano: loop('SOUNDS/piano.mp3', 1), rain: loop('SOUNDS/rain.mp3', 1) };
+  if (window.dmGame) return;
+  var story = document.querySelector('tw-story');
+  var root = document.documentElement;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- settings ---------- */
+  var SET = { music: 0.8, sfx: 0.9, text: 1, anim: true, clearVoice: false, muted: false };
+  try { var saved = JSON.parse(localStorage.getItem('dm-settings') || '{}'); for (var k in saved) if (k in SET) SET[k] = saved[k]; } catch (e) {}
+  try { if (localStorage.getItem('dm-muted') === '1') SET.muted = true; } catch (e) {}
+  function saveSettings() { try { localStorage.setItem('dm-settings', JSON.stringify(SET)); } catch (e) {} }
+  function applyLook() {
+    root.style.setProperty('--dm-text', SET.text);
+    root.classList.toggle('dm-voice-clear', !!SET.clearVoice);
+    root.classList.toggle('dm-no-anim', !SET.anim || reduced);
+  }
+  applyLook();
+
+  /* ---------- sound ---------- */
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function Loop(src, loopAt, xf) {
+    var self = this;
+    this.els = [new Audio(src), new Audio(src)];
+    this.els.forEach(function (a) { a.preload = 'auto'; a.volume = 0; a.addEventListener('ended', function () { if (a === self.cur && !self.xf) { a.currentTime = 0; a.play().catch(function () {}); } }); });
+    this.cur = this.els[0]; this.level = 0; this.target = 0; this.rate = 0.5; this.loopAt = loopAt; this.xfLen = xf; this.xf = null; this.on = false;
+  }
+  Loop.prototype.fade = function (target, sec) { if (target === this.target) return; this.target = target; this.rate = Math.abs(target - this.level) / Math.max(0.05, sec); };
+  Loop.prototype.tick = function (dt, gain, now) {
+    if (this.level !== this.target) {
+      var d = this.rate * dt;
+      this.level = this.level < this.target ? Math.min(this.target, this.level + d) : Math.max(this.target, this.level - d);
+    }
+    if (this.level > 0 && !this.on) { this.on = true; this.cur.play().catch(function () {}); }
+    if (this.level === 0 && this.target === 0 && this.on) { this.on = false; this.els.forEach(function (a) { a.pause(); }); this.xf = null; }
+    if (!this.on) return;
+    var c = this.cur, o = this.els[0] === c ? this.els[1] : this.els[0];
+    var at = this.loopAt > 0 ? this.loopAt : (c.duration || 0) + this.loopAt;
+    if (!this.xf && c.duration && c.currentTime >= at) { o.currentTime = 0; o.play().catch(function () {}); this.xf = now; }
+    var p = this.xf ? clamp((now - this.xf) / this.xfLen) : 0;
+    // a smooth (squared) curve on the level, and an equal-power cross-fade at the loop point
+    var v = this.level * this.level * gain;
+    c.volume = clamp(v * Math.cos(p * Math.PI / 2));
+    o.volume = this.xf ? clamp(v * Math.sin(p * Math.PI / 2)) : 0;
+    if (this.xf && p >= 1) { c.pause(); this.cur = o; this.xf = null; }
+  };
+  // loop points: the lofi track loops on the beat before its fade-out; the piano rings into its opening
+  var loops = { music: new Loop('SOUNDS/music.mp3', 67.77, 1.6), piano: new Loop('SOUNDS/piano.mp3', -2.6, 2.4), rain: new Loop('SOUNDS/rain.mp3', -2.5, 2.5) };
   var buzz = new Audio('SOUNDS/buzz.mp3'), whoosh = new Audio('SOUNDS/whoosh.mp3');
-  buzz.volume = 1; whoosh.volume = 1;
-  window.dmSound = { loops: loops, buzz: buzz, whoosh: whoosh };
-  window.dmMusic = loops.music.el;
-
-  var muted = false;
-  try { muted = localStorage.getItem('dm-muted') === '1'; } catch (e) {}
+  var duck = 1, duckTarget = 1, duckUntil = 0;
   var started = false, tags = [];
-
-  function fadeTo(l, target, ms) {
-    var a = l.el; clearInterval(l.timer);
-    var steps = Math.max(1, Math.round(ms / 50)), step = (target - a.volume) / steps, n = 0;
-    if (target > 0 && a.paused) a.play().catch(function () {});
-    l.timer = setInterval(function () {
-      n++; a.volume = Math.min(1, Math.max(0, a.volume + step));
-      if (n >= steps) { clearInterval(l.timer); a.volume = target; if (target === 0) a.pause(); }
-    }, 50);
-  }
   function has(t) { return tags.indexOf(t) !== -1; }
-  function update(ms) {
+  function update(sec) {
     if (!started) return;
-    var off = muted || has('silence');
-    fadeTo(loops.music, off || has('piano') ? 0 : loops.music.vol, ms);
-    fadeTo(loops.piano, !off && has('piano') ? loops.piano.vol : 0, ms);
-    fadeTo(loops.rain, !off && has('rain') ? loops.rain.vol : 0, ms);
+    var off = SET.muted || has('silence');
+    var bed = has('night') ? 0.82 : 1;
+    if (has('eod')) bed = 0.72;
+    loops.music.fade(off || has('piano') ? 0 : bed, sec);
+    loops.piano.fade(!off && has('piano') ? 1 : 0, sec);
+    loops.rain.fade(!off && has('rain') ? 1 : 0, sec);
   }
-  function once(a, delay) {
-    if (!started || muted) return;
-    setTimeout(function () { try { a.currentTime = 0; } catch (e) {} a.play().catch(function () {}); }, delay || 0);
+  var last = 0;
+  function frame(now) {
+    now /= 1000; var dt = last ? Math.min(0.25, now - last) : 0; last = now;
+    if (now > duckUntil) duckTarget = 1;
+    duck += (duckTarget - duck) * Math.min(1, dt * (duckTarget < duck ? 9 : 1.4));
+    loops.music.tick(dt, SET.music * duck, now);
+    loops.piano.tick(dt, SET.music * duck, now);
+    loops.rain.tick(dt, SET.sfx * 0.9, now);
+    requestAnimationFrame(frame);
   }
-
-  var btn = document.createElement('button');
-  btn.className = 'dm-mute'; btn.type = 'button';
-  function label() { btn.textContent = muted ? '♪ off' : '♪ on'; btn.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off'); }
-  label();
-  btn.addEventListener('click', function (e) {
-    e.stopPropagation(); muted = !muted; label();
-    try { localStorage.setItem('dm-muted', muted ? '1' : '0'); } catch (err) {}
-    started = true; update(400);
-  });
-  var css = document.createElement('style');
-  css.textContent = '.dm-mute{position:fixed;right:14px;bottom:14px;z-index:60;font:inherit;font-size:14px;color:#fbf7f1;' +
-    'background:rgba(11,9,16,.75);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.7}' +
-    '.dm-mute:hover{opacity:1}';
-  document.head.appendChild(css);
-  document.body.appendChild(btn);
+  requestAnimationFrame(frame);
+  function once(a, vol, delay) {
+    if (!started || SET.muted) return;
+    setTimeout(function () {
+      a.volume = clamp(vol * SET.sfx);
+      try { a.currentTime = 0; } catch (e) {}
+      a.play().catch(function () {});
+    }, delay || 0);
+  }
+  function buzzIt(delay) { once(buzz, 1, delay); setTimeout(function () { duckTarget = 0.55; duckUntil = performance.now() / 1000 + 0.9; }, delay || 0); }
 
   function begin() {
     if (started) return;
-    started = true; update(2000);
+    started = true; update(2.5);
     document.removeEventListener('click', begin, true);
     document.removeEventListener('keydown', begin, true);
   }
   document.addEventListener('click', begin, true);
   document.addEventListener('keydown', begin, true);
 
-  var story = document.querySelector('tw-story');
-  // the loops follow the passage's tags
+  /* ---------- stage: scene art that cross-fades ---------- */
+  var stage = document.createElement('div'); stage.className = 'dm-stage'; stage.setAttribute('aria-hidden', 'true');
+  var bgs = [mk('dm-bg'), mk('dm-bg')], sprs = [mk('dm-spr'), mk('dm-spr')];
+  function mk(c) { var d = document.createElement('div'); d.className = c; stage.appendChild(d); return d; }
+  document.body.appendChild(stage);
+  root.classList.add('dm-staged');
+  var curBg = null, curSpr = null, bgI = 0, sprI = 0, preload = {};
+  function firstUrl(v) { var m = /url\((["']?)([^"')]+)\1\)/.exec(v || ''); return m ? m[2] : null; }
+  function whenLoaded(v, cb) {
+    var u = firstUrl(v); if (!u) return cb();
+    if (preload[u] === true) return cb();
+    var img = new Image(), done = false;
+    function go() { if (done) return; done = true; preload[u] = true; cb(); }
+    img.onload = go; img.onerror = go; setTimeout(go, 600); img.src = u;
+  }
+  function stageUpdate() {
+    if (!story) return;
+    var cs = getComputedStyle(story), t = story.getAttribute('tags') || '';
+    var black = /(^|\s)bg-black(\s|$)/.test(t);
+    var ov = cs.getPropertyValue('--ov').trim(), bg = cs.getPropertyValue('--bg').trim();
+    var bgVal = black || !bg || bg === 'none' ? 'none' : (ov && ov !== 'none' ? ov + ', ' : '') + bg;
+    var spr = black ? 'none' : (cs.getPropertyValue('--sprite').trim() || 'none');
+    var pos = cs.getPropertyValue('--sprite-pos').trim() || '50% 100%';
+    var night = /(^|\s)night(\s|$)/.test(t);
+    stage.classList.toggle('dm-hidden', black);
+    if (bgVal !== curBg) {
+      var target = bgVal;
+      whenLoaded(target, function () {
+        if (target !== bgVal) return;
+        var next = bgs[1 - bgI], prev = bgs[bgI];
+        next.style.backgroundImage = target; next.classList.add('on'); prev.classList.remove('on'); bgI = 1 - bgI;
+      });
+      curBg = bgVal;
+    }
+    var sprKey = spr + '|' + pos + '|' + night;
+    if (sprKey !== curSpr) {
+      var appear = !curSpr || curSpr.indexOf('none|') === 0;
+      var n = sprs[1 - sprI], o = sprs[sprI];
+      n.style.backgroundImage = spr; n.style.backgroundPosition = pos; n.classList.toggle('night', night);
+      n.classList.toggle('rise', appear); n.classList.remove('on'); void n.offsetWidth;
+      whenLoaded(spr, function () { n.classList.add('on'); o.classList.remove('on'); });
+      sprI = 1 - sprI; curSpr = sprKey;
+    }
+  }
+  var pending = false;
+  function scheduleStage() { if (pending) return; pending = true; requestAnimationFrame(function () { requestAnimationFrame(function () { pending = false; stageUpdate(); }); }); }
+
+  /* ---------- text: paragraphs fade in one after another ---------- */
+  var revealing = null;
+  function reveal(p) {
+    if (!SET.anim || reduced || p.querySelector('.premise, .bigmeters, .namebox')) return;
+    var groups = [], cur = [];
+    // Harlowe first shows a new passage inside a transition wrapper; work inside it if it's there
+    var host = p.querySelector(':scope > tw-transition-container') || p;
+    var kids = Array.prototype.slice.call(host.childNodes);
+    function nextEl(i) { for (var j = i + 1; j < kids.length; j++) { var k = kids[j]; if (k.nodeType === 1) return k; if (k.textContent.trim()) return null; } return null; }
+    function prevIsBr() { for (var j = cur.length - 2; j >= 0; j--) { var k = cur[j]; if (k.nodeType === 1) return k.tagName === 'BR'; if (k.textContent.trim()) return false; } return false; }
+    kids.forEach(function (n, i) {
+      if (n.tagName === 'TW-SIDEBAR') return;
+      cur.push(n);
+      // a blank line between paragraphs: <br><br>, or Harlowe's own marker for it
+      var nx = nextEl(i);
+      var more = nx && (nx.tagName === 'BR' || nx.tagName === 'TW-CONSECUTIVE-BR');
+      if (n.tagName === 'TW-CONSECUTIVE-BR' || (n.tagName === 'BR' && prevIsBr() && !more)) { groups.push(cur); cur = []; }
+    });
+    groups.push(cur);
+    var i = 0;
+    groups.forEach(function (g) {
+      var visible = g.some(function (n) { return n.nodeType === 3 ? n.textContent.trim() : n.nodeType === 1 && n.tagName !== 'BR' && n.tagName !== 'TW-CONSECUTIVE-BR' && (n.textContent.trim() || n.querySelector('img, input, .logo')); });
+      if (!visible) return;
+      var w = document.createElement('div'); w.className = 'dm-line';
+      w.style.animationDelay = Math.min(2.4, i * 0.22) + 's'; i++;
+      g[0].parentNode.insertBefore(w, g[0]);
+      g.forEach(function (n) { w.appendChild(n); });
+    });
+    revealing = p;
+    setTimeout(function () { if (revealing === p) revealing = null; }, Math.min(2.4, i * 0.22) * 1000 + 700);
+  }
+  function finishReveal(e) {
+    if (!revealing || !document.body.contains(revealing)) { revealing = null; return; }
+    if (e.type === 'keydown' && [' ', 'Enter', 'Escape'].indexOf(e.key) === -1) return;
+    if (e.target.closest && e.target.closest('.dm-settings, .dm-gear, .dm-mute, input')) return;
+    revealing.classList.add('dm-shown'); revealing = null;
+    // a click on a choice still counts; anywhere else it only shows the rest of the text
+    if (e.target.closest && e.target.closest('tw-link, .enchantment-link')) return;
+    e.preventDefault(); e.stopPropagation();
+  }
+  document.addEventListener('click', finishReveal, true);
+  document.addEventListener('keydown', finishReveal, true);
+
+  /* ---------- endings gallery ---------- */
+  var ENDINGS = [
+    ['good', 'Good', 'Keep them both above 60, never hide the truth, and ask Iris directly on the last night.'],
+    ['middle', 'Middle', 'Everyone makes it to Monday, but not together.'],
+    ['bad', 'Bad', 'Let one of them slip too far.'],
+    ['waits', 'She Waits', 'Say yes to Maeve on Wednesday night, and still save them both.'],
+    ['three', 'All Three', 'Say yes to Maeve, and let them go.'],
+    ['forever', 'Forever', 'Say yes to Maeve twice.']
+  ];
+  function found() { try { return JSON.parse(localStorage.getItem('dm-endings') || '[]'); } catch (e) { return []; } }
+  function record(id) { var f = found(); if (f.indexOf(id) === -1) { f.push(id); try { localStorage.setItem('dm-endings', JSON.stringify(f)); } catch (e) {} } }
+  function fillGallery(p) {
+    var box = p.querySelector('.dm-gallery'); if (!box) return;
+    var f = found(), html = '<div class="dm-g-head">Endings found: ' + f.length + ' of 6</div><div class="dm-g-row">';
+    ENDINGS.forEach(function (e) {
+      var got = f.indexOf(e[0]) !== -1;
+      html += '<div class="dm-g-chip' + (got ? ' got' : '') + '"><b>' + (got ? e[1] : '???') + '</b><span>' + (got ? 'found' : e[2]) + '</span></div>';
+    });
+    box.innerHTML = html + '</div>';
+  }
+
+  /* ---------- settings panel ---------- */
+  var gear = document.createElement('button'); gear.type = 'button'; gear.className = 'dm-gear'; gear.textContent = 'Settings';
+  var mute = document.createElement('button'); mute.type = 'button'; mute.className = 'dm-mute';
+  function muteLabel() { mute.textContent = SET.muted ? '♪ off' : '♪ on'; mute.setAttribute('aria-label', SET.muted ? 'Turn sound on' : 'Turn sound off'); }
+  muteLabel();
+  mute.addEventListener('click', function (e) {
+    e.stopPropagation(); SET.muted = !SET.muted; muteLabel(); saveSettings(); syncPanel();
+    try { localStorage.setItem('dm-muted', SET.muted ? '1' : '0'); } catch (err) {}
+    started = true; update(0.5);
+  });
+  var panel = document.createElement('div'); panel.className = 'dm-settings'; panel.hidden = true;
+  panel.innerHTML =
+    '<div class="dm-s-title">Settings</div>' +
+    '<label>Music <input type="range" min="0" max="100" data-k="music"></label>' +
+    '<label>Effects and rain <input type="range" min="0" max="100" data-k="sfx"></label>' +
+    '<div class="dm-s-row"><span>Text size</span><button data-text="0.9">Small</button><button data-text="1">Normal</button><button data-text="1.15">Large</button></div>' +
+    '<div class="dm-s-row"><span>Text appears</span><button data-anim="1">Line by line</button><button data-anim="0">All at once</button></div>' +
+    '<div class="dm-s-row"><span>The voice</span><button data-voice="0">Blurred</button><button data-voice="1">Clear</button></div>' +
+    '<button class="dm-s-close">Close</button>';
+  function syncPanel() {
+    panel.querySelectorAll('input[type=range]').forEach(function (r) { r.value = Math.round(SET[r.dataset.k] * 100); });
+    panel.querySelectorAll('[data-text]').forEach(function (b) { b.classList.toggle('sel', +b.dataset.text === SET.text); });
+    panel.querySelectorAll('[data-anim]').forEach(function (b) { b.classList.toggle('sel', (b.dataset.anim === '1') === !!SET.anim); });
+    panel.querySelectorAll('[data-voice]').forEach(function (b) { b.classList.toggle('sel', (b.dataset.voice === '1') === !!SET.clearVoice); });
+  }
+  panel.addEventListener('input', function (e) {
+    var k = e.target.dataset && e.target.dataset.k; if (!k) return;
+    SET[k] = e.target.value / 100; saveSettings();
+  });
+  panel.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.text) SET.text = +b.dataset.text;
+    if (b.dataset.anim) SET.anim = b.dataset.anim === '1';
+    if (b.dataset.voice) SET.clearVoice = b.dataset.voice === '1';
+    if (b.classList.contains('dm-s-close')) panel.hidden = true;
+    saveSettings(); applyLook(); syncPanel();
+  });
+  gear.addEventListener('click', function (e) { e.stopPropagation(); panel.hidden = !panel.hidden; syncPanel(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') panel.hidden = true; });
+  document.body.appendChild(panel); document.body.appendChild(gear); document.body.appendChild(mute);
+  syncPanel();
+
+  /* ---------- wiring ---------- */
   function checkTags() {
     var next = (story && story.getAttribute('tags') || '').split(/\s+/);
-    if (next.join(' ') === tags.join(' ')) return;
-    var wasSilent = has('silence'); tags = next;
-    update(has('silence') ? 1500 : wasSilent ? 3000 : 1800);
+    if (next.join(' ') !== tags.join(' ')) {
+      var wasSilent = has('silence'), wasPiano = has('piano'); tags = next;
+      update(has('silence') ? 1.6 : wasSilent ? 3.5 : wasPiano !== has('piano') ? 3 : 2);
+    }
+    scheduleStage();
   }
-  // one-shots fire when a new passage appears
   function newPassage(p) {
+    reveal(p);
+    fillGallery(p);
+    var t = story.getAttribute('tags') || '';
+    var m = /(^|\s)ending-(\w+)/.exec(t); if (m) record(m[2]);
+    scheduleStage();
     setTimeout(function () {
       var texts = p.querySelectorAll('.phone:not(.me)').length;
-      if (texts) { once(buzz); if (texts > 1) once(buzz, 550); }
+      if (texts) { buzzIt(250); if (texts > 1) buzzIt(850); }
       var between = /(^|\s)bg-between-\d/.test(story.getAttribute('tags') || '');
-      if (p.querySelector('.deathpop') || between) once(whoosh, texts ? 300 : 0);
+      if (p.querySelector('.deathpop') || between) once(whoosh, 0.85, texts ? 400 : 0);
     }, 60);
   }
   if (story) {
@@ -1547,10 +1800,14 @@ The page goes black. There's nothing after this.
     new MutationObserver(function (list) {
       list.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.tagName === 'TW-PASSAGE') newPassage(n); }); });
     }).observe(story, { childList: true });
+    var first = story.querySelector('tw-passage'); if (first) newPassage(first);
+    // the title page's gallery appears when its panel opens
+    new MutationObserver(function () { if (story.querySelector('.dm-gallery:empty')) fillGallery(story); }).observe(story, { childList: true, subtree: true });
   }
   checkTags();
+  window.dmGame = { settings: SET, loops: loops, update: update };
+  window.dmMusic = loops.music.els[0];
 })();
-
 
 :: reset vars
 (set: $iris to 20, $naomi to 100, $baseI to 20, $baseN to 100, $devI to 0, $devN to 0, $last to "", $alone to 0, $aloneToday to 0, $next to "", $r to "", $react to "")
@@ -2027,7 +2284,7 @@ You look at your phone. 2:07.
 [[...->Again]]
 
 
-:: End Forever [bg-gallery-night night maeve piano]
+:: End Forever [bg-gallery-night night maeve piano ending-forever]
 She takes you to the art hallway again. Teal and orange. Empty.
 
 This time you know. Ninety percent. Ninety-nine. You go anyway.

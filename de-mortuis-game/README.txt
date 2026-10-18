@@ -92,7 +92,20 @@ SOUND (SOUNDS/)
   whoosh.mp3  creepy whoosh (freesound community). Plays when Death breaks in and when
               you arrive in the between.
   Tag a passage "silence" to fade everything out (2:07 on Day 7, Maeve's last scene).
+  Each loop plays on two alternating copies, so the loop point is a soft cross-fade instead of a gap
+  (the lofi track loops on the beat at 67.8s, before its own fade-out). Switching tracks is a 2-3s
+  equal-power fade, the music sits a little lower at night and on the end-of-day screens, and it dips
+  under the phone buzz. Rain was filtered to take the hiss out; the whoosh was pitched down and shortened.
   Nothing plays before the first click (browsers block it); the corner button mutes it all.
+
+PLAYER OPTIONS (corner buttons, saved on the player's computer)
+  Settings: music volume, effects and rain volume, text size, text line by line or all at once,
+  and a clear (unblurred) font for the voice.
+  Back: the top-left button undoes the last choice.
+  Title page > Endings and chapters: which of the 6 endings this computer has found (with hints for
+  the rest), and replay from the start of any day reached in the latest run.
+  The scene art and the girls cross-fade between passages; paragraphs fade in one after another
+  (a click shows the rest at once). All of it lives in the StoryScript passage.
   All are free to use under the Pixabay licence, no credit required.
   Like the photos, sound only plays in the published HTML, not in Twine's Play/Test.
 
