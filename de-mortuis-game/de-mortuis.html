@@ -1146,33 +1146,35 @@ Iris looks at Naomi, then at you. The two people who passed on her secret are si
 
 &quot;Some girl just texted me,&quot; she says. &quot;White hair. I don&#39;t even know how she got my number. She said, //ask him who he told.//&quot;]
 
-[[2:08-&gt;Vending]]</tw-passagedata><tw-passagedata pid="52" name="The Voice" tags="bg-between-2 maeve silence" position="125,625" size="100,100">&lt;div class=&quot;deathpop&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;death&quot;&gt;There you are.&lt;/span&gt;&lt;/div&gt;The hallway is gone. The machine, the flickering light, the floor under your feet. There&#39;s only the nothing, the same nothing as before Monday, and Maeve standing in the middle of it.
+[[2:08-&gt;Vending]]</tw-passagedata><tw-passagedata pid="52" name="The Voice" tags="bg-vending night maeve silence" position="125,625" size="100,100">Maeve doesn&#39;t leave. She stays leaning on the machine, turning the empty cup in her hands.
 
-When she speaks, it isn&#39;t her voice. It&#39;s the other one.
+&quot;So,&quot; she says. &quot;Same seven days. Rules are rules.&quot;
 
-&lt;span class=&quot;death&quot;&gt;Oh, good. There you are.&lt;/span&gt;
+Something cold moves down your back. You&#39;ve heard that before.
 
-You know that voice. You&#39;d know it anywhere. (if: $loop is 2)[You&#39;ve heard it twice now, in the dark, explaining the rules to you.](else:)[You heard it in the dark before Monday, explaining the rules to you.]
+&quot;Each day you pick where to be,&quot; she goes on, like she&#39;s reading it off a card. &quot;You can&#39;t be everywhere. Nobody can.&quot;
 
-&lt;span class=&quot;death&quot;&gt;Yes, sweetheart. Me. It was always me.&lt;/span&gt;
+(if: $switches is 5)[&quot;Five times, I said you could hear what someone was thinking. You never used one. I was a little offended.&quot;](else-if: $switches is 0)[&quot;Five times, I said you could hear what someone was thinking. You used every single one. Good boy.&quot;](else:)[&quot;Five times, I said you could hear what someone was thinking. You didn&#39;t even use them all. Saving them for a rainy day?&quot;]
 
-(if: $loop is 2)[Seventy-five percent, you&#39;d told yourself. You can round up now.](else:)[The cold hands. The motion lights that never came on. The way she knew your name before you&#39;d said it.]
+You never told her about that. You never told anyone. The only one who knew was the voice in the dark before Monday, the one with nobody behind it.
 
-Then the voice softens back into hers, as if she&#39;s done pretending.
-
-(if: $devI &gt; $devN + 1)[&quot;You gave your week to Iris. Good. I was sitting outside her door every night, you know. I always wait for the quiet ones.&quot;](else-if: $devN &gt; $devI + 1)[&quot;You kept running to Naomi. Clever. Nobody watches the loud ones. I was watching her by Thursday.&quot;](else:)[&quot;You tore yourself in half all week, a little bit for each of them. I watched you do it. It was almost sweet.&quot;](if: $alone &gt;= 3)[ She tilts her head. &quot;And every time you walked off on your own, you walked straight to me. Did you never wonder why I was always there?&quot;](else-if: $d6 is &quot;alone&quot;)[ She tilts her head. &quot;And on your last day you came and sat with me on the bench. You didn&#39;t let go of my hand once.&quot;](if: $dayFive is &quot;shout&quot;)[
+(if: $devI &gt; $devN + 1)[&quot;You gave your week to Iris. Good. I was sitting outside her door every night, you know. I always wait for the quiet ones.&quot;](else-if: $devN &gt; $devI + 1)[&quot;You kept running to Naomi. Clever. Nobody watches the loud ones. I was watching her by Thursday.&quot;](else:)[&quot;You tore yourself in half all week, a little bit for each of them. I watched you do it. It was almost sweet.&quot;](if: $alone &gt;= 3)[ She tilts her head. &quot;And every time you went off on your own, you weren&#39;t really on your own, were you? Someone always showed up.&quot;](else-if: $d6 is &quot;alone&quot;)[ She tilts her head. &quot;And on your last day you came and sat with me on the bench. You didn&#39;t let go of my hand once.&quot;](if: $dayFive is &quot;shout&quot;)[
 
 &quot;Friday, when you grabbed her arm in front of everyone? I felt that one. I very nearly came for her that night.&quot;](else-if: $dayFive is &quot;iris&quot;)[
 
 &quot;Friday, when Iris walked into that room and said it herself? That&#39;s when I knew I might lose this week.&quot;](if: $confessedIris)[
 
-&quot;You told Iris it started with you. Most people take that with them. To me.&quot;](else-if: $hidIris)[
+&quot;You told Iris it started with you. Most people take that with them. All the way to me.&quot;](else-if: $hidIris)[
 
 &quot;You never told her. So I did, at 2:07. I like to be punctual.&quot;](if: $askedDirect)[ &quot;And you asked her. Out loud, the real question. People think asking is what does it. It&#39;s what stops it.&quot;]
 
-(if: $ending is &quot;good&quot;)[&quot;So. Nobody for me this week. Not one of you.&quot; She sounds almost proud. &quot;I don&#39;t mind losing, if it&#39;s to you. Go back inside, (print: $name). Before Mommy changes her mind.&quot;](else-if: $ending is &quot;middle&quot;)[&quot;Everyone&#39;s breathing. Nobody&#39;s together. That&#39;s a draw, baby. I&#39;ll take a draw, (print: $name).&quot;](else-if: $ending is &quot;bad&quot;)[&quot;I told you before Monday that I didn&#39;t want any of you. I meant it.&quot; Her cold hand finds yours. &quot;You made me come anyway, (print: $name).&quot;](else-if: $ending is &quot;waits&quot;)[&quot;You knew what I was, and you held my hand anyway.&quot; She kisses your knuckles. &quot;Sixty years, (print: $name). Mommy&#39;s counting.&quot;](else:)[&quot;You never once asked what I was. You didn&#39;t want to know.&quot; She smiles. &quot;They never do, (print: $name).&quot;]
+(if: $ending is &quot;good&quot;)[&quot;I said I&#39;d like a quiet week. I didn&#39;t want any of you, not one of the three.&quot; She sounds almost proud. &quot;And look. You gave me one.&quot;](else-if: $ending is &quot;middle&quot;)[&quot;I said I&#39;d like a quiet week. Everyone&#39;s breathing, and nobody&#39;s together. That&#39;s a draw, baby. I&#39;ll take a draw.&quot;](else-if: $ending is &quot;bad&quot;)[&quot;I told you I didn&#39;t want any of you. I meant it.&quot; Her cold hand finds yours. &quot;You made me come anyway.&quot;](else-if: $ending is &quot;waits&quot;)[&quot;You held my hand all week and never asked why it was so cold.&quot; She kisses your knuckles. &quot;I don&#39;t mind. I&#39;m very good at waiting.&quot;](else:)[&quot;You never once asked what I was. You didn&#39;t want to know. They never do.&quot;]
 
-The nothing folds shut, and you&#39;re standing in the dark hallway again. The machine hums. She&#39;s gone.
+She drops the cup in the bin and looks at you properly, and for the first time all week she isn&#39;t smiling.
+
+&quot;I&#39;m Death, (print: $name).&quot;
+
+The light above the machine goes out.
 
 [[...-&gt;Final]]</tw-passagedata><tw-passagedata pid="53" name="Final" tags="bg-black eod fade piano" position="250,625" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;THE END OF THE WEEK&lt;/div&gt;
 &lt;div class=&quot;meter&quot;&gt;&lt;span class=&quot;who&quot;&gt;Iris&lt;/span&gt;&lt;div class=&quot;bar&quot;&gt;(print: &#39;&lt;div class=&quot;fill iris&quot; style=&quot;width:&#39; + (str: $iris) + &#39;%&quot;&gt;&lt;/div&gt;&#39;)&lt;/div&gt;&lt;span class=&quot;num&quot;&gt;$iris&lt;/span&gt;&lt;/div&gt;
@@ -1815,9 +1817,7 @@ This time you know what she is. Ninety percent sure, ninety-nine. You go anyway.
 
 &quot;Are you going to tell me what you are?&quot;
 
-&quot;You already know, (print: $name).&quot; And then, in the other voice, the one from the dark before Monday:
-
-&lt;span class=&quot;death&quot;&gt;Oh, good. There you are.&lt;/span&gt;
+&quot;You already know.&quot; She cups your face in her cold hands. &quot;But I&#39;ll say it, since you came all this way twice. I&#39;m Death, (print: $name).&quot;
 
 She kisses you. It feels like snow, and then it doesn&#39;t feel like anything.
 
@@ -2113,7 +2113,7 @@ Maeve is leaning against it.
 
 &quot;They&#39;re gone, you know. Both of them. You could have had them, and you chose me.&quot; She smiles, but her eyes stay cold. &quot;Good. Mommy doesn&#39;t share. Shh, don&#39;t think about them anymore. I&#39;ll look after you now. Only me, (print: $name).&quot;]
 
-The light above the machine flickers once, and goes out.
+The light above the machine flickers.
 
 [[...-&gt;The Voice]]</tw-passagedata><tw-passagedata pid="166" name="Opening" tags="bg-black" position="625,2000" size="100,100">&lt;div class=&quot;opening&quot;&gt;&lt;p class=&quot;op-card&quot;&gt;&lt;small&gt;a game by&lt;/small&gt;&lt;b&gt;Anish Goel&lt;/b&gt;&lt;/p&gt;&lt;p class=&quot;op-card two&quot;&gt;&lt;small&gt;art by&lt;/small&gt;&lt;b&gt;Ishan Iyer&lt;/b&gt;&lt;/p&gt;&lt;/div&gt;&lt;p class=&quot;op-skip&quot;&gt;(link: &quot;Skip&quot;)[(redirect: &quot;Content note&quot;)]&lt;/p&gt;(after: 7s)[(redirect: &quot;Content note&quot;)]</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
