@@ -1056,6 +1056,38 @@ Your phone lights up on the carpet.
 [[2:08->Vending]]
 
 
+:: The Voice [bg-between-2 maeve silence]
+<div class="deathpop" aria-hidden="true"><span class="death">There you are.</span></div>The hallway is gone. The machine, the flickering light, the floor under your feet. There's only the nothing, the same nothing as before Monday, and Maeve standing in the middle of it.
+
+When she speaks, it isn't her voice. It's the other one.
+
+<span class="death">Oh, good. There you are.</span>
+
+You know that voice. You'd know it anywhere. (if: $loop is 2)[You've heard it twice now, in the dark, explaining the rules to you.](else:)[You heard it in the dark before Monday, explaining the rules to you.]
+
+<span class="death">Yes, sweetheart. Me. It was always me.</span>
+
+(if: $loop is 2)[Seventy-five percent, you'd told yourself. You can round up now.](else:)[The cold hands. The motion lights that never came on. The way she knew your name before you'd said it.]
+
+Then the voice softens back into hers, as if she's done pretending.
+
+(if: $devI > $devN + 1)["You gave your week to Iris. Good. I was sitting outside her door every night, you know. I always wait for the quiet ones."](else-if: $devN > $devI + 1)["You kept running to Naomi. Clever. Nobody watches the loud ones. I was watching her by Thursday."](else:)["You tore yourself in half all week, a little bit for each of them. I watched you do it. It was almost sweet."](if: $alone >= 3)[ She tilts her head. "And every time you walked off on your own, you walked straight to me. Did you never wonder why I was always there?"](else-if: $d6 is "alone")[ She tilts her head. "And on your last day you came and sat with me on the bench. You didn't let go of my hand once."](if: $dayFive is "shout")[
+
+"Friday, when you grabbed her arm in front of everyone? I felt that one. I very nearly came for her that night."](else-if: $dayFive is "iris")[
+
+"Friday, when Iris walked into that room and said it herself? That's when I knew I might lose this week."](if: $confessedIris)[
+
+"You told Iris it started with you. Most people take that with them. To me."](else-if: $hidIris)[
+
+"You never told her. So I did, at 2:07. I like to be punctual."](if: $askedDirect)[ "And you asked her. Out loud, the real question. People think asking is what does it. It's what stops it."]
+
+(if: $ending is "good")["So. Nobody for me this week. Not one of you." She sounds almost proud. "I don't mind losing, if it's to you. Go back inside, (print: $name). Before Mommy changes her mind."](else-if: $ending is "middle")["Everyone's breathing. Nobody's together. That's a draw, baby. I'll take a draw, (print: $name)."](else-if: $ending is "bad")["I told you before Monday that I didn't want any of you. I meant it." Her cold hand finds yours. "You made me come anyway, (print: $name)."](else-if: $ending is "waits")["You knew what I was, and you held my hand anyway." She kisses your knuckles. "Sixty years, (print: $name). Mommy's counting."](else:)["You never once asked what I was. You didn't want to know." She smiles. "They never do, (print: $name)."]
+
+The nothing folds shut, and you're standing in the dark hallway again. The machine hums. She's gone.
+
+[[...->Final]]
+
+
 :: Final [bg-black eod fade piano]
 <div class="dayhead">THE END OF THE WEEK</div>
 <div class="meter"><span class="who">Iris</span><div class="bar">(print: '<div class="fill iris" style="width:' + (str: $iris) + '%"></div>')</div><span class="num">$iris</span></div>
@@ -1433,11 +1465,11 @@ Nobody has ever corrected her.
 
 
 :: Reveal Good [bg-vending night maeve piano]
-Before you went back inside that night, you asked her. You had to.
+Before you went back inside that night, you asked her the one thing you still didn't understand.
 
-"Who are you?"
+"Why me?"
 
-"I'm the one who was here last time, (print: $name). For her, and then for you." She dropped her cup in the bin. "I brought you back to see what you'd do. Most people do exactly the same thing again. You didn't."(if: $loop is 2)[ She smiled. "Took you two tries. You got so much better at it once you stopped looking at me."]
+"Because I was here last time, (print: $name). For her, and then for you." She dropped her cup in the bin. "I brought you back to see what you'd do. Most people do exactly the same thing again. You didn't."(if: $loop is 2)[ She smiled. "Took you two tries. You got so much better at it once you stopped looking at me."]
 
 She straightened your collar, gently. "Tell them how it feels, too. Not just the facts. You were never supposed to do any of this alone."
 
@@ -2321,7 +2353,11 @@ This time you know what she is. Ninety percent sure, ninety-nine. You go anyway.
 
 "Are you going to tell me what you are?"
 
-"You already know, (print: $name)." She kisses you. It feels like snow, and then it doesn't feel like anything.
+"You already know, (print: $name)." And then, in the other voice, the one from the dark before Monday:
+
+<span class="death">Oh, good. There you are.</span>
+
+She kisses you. It feels like snow, and then it doesn't feel like anything.
 
 Somewhere very far away, two phones light up with your name, and there's nobody there to answer them.
 
@@ -2743,9 +2779,9 @@ Maeve is leaning against it.
 
 "They're gone, you know. Both of them. You could have had them, and you chose me." She smiles, but her eyes stay cold. "Good. Mommy doesn't share. Shh, don't think about them anymore. I'll look after you now. Only me, (print: $name)."]
 
-The light above the machine goes out.
+The light above the machine flickers once, and goes out.
 
-[[...->Final]]
+[[...->The Voice]]
 
 
 :: Opening [bg-black]
