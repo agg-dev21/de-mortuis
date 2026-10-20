@@ -1059,7 +1059,7 @@ Your phone lights up on the carpet.
 :: The Voice [bg-vending night maeve silence]
 Maeve doesn't leave. She stays leaning on the machine, turning the empty cup in her hands.
 
-"So," she says. "Same seven days. Rules are rules."
+(if: $loop is 2)["So," she says. "Same seven days. Rules are rules."
 
 Something cold moves down your back. You've heard that before.
 
@@ -1067,7 +1067,9 @@ Something cold moves down your back. You've heard that before.
 
 (if: $switches is 5)["Five times, I said you could hear what someone was thinking. You never used one. I was a little offended."](else-if: $switches is 0)["Five times, I said you could hear what someone was thinking. You used every single one. Good boy."](else:)["Five times, I said you could hear what someone was thinking. You didn't even use them all. Saving them for a rainy day?"]
 
-You never told her about that. You never told anyone. The only one who knew was the voice in the dark before Monday, the one with nobody behind it.
+You never told her about that. You never told anyone. The only one who knew was the voice in the dark, the one with nobody behind it.](else:)["So," she says. "Long week?"
+
+She doesn't wait for you to answer. "You've been trying to be in two places at once since Monday. You can't, you know. Nobody can."(if: $switches < 5)[ She smiles into the cup. "And you kept looking at them like you could hear what they were thinking. Could you?"]]
 
 (if: $devI > $devN + 1)["You gave your week to Iris. Good. I was sitting outside her door every night, you know. I always wait for the quiet ones."](else-if: $devN > $devI + 1)["You kept running to Naomi. Clever. Nobody watches the loud ones. I was watching her by Thursday."](else:)["You tore yourself in half all week, a little bit for each of them. I watched you do it. It was almost sweet."](if: $alone >= 3)[ She tilts her head. "And every time you went off on your own, you weren't really on your own, were you? Someone always showed up."](else-if: $d6 is "alone")[ She tilts her head. "And on your last day you came and sat with me on the bench. You didn't let go of my hand once."](if: $dayFive is "shout")[
 
@@ -1085,7 +1087,9 @@ She drops the cup in the bin and looks at you properly, and for the first time a
 
 "I'm Death, (print: $name)."
 
-The light above the machine goes out.
+(if: $loop is 1)[And all at once it fits. The cold hands. The motion lights that never came on. The way she knew your name before you'd said it. The voice in the dark before Monday, with nobody behind it, asking for a quiet week.
+
+]The light above the machine goes out.
 
 [[...->Final]]
 

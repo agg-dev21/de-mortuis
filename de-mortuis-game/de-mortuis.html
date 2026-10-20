@@ -1148,7 +1148,7 @@ Iris looks at Naomi, then at you. The two people who passed on her secret are si
 
 [[2:08-&gt;Vending]]</tw-passagedata><tw-passagedata pid="52" name="The Voice" tags="bg-vending night maeve silence" position="125,625" size="100,100">Maeve doesn&#39;t leave. She stays leaning on the machine, turning the empty cup in her hands.
 
-&quot;So,&quot; she says. &quot;Same seven days. Rules are rules.&quot;
+(if: $loop is 2)[&quot;So,&quot; she says. &quot;Same seven days. Rules are rules.&quot;
 
 Something cold moves down your back. You&#39;ve heard that before.
 
@@ -1156,7 +1156,9 @@ Something cold moves down your back. You&#39;ve heard that before.
 
 (if: $switches is 5)[&quot;Five times, I said you could hear what someone was thinking. You never used one. I was a little offended.&quot;](else-if: $switches is 0)[&quot;Five times, I said you could hear what someone was thinking. You used every single one. Good boy.&quot;](else:)[&quot;Five times, I said you could hear what someone was thinking. You didn&#39;t even use them all. Saving them for a rainy day?&quot;]
 
-You never told her about that. You never told anyone. The only one who knew was the voice in the dark before Monday, the one with nobody behind it.
+You never told her about that. You never told anyone. The only one who knew was the voice in the dark, the one with nobody behind it.](else:)[&quot;So,&quot; she says. &quot;Long week?&quot;
+
+She doesn&#39;t wait for you to answer. &quot;You&#39;ve been trying to be in two places at once since Monday. You can&#39;t, you know. Nobody can.&quot;(if: $switches &lt; 5)[ She smiles into the cup. &quot;And you kept looking at them like you could hear what they were thinking. Could you?&quot;]]
 
 (if: $devI &gt; $devN + 1)[&quot;You gave your week to Iris. Good. I was sitting outside her door every night, you know. I always wait for the quiet ones.&quot;](else-if: $devN &gt; $devI + 1)[&quot;You kept running to Naomi. Clever. Nobody watches the loud ones. I was watching her by Thursday.&quot;](else:)[&quot;You tore yourself in half all week, a little bit for each of them. I watched you do it. It was almost sweet.&quot;](if: $alone &gt;= 3)[ She tilts her head. &quot;And every time you went off on your own, you weren&#39;t really on your own, were you? Someone always showed up.&quot;](else-if: $d6 is &quot;alone&quot;)[ She tilts her head. &quot;And on your last day you came and sat with me on the bench. You didn&#39;t let go of my hand once.&quot;](if: $dayFive is &quot;shout&quot;)[
 
@@ -1174,7 +1176,9 @@ She drops the cup in the bin and looks at you properly, and for the first time a
 
 &quot;I&#39;m Death, (print: $name).&quot;
 
-The light above the machine goes out.
+(if: $loop is 1)[And all at once it fits. The cold hands. The motion lights that never came on. The way she knew your name before you&#39;d said it. The voice in the dark before Monday, with nobody behind it, asking for a quiet week.
+
+]The light above the machine goes out.
 
 [[...-&gt;Final]]</tw-passagedata><tw-passagedata pid="53" name="Final" tags="bg-black eod fade piano" position="250,625" size="100,100">&lt;div class=&quot;dayhead&quot;&gt;THE END OF THE WEEK&lt;/div&gt;
 &lt;div class=&quot;meter&quot;&gt;&lt;span class=&quot;who&quot;&gt;Iris&lt;/span&gt;&lt;div class=&quot;bar&quot;&gt;(print: &#39;&lt;div class=&quot;fill iris&quot; style=&quot;width:&#39; + (str: $iris) + &#39;%&quot;&gt;&lt;/div&gt;&#39;)&lt;/div&gt;&lt;span class=&quot;num&quot;&gt;$iris&lt;/span&gt;&lt;/div&gt;
